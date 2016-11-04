@@ -30,7 +30,7 @@ public class TestUI extends UI implements GridBasedCrudComponent.GridCrudListene
 
     @Override
     protected void init(VaadinRequest request) {
-        GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<User>(User.class, this);
+        GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class, this);
         crud.showAllOptions();
         crud.getGrid().setColumns("id", "name", "birthDate", "email");
         crud.setNewFormVisiblePropertyIds("name", "birthDate", "email", "password");
@@ -64,7 +64,7 @@ public class TestUI extends UI implements GridBasedCrudComponent.GridCrudListene
     }
 
     @Override
-    public Collection<User> refreshTable() {
+    public Collection<User> findAll() {
         return users;
     }
 

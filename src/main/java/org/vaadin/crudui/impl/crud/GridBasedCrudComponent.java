@@ -20,7 +20,7 @@ import java.util.Collection;
 public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public static interface GridCrudListener<T> extends CrudListener<T> {
-        Collection<T> refreshTable();
+        Collection<T> findAll();
     }
 
     private Button refreshGridButton;
@@ -111,7 +111,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public void refreshTable() {
         removeAll();
-        Collection all = ((GridCrudListener) crudListener).refreshTable();
+        Collection all = ((GridCrudListener) crudListener).findAll();
         addAll(all);
     }
 
