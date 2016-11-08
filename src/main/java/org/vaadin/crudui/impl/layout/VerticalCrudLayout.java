@@ -13,7 +13,7 @@ public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
     private VerticalLayout mainLayout = new VerticalLayout();
     private Label captionLabel = new Label();
     private HorizontalLayout headerLayout = new HorizontalLayout();
-    private HorizontalLayout toolbarLayout = new HorizontalLayout();
+    private CssLayout toolbarLayout = new CssLayout();
     private HorizontalLayout filterLayout = new HorizontalLayout();
     private VerticalLayout mainComponentLayout = new VerticalLayout();
 
@@ -33,7 +33,7 @@ public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
         headerLayout.setSpacing(true);
 
         toolbarLayout.setVisible(false);
-        toolbarLayout.setSpacing(true);
+        toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         headerLayout.addComponent(toolbarLayout);
 
         filterLayout.setVisible(false);

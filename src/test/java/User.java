@@ -28,9 +28,10 @@ public class User {
         this.id = nextId++;
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, Date birthDate, String email, String password) {
         this.id = nextId++;
         this.name = name;
+        this.birthDate = birthDate;
         this.email = email;
         this.password = password;
     }

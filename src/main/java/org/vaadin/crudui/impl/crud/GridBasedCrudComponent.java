@@ -27,6 +27,16 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private Button deleteButton;
     private Grid grid = new Grid();
 
+    private String refreshCaption = "Refresh";
+    private String addCaption = "Add";
+    private String editCaption = "Edit";
+    private String deleteCaption = "Delete";
+    private String deletedCaption = "Deleted";
+    private String rowCountCaption = "%d row(s) found";
+    private String saveCaption = "Save";
+    private String savedCaption = "Saved";
+    private String selectRowCaption = "Select a row";
+
     protected Supplier<Collection<T>> findAll = () -> Collections.emptyList();
 
     public GridBasedCrudComponent(Class<T> domainType) {
@@ -37,26 +47,23 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         super(domainType, mainLayout);
 
         refreshGridButton = new Button("", this::refreshTableButtonClicked);
-        refreshGridButton.setDescription("Refresh");
         refreshGridButton.setIcon(FontAwesome.REFRESH);
+        setRefreshCaption(refreshCaption);
         mainLayout.addToolbarComponent(refreshGridButton);
 
         addButton = new Button("", this::addButtonClicked);
-        addButton.setDescription("Add");
         addButton.setIcon(FontAwesome.PLUS_CIRCLE);
-        addButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        setAddCaption(addCaption);
         mainLayout.addToolbarComponent(addButton);
 
         editButton = new Button("", this::editButtonClicked);
-        editButton.setDescription("Edit");
         editButton.setIcon(FontAwesome.PENCIL);
-        editButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        setEditCaption(editCaption);
         mainLayout.addToolbarComponent(editButton);
 
         deleteButton = new Button("", this::deleteButtonClicked);
-        deleteButton.setDescription("Delete");
         deleteButton.setIcon(FontAwesome.TIMES);
-        deleteButton.addStyleName(ValoTheme.BUTTON_DANGER);
+        setDeleteCaption(deleteCaption);
         mainLayout.addToolbarComponent(deleteButton);
 
         grid.setSizeFull();
@@ -99,7 +106,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     private void refreshTableButtonClicked(ClickEvent event) {
         refreshTable();
-        Notification.show(grid.getContainerDataSource().size() + " Row(s)");
+        Notification.show(String.format(rowCountCaption, grid.getContainerDataSource().size()));
     }
 
     public void refreshTable() {
@@ -111,9 +118,9 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private void addButtonClicked(ClickEvent event) {
         try {
             T domainObject = domainType.newInstance();
-            showFormWindow("Add", domainObject, newFormVisiblePropertyIds, null, newFormFieldCaptions, false, "Save", FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
+            showFormWindow(addCaption, domainObject, newFormVisiblePropertyIds, null, newFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
                 add.accept(domainObject);
-                Notification.show("Saved");
+                Notification.show(savedCaption);
             });
 
         } catch (InstantiationException e1) {
@@ -127,12 +134,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         T domainObject = (T) grid.getSelectedRow();
 
         if (domainObject != null) {
-            showFormWindow("Edit", domainObject, editFormVisiblePropertyIds, editFormDisabledPropertyIds, editFormFieldCaptions, false, "Guardar", FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
+            showFormWindow(editCaption, domainObject, editFormVisiblePropertyIds, editFormDisabledPropertyIds, editFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
                 update.accept(domainObject);
-                Notification.show("Saved");
+                Notification.show(savedCaption);
             });
         } else {
-            Notification.show("Select a row");
+            Notification.show(selectRowCaption);
         }
     }
 
@@ -140,12 +147,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         T domainObject = (T) grid.getSelectedRow();
 
         if (domainObject != null) {
-            showFormWindow("Delete", domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, "Delete", FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
+            showFormWindow(deleteCaption, domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, deleteCaption, FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
                 delete.accept(domainObject);
-                Notification.show("Deleted");
+                Notification.show(deletedCaption);
             });
         } else {
-            Notification.show("Select a row");
+            Notification.show(selectRowCaption);
         }
     }
 
@@ -184,4 +191,58 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         setFindAllOperation(() -> crudListener.findAll());
     }
 
+    public Button getRefreshGridButton() {
+        return refreshGridButton;
+    }
+
+    public Button getAddButton() {
+        return addButton;
+    }
+
+    public Button getEditButton() {
+        return editButton;
+    }
+
+    public Button getDeleteButton() {
+        return deleteButton;
+    }
+
+    public void setRefreshCaption(String refreshCaption) {
+        this.refreshCaption = refreshCaption;
+    }
+
+    public void setAddCaption(String addCaption) {
+        this.addCaption = addCaption;
+        addButton.setDescription(addCaption);
+    }
+
+    public void setEditCaption(String editCaption) {
+        this.editCaption = editCaption;
+        editButton.setDescription(editCaption);
+    }
+
+    public void setDeleteCaption(String deleteCaption) {
+        this.deleteCaption = deleteCaption;
+        deleteButton.setDescription(deleteCaption);
+    }
+
+    public void setDeletedCaption(String deletedCaption) {
+        this.deletedCaption = deletedCaption;
+    }
+
+    public void setRowCountCaption(String rowCountCaption) {
+        this.rowCountCaption = rowCountCaption;
+    }
+
+    public void setSaveCaption(String saveCaption) {
+        this.saveCaption = saveCaption;
+    }
+
+    public void setSavedCaption(String savedCaption) {
+        this.savedCaption = savedCaption;
+    }
+
+    public void setSelectRowCaption(String selectRowCaption) {
+        this.selectRowCaption = selectRowCaption;
+    }
 }
