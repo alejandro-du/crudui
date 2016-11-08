@@ -36,6 +36,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private String saveCaption = "Save";
     private String savedCaption = "Saved";
     private String selectRowCaption = "Select a row";
+    private String formErrorMessage = "Fix the errors and try again";
 
     protected Supplier<Collection<T>> findAll = () -> Collections.emptyList();
 
@@ -166,7 +167,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         windowLayout.setMargin(true);
         window.setContent(windowLayout);
 
-        Component crudForm = crudFormBuilder.buildNewForm(domainObject, visiblePropertyIds, disabledPropertyIds, fieldCaptions, readOnly, buttonCaption, buttonIcon, buttonStyle, e -> {
+        Component crudForm = crudFormBuilder.buildNewForm(domainObject, visiblePropertyIds, disabledPropertyIds, fieldCaptions, readOnly, buttonCaption, formErrorMessage, buttonIcon, buttonStyle, e -> {
             saveButtonClickListener.buttonClick(e);
             refreshTable();
             window.close();
@@ -245,4 +246,9 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     public void setSelectRowCaption(String selectRowCaption) {
         this.selectRowCaption = selectRowCaption;
     }
+
+    public void setFormErrorMessage(String formErrorMessage) {
+        this.formErrorMessage = formErrorMessage;
+    }
+
 }
