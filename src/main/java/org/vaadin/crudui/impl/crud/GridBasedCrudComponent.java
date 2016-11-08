@@ -39,50 +39,48 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         refreshGridButton = new Button("", this::refreshTableButtonClicked);
         refreshGridButton.setDescription("Refresh");
         refreshGridButton.setIcon(FontAwesome.REFRESH);
+        mainLayout.addToolbarComponent(refreshGridButton);
 
         addButton = new Button("", this::addButtonClicked);
         addButton.setDescription("Add");
         addButton.setIcon(FontAwesome.PLUS_CIRCLE);
         addButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        mainLayout.addToolbarComponent(addButton);
 
         editButton = new Button("", this::editButtonClicked);
         editButton.setDescription("Edit");
         editButton.setIcon(FontAwesome.PENCIL);
         editButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        mainLayout.addToolbarComponent(editButton);
 
         deleteButton = new Button("", this::deleteButtonClicked);
         deleteButton.setDescription("Delete");
         deleteButton.setIcon(FontAwesome.TIMES);
         deleteButton.addStyleName(ValoTheme.BUTTON_DANGER);
+        mainLayout.addToolbarComponent(deleteButton);
 
         grid.setSizeFull();
         grid.setContainerDataSource(new BeanItemContainer<>(domainType));
         mainLayout.setMainComponent(grid);
     }
 
-    @Override
-    public void showAllOptions() {
-        showRefreshTableOption();
-        super.showAllOptions();
-    }
-
-    public void showRefreshTableOption() {
-        mainLayout.addToolbarComponent(refreshGridButton);
+    public void setRefreshTableOption(boolean visible) {
+        refreshGridButton.setVisible(visible);
     }
 
     @Override
-    public void showAddOption() {
-        mainLayout.addToolbarComponent(addButton);
+    public void setAddOptionVisible(boolean visible) {
+        addButton.setVisible(visible);
     }
 
     @Override
-    public void showEditOption() {
-        mainLayout.addToolbarComponent(editButton);
+    public void setEditOptionVisible(boolean visible) {
+        editButton.setVisible(visible);
     }
 
     @Override
-    public void showDeleteOption() {
-        mainLayout.addToolbarComponent(deleteButton);
+    public void setDeleteOptionVisible(boolean visible) {
+        deleteButton.setVisible(visible);
     }
 
     public void removeAll() {
@@ -118,10 +116,10 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
                 Notification.show("Saved");
             });
 
-        } catch (InstantiationException e2) {
+        } catch (InstantiationException e1) {
+            e1.printStackTrace();
+        } catch (IllegalAccessException e2) {
             e2.printStackTrace();
-        } catch (IllegalAccessException e3) {
-            e3.printStackTrace();
         }
     }
 
@@ -174,11 +172,11 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     public void setOperations(Consumer<T> add, Consumer<T> update, Consumer<T> delete, Supplier<Collection<T>> findAll) {
         super.setOperations(add, update, delete);
         setFindAllOperation(findAll);
-        refreshTable();
     }
 
     public void setFindAllOperation(Supplier<Collection<T>> findAll) {
         this.findAll = findAll;
+        refreshTable();
     }
 
     public void setCrudListener(GridCrudListener<T> crudListener) {

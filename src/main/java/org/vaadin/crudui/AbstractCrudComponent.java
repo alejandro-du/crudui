@@ -21,9 +21,12 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
     protected String[] deleteFormFieldCaptions;
     protected Object[] editFormDisabledPropertyIds;
 
-    protected Consumer<T> add = t -> { };
-    protected Consumer<T> update = t -> { };
-    protected Consumer<T> delete = t -> { };
+    protected Consumer<T> add = t -> {
+    };
+    protected Consumer<T> update = t -> {
+    };
+    protected Consumer<T> delete = t -> {
+    };
 
     protected CrudLayout mainLayout;
     protected CrudFormBuilder<T> crudFormBuilder;
@@ -48,13 +51,6 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
     @Override
     public void setCaption(String caption) {
         mainLayout.setCaption(caption);
-    }
-
-    @Override
-    public void showAllOptions() {
-        showAddOption();
-        showEditOption();
-        showDeleteOption();
     }
 
     @Override

@@ -9,13 +9,11 @@ import java.util.function.Consumer;
  */
 public interface CrudComponent<T> extends Component {
 
-    void showAllOptions();
+    void setAddOptionVisible(boolean visible);
 
-    void showAddOption();
+    void setEditOptionVisible(boolean visible);
 
-    void showEditOption();
-
-    void showDeleteOption();
+    void setDeleteOptionVisible(boolean visible);
 
     void setNewFormVisiblePropertyIds(Object... newFormVisiblePropertyIds);
 
