@@ -9,19 +9,17 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.AbstractCrudComponent;
 import org.vaadin.crudui.CrudLayout;
-import org.vaadin.crudui.CrudListener;
 import org.vaadin.crudui.impl.layout.VerticalCrudLayout;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte
  */
 public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
-
-    public static interface GridCrudListener<T> extends CrudListener<T> {
-        Collection<T> findAll();
-    }
 
     private Button refreshGridButton;
     private Button addButton;
@@ -29,12 +27,14 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private Button deleteButton;
     private Grid grid = new Grid();
 
-    public GridBasedCrudComponent(Class<T> domainType, GridCrudListener<T> crudListener) {
-        this(domainType, crudListener, new VerticalCrudLayout());
+    protected Supplier<Collection<T>> findAll = () -> Collections.emptyList();
+
+    public GridBasedCrudComponent(Class<T> domainType) {
+        this(domainType, new VerticalCrudLayout());
     }
 
-    public GridBasedCrudComponent(Class<T> domainType, GridCrudListener<T> crudListener, CrudLayout mainLayout) {
-        super(domainType, crudListener, mainLayout);
+    public GridBasedCrudComponent(Class<T> domainType, CrudLayout mainLayout) {
+        super(domainType, mainLayout);
 
         refreshGridButton = new Button("", this::refreshTableButtonClicked);
         refreshGridButton.setDescription("Refresh");
@@ -58,7 +58,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         grid.setSizeFull();
         grid.setContainerDataSource(new BeanItemContainer<>(domainType));
         mainLayout.setMainComponent(grid);
-        refreshTable();
     }
 
     @Override
@@ -100,10 +99,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         return grid;
     }
 
-    public GridCrudListener<T> getCrudListener() {
-        return (GridCrudListener<T>) crudListener;
-    }
-
     private void refreshTableButtonClicked(ClickEvent event) {
         refreshTable();
         Notification.show(grid.getContainerDataSource().size() + " Row(s)");
@@ -111,7 +106,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public void refreshTable() {
         removeAll();
-        Collection all = ((GridCrudListener) crudListener).findAll();
+        Collection all = findAll.get();
         addAll(all);
     }
 
@@ -119,7 +114,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         try {
             T domainObject = domainType.newInstance();
             showFormWindow("Add", domainObject, newFormVisiblePropertyIds, null, newFormFieldCaptions, false, "Save", FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
-                crudListener.add(domainObject);
+                add.accept(domainObject);
                 Notification.show("Saved");
             });
 
@@ -135,7 +130,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
         if (domainObject != null) {
             showFormWindow("Edit", domainObject, editFormVisiblePropertyIds, editFormDisabledPropertyIds, editFormFieldCaptions, false, "Guardar", FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
-                crudListener.update(domainObject);
+                update.accept(domainObject);
                 Notification.show("Saved");
             });
         } else {
@@ -148,13 +143,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
         if (domainObject != null) {
             showFormWindow("Delete", domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, "Delete", FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
-                crudListener.delete(domainObject);
+                delete.accept(domainObject);
                 Notification.show("Deleted");
             });
         } else {
             Notification.show("Select a row");
         }
-
     }
 
     private void showFormWindow(String windowTitle, T domainObject, Object[] visiblePropertyIds, Object disabledPropertyIds[], String[] fieldCaptions, boolean readOnly, String buttonCaption, Resource buttonIcon, String buttonStyle, ClickListener saveButtonClickListener) {
@@ -175,6 +169,21 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
         crudForm.setReadOnly(readOnly);
         windowLayout.addComponent(crudForm);
+    }
+
+    public void setOperations(Consumer<T> add, Consumer<T> update, Consumer<T> delete, Supplier<Collection<T>> findAll) {
+        super.setOperations(add, update, delete);
+        setFindAllOperation(findAll);
+        refreshTable();
+    }
+
+    public void setFindAllOperation(Supplier<Collection<T>> findAll) {
+        this.findAll = findAll;
+    }
+
+    public void setCrudListener(GridCrudListener<T> crudListener) {
+        super.setCrudListener(crudListener);
+        setFindAllOperation(() -> crudListener.findAll());
     }
 
 }
