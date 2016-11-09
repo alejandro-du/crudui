@@ -11,6 +11,6 @@ import java.io.Serializable;
  */
 public interface CrudFormBuilder<T> extends Serializable {
 
-    Component buildNewForm(T domainObject, Object visiblePropertyIds[], Object disabledPropertyIds[], String[] fieldCaptions, boolean readOnly, String buttonCaption, String errorMessage, Resource buttonIcon, String buttonStyle, Button.ClickListener saveButtonClickListener);
+    Component buildNewForm(T domainObject, Object visiblePropertyIds[], Object disabledPropertyIds[], String[] fieldCaptions, boolean readOnly, String buttonCaption, String errorMessage, Resource buttonIcon, String buttonStyle, Button.ClickListener buttonClickListener);
 
 }

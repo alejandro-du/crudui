@@ -12,8 +12,6 @@ import org.vaadin.crudui.CrudLayout;
 import org.vaadin.crudui.impl.layout.VerticalCrudLayout;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -21,15 +19,15 @@ import java.util.function.Supplier;
  */
 public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
-    private Button refreshGridButton;
+    private Button findAllButton;
     private Button addButton;
-    private Button editButton;
+    private Button updateButton;
     private Button deleteButton;
     private Grid grid = new Grid();
 
-    private String refreshCaption = "Refresh";
+    private String findAllCaption = "Refresh";
     private String addCaption = "Add";
-    private String editCaption = "Edit";
+    private String updateCaption = "Update";
     private String deleteCaption = "Delete";
     private String deletedCaption = "Deleted";
     private String rowCountCaption = "%d row(s) found";
@@ -38,8 +36,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private String selectRowCaption = "Select a row";
     private String formErrorMessage = "Fix the errors and try again";
 
-    protected Supplier<Collection<T>> findAll = () -> Collections.emptyList();
-
     public GridBasedCrudComponent(Class<T> domainType) {
         this(domainType, new VerticalCrudLayout());
     }
@@ -47,20 +43,20 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     public GridBasedCrudComponent(Class<T> domainType, CrudLayout mainLayout) {
         super(domainType, mainLayout);
 
-        refreshGridButton = new Button("", this::refreshTableButtonClicked);
-        refreshGridButton.setIcon(FontAwesome.REFRESH);
-        setRefreshCaption(refreshCaption);
-        mainLayout.addToolbarComponent(refreshGridButton);
+        findAllButton = new Button("", this::refreshTableButtonClicked);
+        findAllButton.setIcon(FontAwesome.REFRESH);
+        setFindAllCaption(findAllCaption);
+        mainLayout.addToolbarComponent(findAllButton);
 
         addButton = new Button("", this::addButtonClicked);
         addButton.setIcon(FontAwesome.PLUS_CIRCLE);
         setAddCaption(addCaption);
         mainLayout.addToolbarComponent(addButton);
 
-        editButton = new Button("", this::editButtonClicked);
-        editButton.setIcon(FontAwesome.PENCIL);
-        setEditCaption(editCaption);
-        mainLayout.addToolbarComponent(editButton);
+        updateButton = new Button("", this::updateButtonClicked);
+        updateButton.setIcon(FontAwesome.PENCIL);
+        setUpdateCaption(updateCaption);
+        mainLayout.addToolbarComponent(updateButton);
 
         deleteButton = new Button("", this::deleteButtonClicked);
         deleteButton.setIcon(FontAwesome.TIMES);
@@ -72,23 +68,24 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         mainLayout.setMainComponent(grid);
     }
 
-    public void setRefreshTableOption(boolean visible) {
-        refreshGridButton.setVisible(visible);
-    }
-
     @Override
     public void setAddOptionVisible(boolean visible) {
         addButton.setVisible(visible);
     }
 
     @Override
-    public void setEditOptionVisible(boolean visible) {
-        editButton.setVisible(visible);
+    public void setUpdateOptionVisible(boolean visible) {
+        updateButton.setVisible(visible);
     }
 
     @Override
     public void setDeleteOptionVisible(boolean visible) {
         deleteButton.setVisible(visible);
+    }
+
+    @Override
+    public void setFindAllOptionVisible(boolean visible) {
+        findAllButton.setVisible(false);
     }
 
     public void removeAll() {
@@ -105,22 +102,22 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         return grid;
     }
 
-    private void refreshTableButtonClicked(ClickEvent event) {
-        refreshTable();
-        Notification.show(String.format(rowCountCaption, grid.getContainerDataSource().size()));
+    public void refreshGrid() {
+        removeAll();
+        Collection all = findAllOperation.get();
+        addAll(all);
     }
 
-    public void refreshTable() {
-        removeAll();
-        Collection all = findAll.get();
-        addAll(all);
+    private void refreshTableButtonClicked(ClickEvent event) {
+        refreshGrid();
+        Notification.show(String.format(rowCountCaption, grid.getContainerDataSource().size()));
     }
 
     private void addButtonClicked(ClickEvent event) {
         try {
             T domainObject = domainType.newInstance();
             showFormWindow(addCaption, domainObject, addFormVisiblePropertyIds, null, addFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
-                add.accept(domainObject);
+                addOperation.accept(domainObject);
                 Notification.show(savedCaption);
             });
 
@@ -131,12 +128,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         }
     }
 
-    private void editButtonClicked(ClickEvent event) {
+    private void updateButtonClicked(ClickEvent event) {
         T domainObject = (T) grid.getSelectedRow();
 
         if (domainObject != null) {
-            showFormWindow(editCaption, domainObject, editFormVisiblePropertyIds, editFormDisabledPropertyIds, editFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
-                update.accept(domainObject);
+            showFormWindow(updateCaption, domainObject, updateFormVisiblePropertyIds, updateFormDisabledPropertyIds, updateFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
+                updateOperation.accept(domainObject);
                 Notification.show(savedCaption);
             });
         } else {
@@ -149,7 +146,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
         if (domainObject != null) {
             showFormWindow(deleteCaption, domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, deleteCaption, FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
-                delete.accept(domainObject);
+                deleteOperation.accept(domainObject);
                 Notification.show(deletedCaption);
             });
         } else {
@@ -169,7 +166,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
         Component crudForm = crudFormBuilder.buildNewForm(domainObject, visiblePropertyIds, disabledPropertyIds, fieldCaptions, readOnly, buttonCaption, formErrorMessage, buttonIcon, buttonStyle, e -> {
             saveButtonClickListener.buttonClick(e);
-            refreshTable();
+            refreshGrid();
             window.close();
         });
 
@@ -177,39 +174,29 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         windowLayout.addComponent(crudForm);
     }
 
-    public void setOperations(Consumer<T> add, Consumer<T> update, Consumer<T> delete, Supplier<Collection<T>> findAll) {
-        super.setOperations(add, update, delete);
-        setFindAllOperation(findAll);
+    public void setFindAllOperation(Supplier<Collection<T>> findAllOperation) {
+        super.setFindAllOperation(findAllOperation);
+        refreshGrid();
     }
 
-    public void setFindAllOperation(Supplier<Collection<T>> findAll) {
-        this.findAll = findAll;
-        refreshTable();
-    }
-
-    public void setCrudListener(GridCrudListener<T> crudListener) {
-        super.setCrudListener(crudListener);
-        setFindAllOperation(() -> crudListener.findAll());
-    }
-
-    public Button getRefreshGridButton() {
-        return refreshGridButton;
+    public Button getFindAllButton() {
+        return findAllButton;
     }
 
     public Button getAddButton() {
         return addButton;
     }
 
-    public Button getEditButton() {
-        return editButton;
+    public Button getUpdateButton() {
+        return updateButton;
     }
 
     public Button getDeleteButton() {
         return deleteButton;
     }
 
-    public void setRefreshCaption(String refreshCaption) {
-        this.refreshCaption = refreshCaption;
+    public void setFindAllCaption(String findAllCaption) {
+        this.findAllCaption = findAllCaption;
     }
 
     public void setAddCaption(String addCaption) {
@@ -217,9 +204,9 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         addButton.setDescription(addCaption);
     }
 
-    public void setEditCaption(String editCaption) {
-        this.editCaption = editCaption;
-        editButton.setDescription(editCaption);
+    public void setUpdateCaption(String updateCaption) {
+        this.updateCaption = updateCaption;
+        updateButton.setDescription(updateCaption);
     }
 
     public void setDeleteCaption(String deleteCaption) {

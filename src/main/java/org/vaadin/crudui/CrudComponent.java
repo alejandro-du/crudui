@@ -2,7 +2,9 @@ package org.vaadin.crudui;
 
 import com.vaadin.ui.Component;
 
+import java.util.Collection;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte
@@ -11,35 +13,39 @@ public interface CrudComponent<T> extends Component {
 
     void setAddOptionVisible(boolean visible);
 
-    void setEditOptionVisible(boolean visible);
+    void setUpdateOptionVisible(boolean visible);
 
     void setDeleteOptionVisible(boolean visible);
 
+    void setFindAllOptionVisible(boolean visible);
+
     void setAddFormVisiblePropertyIds(Object... addFormVisiblePropertyIds);
 
-    void setEditFormVisiblePropertyIds(Object... editFormVisiblePropertyIds);
+    void setUpdateFormVisiblePropertyIds(Object... updateFormVisiblePropertyIds);
 
     void setDeleteFormVisiblePropertyIds(Object... deleteFormVisiblePropertyIds);
 
-    void setEditFormDisabledPropertyIds(Object... editFormDisabledPropertyIds);
+    void setUpdateFormDisabledPropertyIds(Object... updateFormDisabledPropertyIds);
 
     void setAddFormFieldCaptions(String... addFormFieldCaptions);
 
-    void setEditFormFieldCaptions(String... editFormFieldCaptions);
+    void setUpdateFormFieldCaptions(String... updateFormFieldCaptions);
 
     void setDeleteFormFieldCaptions(String... deleteFormFieldCaptions);
 
     CrudLayout getMainLayout();
 
-    void setCrudFormBuilder(CrudFormBuilder<T> crudForm);
+    void setCrudFormBuilder(CrudFormBuilder<T> crudFormBuilder);
 
-    void setOperations(Consumer<T> add, Consumer<T> update, Consumer<T> delete);
+    void setAddOperation(Consumer<T> addOperation);
 
-    void setAddOperation(Consumer<T> add);
+    void setUpdateOperation(Consumer<T> updateOperation);
 
-    void setUpdateOperation(Consumer<T> update);
+    void setDeleteOperation(Consumer<T> deleteOperation);
 
-    void setDeleteOperation(Consumer<T> delete);
+    void setFindAllOperation(Supplier<Collection<T>> findAllOperation);
+
+    void setOperations(Consumer<T> addOperation, Consumer<T> updateOperation, Consumer<T> deleteOperation, Supplier<Collection<T>> findAllOperation);
 
     void setCrudListener(CrudListener<T> crudListener);
 
