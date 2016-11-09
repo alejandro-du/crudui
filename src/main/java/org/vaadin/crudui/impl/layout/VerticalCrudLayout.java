@@ -10,12 +10,12 @@ import org.vaadin.crudui.CrudLayout;
  */
 public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
 
-    private VerticalLayout mainLayout = new VerticalLayout();
-    private Label captionLabel = new Label();
-    private HorizontalLayout headerLayout = new HorizontalLayout();
-    private CssLayout toolbarLayout = new CssLayout();
-    private HorizontalLayout filterLayout = new HorizontalLayout();
-    private VerticalLayout mainComponentLayout = new VerticalLayout();
+    protected VerticalLayout mainLayout = new VerticalLayout();
+    protected Label captionLabel = new Label();
+    protected HorizontalLayout headerLayout = new HorizontalLayout();
+    protected CssLayout toolbarLayout = new CssLayout();
+    protected HorizontalLayout filterLayout = new HorizontalLayout();
+    protected VerticalLayout mainComponentLayout = new VerticalLayout();
 
     public VerticalCrudLayout() {
         mainLayout.setSizeFull();
