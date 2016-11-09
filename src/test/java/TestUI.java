@@ -34,11 +34,7 @@ public class TestUI extends UI implements CrudListener<User> {
     protected void init(VaadinRequest request) {
         GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
         crud.setCrudListener(this);
-        crud.getGrid().setColumns("id", "name", "birthDate", "email");
-        crud.setAddFormVisiblePropertyIds("name", "birthDate", "email", "password");
-        crud.setUpdateFormVisiblePropertyIds("id", "name", "birthDate", "email");
-        crud.setUpdateFormDisabledPropertyIds("id");
-        crud.setDeleteFormVisiblePropertyIds("id", "name", "birthDate", "email");
+        crud.setVisiblePropertyIds("name", "birthDate", "email");
         crud.setAddCaption("Add new user");
         crud.setRowCountCaption("%d user(s) found");
 

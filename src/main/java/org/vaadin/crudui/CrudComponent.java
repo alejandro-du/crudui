@@ -25,6 +25,8 @@ public interface CrudComponent<T> extends Component {
 
     void setDeleteFormVisiblePropertyIds(Object... deleteFormVisiblePropertyIds);
 
+    void setVisiblePropertyIds(Object... visiblePropertyIds);
+
     void setUpdateFormDisabledPropertyIds(Object... updateFormDisabledPropertyIds);
 
     void setAddFormFieldCaptions(String... addFormFieldCaptions);

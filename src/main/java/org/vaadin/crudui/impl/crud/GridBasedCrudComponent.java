@@ -88,6 +88,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         findAllButton.setVisible(false);
     }
 
+    @Override
+    public void setVisiblePropertyIds(Object... visiblePropertyIds) {
+        super.setVisiblePropertyIds(visiblePropertyIds);
+        grid.setColumns(visiblePropertyIds);
+    }
+
     public void removeAll() {
         grid.setContainerDataSource(new BeanItemContainer<>(domainType));
     }

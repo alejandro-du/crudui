@@ -73,6 +73,14 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
     }
 
     @Override
+    public void setVisiblePropertyIds(Object... visiblePropertyIds) {
+        this.addFormVisiblePropertyIds =
+                this.updateFormVisiblePropertyIds =
+                        this.deleteFormVisiblePropertyIds =
+                                visiblePropertyIds;
+    }
+
+    @Override
     public void setUpdateFormDisabledPropertyIds(Object... updateFormDisabledPropertyIds) {
         this.updateFormDisabledPropertyIds = updateFormDisabledPropertyIds;
     }
