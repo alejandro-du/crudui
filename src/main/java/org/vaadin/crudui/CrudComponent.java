@@ -15,7 +15,7 @@ public interface CrudComponent<T> extends Component {
 
     void setDeleteOptionVisible(boolean visible);
 
-    void setNewFormVisiblePropertyIds(Object... newFormVisiblePropertyIds);
+    void setAddFormVisiblePropertyIds(Object... addFormVisiblePropertyIds);
 
     void setEditFormVisiblePropertyIds(Object... editFormVisiblePropertyIds);
 
@@ -23,7 +23,7 @@ public interface CrudComponent<T> extends Component {
 
     void setEditFormDisabledPropertyIds(Object... editFormDisabledPropertyIds);
 
-    void setNewFormFieldCaptions(String... newFormFieldCaptions);
+    void setAddFormFieldCaptions(String... addFormFieldCaptions);
 
     void setEditFormFieldCaptions(String... editFormFieldCaptions);
 

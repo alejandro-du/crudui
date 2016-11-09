@@ -35,7 +35,7 @@ public class TestUI extends UI implements GridCrudListener<User> {
         GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
         crud.setCrudListener(this);
         crud.getGrid().setColumns("id", "name", "birthDate", "email");
-        crud.setNewFormVisiblePropertyIds("name", "birthDate", "email", "password");
+        crud.setAddFormVisiblePropertyIds("name", "birthDate", "email", "password");
         crud.setEditFormVisiblePropertyIds("id", "name", "birthDate", "email");
         crud.setEditFormDisabledPropertyIds("id");
         crud.setDeleteFormVisiblePropertyIds("id", "name", "birthDate", "email");

@@ -119,7 +119,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private void addButtonClicked(ClickEvent event) {
         try {
             T domainObject = domainType.newInstance();
-            showFormWindow(addCaption, domainObject, newFormVisiblePropertyIds, null, newFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
+            showFormWindow(addCaption, domainObject, addFormVisiblePropertyIds, null, addFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
                 add.accept(domainObject);
                 Notification.show(savedCaption);
             });
