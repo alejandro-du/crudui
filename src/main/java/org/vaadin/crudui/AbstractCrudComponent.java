@@ -1,7 +1,6 @@
 package org.vaadin.crudui;
 
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
@@ -47,14 +46,18 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
     public AbstractCrudComponent(Class<T> domainType, CrudLayout mainLayout) {
         this.domainType = domainType;
         this.mainLayout = mainLayout;
-        BeanItemContainer<T> propertyIdsHelper = new BeanItemContainer<T>(domainType);
         crudFormFactory = new VerticalCrudFormFactory<T>();
-        addFormVisiblePropertyIds = new ArrayList<>(propertyIdsHelper.getContainerPropertyIds());
-        updateFormVisiblePropertyIds = new ArrayList<>(propertyIdsHelper.getContainerPropertyIds());
-        deleteFormVisiblePropertyIds = new ArrayList<>(propertyIdsHelper.getContainerPropertyIds());
+        addFormVisiblePropertyIds = discoverPropertyIds(domainType);
+        updateFormVisiblePropertyIds = discoverPropertyIds(domainType);
+        deleteFormVisiblePropertyIds = discoverPropertyIds(domainType);
 
         setCompositionRoot(mainLayout);
         setSizeFull();
+    }
+
+    protected List<Object> discoverPropertyIds(Class<T> domainType) {
+        BeanItemContainer<T> propertyIdsHelper = new BeanItemContainer<T>(domainType);
+        return new ArrayList<>(propertyIdsHelper.getContainerPropertyIds());
     }
 
     @Override
@@ -179,8 +182,7 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
                     disabledPropertyIds == null || !disabledPropertyIds.contains(propertyId),
                     !fieldCaptions.isEmpty() ? fieldCaptions.get(i) : DefaultFieldFactory.createCaptionByPropertyId(propertyId),
                     fieldType != null ? fieldType : Field.class,
-                    creationListener != null ? creationListener : field -> { },
-                    Arrays.asList(new BeanValidator(domainObject.getClass(), "" + propertyId))
+                    creationListener != null ? creationListener : field -> { }
             );
 
             fieldConfigurations.add(fieldConfiguration);

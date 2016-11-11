@@ -1,9 +1,7 @@
 package org.vaadin.crudui;
 
-import com.vaadin.data.Validator;
 import com.vaadin.ui.Field;
 
-import java.util.Collection;
 import java.util.function.Consumer;
 
 public class CrudFieldConfiguration {
@@ -20,16 +18,13 @@ public class CrudFieldConfiguration {
 
     private Consumer<Field> creationListener;
 
-    private Collection<Validator> validators;
-
     public CrudFieldConfiguration(
             Object propertyId,
             boolean readOnly,
             boolean enabled,
             String caption,
             Class<? extends Field> fieldType,
-            Consumer<Field> creationListener,
-            Collection<Validator> validators
+            Consumer<Field> creationListener
     ) {
         this.propertyId = propertyId;
         this.readOnly = readOnly;
@@ -37,7 +32,6 @@ public class CrudFieldConfiguration {
         this.caption = caption;
         this.fieldType = fieldType;
         this.creationListener = creationListener;
-        this.validators = validators;
     }
 
     public Object getPropertyId() {
@@ -86,14 +80,6 @@ public class CrudFieldConfiguration {
 
     public void setCreationListener(Consumer<Field> creationListener) {
         this.creationListener = creationListener;
-    }
-
-    public Collection<Validator> getValidators() {
-        return validators;
-    }
-
-    public void setValidators(Collection<Validator> validators) {
-        this.validators = validators;
     }
 
 }

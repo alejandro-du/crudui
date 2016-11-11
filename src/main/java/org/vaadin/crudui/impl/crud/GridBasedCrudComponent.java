@@ -38,6 +38,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private Button updateButton;
     private Button deleteButton;
     private Grid grid = new Grid();
+    private BeanItemContainer<T> container;
 
     public GridBasedCrudComponent(Class<T> domainType) {
         this(domainType, new VerticalCrudLayout());
@@ -67,7 +68,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         mainLayout.addToolbarComponent(deleteButton);
 
         grid.setSizeFull();
-        grid.setContainerDataSource(new BeanItemContainer<>(domainType));
+        grid.setContainerDataSource(container = new BeanItemContainer<>(domainType));
         mainLayout.setMainComponent(grid);
     }
 
@@ -104,17 +105,21 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     public void removeAll() {
-        grid.setContainerDataSource(new BeanItemContainer<>(domainType));
+        container.removeAllItems();
     }
 
     public void addAll(Collection<T> collection) {
         if (collection != null) {
-            grid.setContainerDataSource(new BeanItemContainer<>(domainType, collection));
+            container.addAll(collection);
         }
     }
 
     public Grid getGrid() {
         return grid;
+    }
+
+    public BeanItemContainer getGridContainer() {
+        return container;
     }
 
     public void refreshGrid() {
@@ -125,7 +130,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     private void refreshTableButtonClicked(ClickEvent event) {
         refreshGrid();
-        Notification.show(String.format(rowCountCaption, grid.getContainerDataSource().size()));
+        Notification.show(String.format(rowCountCaption, container.size()));
     }
 
     private void addButtonClicked(ClickEvent event) {

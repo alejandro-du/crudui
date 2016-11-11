@@ -1,4 +1,5 @@
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.DateRenderer;
@@ -9,9 +10,10 @@ import org.vaadin.crudui.impl.crud.GridBasedCrudComponent;
 import org.vaadin.crudui.impl.form.GridLayoutCrudFormFactory;
 import org.vaadin.jetty.VaadinJettyServer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Alejandro Duarte
@@ -23,12 +25,18 @@ public class TestUI extends UI implements CrudListener<User> {
         VaadinJettyServer server = new VaadinJettyServer(8080, TestUI.class);
         server.start();
 
-        for (long i = 1; i <= 10; i++) {
-            users.add(new User("User " + i, new Date(), "email" + i + "@test.com", "password" + i));
+        Group employees = new Group("Employees", false);
+        Group admins = new Group("Admins", true);
+        groups.add(employees);
+        groups.add(admins);
+
+        for (long i = 1; i <= 20; i++) {
+            users.add(new User("User " + i, new Date(), "email" + i + "@test.com", "password" + i, true, employees, groups));
         }
     }
 
-    private static ArrayList<User> users = new ArrayList<>();
+    private static Set<User> users = new LinkedHashSet<>();
+    private static Set<Group> groups = new LinkedHashSet<>();
 
     private TabSheet tabSheet = new TabSheet();
 
@@ -62,16 +70,30 @@ public class TestUI extends UI implements CrudListener<User> {
 
     private CrudComponent getConfiguredCrud() {
         GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
-        crud.setCrudFormFactory(new GridLayoutCrudFormFactory<>(2, 2));
         crud.setCrudListener(this);
-        crud.setVisiblePropertyIds("name", "birthDate", "email");
-        crud.setAddFormVisiblePropertyIds("name", "birthDate", "email", "password");
-        crud.setUpdateFormVisiblePropertyIds("name", "birthDate", "email", "password");
-        crud.setAddCaption("Add new user");
-        crud.setRowCountCaption("%d user(s) found");
-        crud.getGrid().getColumn("birthDate").setRenderer(new DateRenderer("%1$te/%1$tm/%1$tY"));
+
+        crud.setCrudFormFactory(new GridLayoutCrudFormFactory<>(2, 2));
+
+        crud.setAddFormVisiblePropertyIds("name", "birthDate", "email", "password", "groups", "mainGroup", "active");
+        crud.setUpdateFormVisiblePropertyIds("name", "birthDate", "email", "password", "groups", "mainGroup", "active");
+        crud.setDeleteFormVisiblePropertyIds("name", "email", "active");
+
+        crud.getGridContainer().addNestedContainerBean("mainGroup");
+        crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup.name", "active");
+        crud.getGrid().getColumn("mainGroup.name").setHeaderCaption("Main group");
+        crud.getGrid().getColumn("birthDate").setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
+
         crud.setFieldType("password", PasswordField.class);
         crud.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
+        crud.setFieldType("mainGroup", ComboBox.class);
+        crud.setFieldCreationListener("mainGroup", field -> {
+            ComboBox comboBox = (ComboBox) field;
+            comboBox.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
+            comboBox.setItemCaptionPropertyId("name");
+        });
+
+        crud.setAddCaption("Add new user");
+        crud.setRowCountCaption("%d user(s) found");
 
         return crud;
     }
