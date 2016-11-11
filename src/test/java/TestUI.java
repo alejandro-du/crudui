@@ -8,6 +8,7 @@ import org.vaadin.crudui.CrudComponent;
 import org.vaadin.crudui.CrudListener;
 import org.vaadin.crudui.impl.crud.GridBasedCrudComponent;
 import org.vaadin.crudui.impl.form.GridLayoutCrudFormFactory;
+import org.vaadin.crudui.impl.layout.HorizontalSplitCrudLayout;
 import org.vaadin.jetty.VaadinJettyServer;
 
 import java.util.Collection;
@@ -69,7 +70,7 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     private CrudComponent getConfiguredCrud() {
-        GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
+        GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class, new HorizontalSplitCrudLayout());
         crud.setCrudListener(this);
 
         crud.setCrudFormFactory(new GridLayoutCrudFormFactory<>(2, 2));

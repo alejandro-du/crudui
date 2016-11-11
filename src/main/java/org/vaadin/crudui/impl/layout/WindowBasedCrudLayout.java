@@ -8,7 +8,7 @@ import org.vaadin.crudui.CrudLayout;
 /**
  * @author Alejandro Duarte
  */
-public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
+public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout {
 
     protected VerticalLayout mainLayout = new VerticalLayout();
     protected Label captionLabel = new Label();
@@ -16,11 +16,12 @@ public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
     protected CssLayout toolbarLayout = new CssLayout();
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
+    protected Window formWindow;
 
-    public VerticalCrudLayout() {
+    public WindowBasedCrudLayout() {
+        setCompositionRoot(mainLayout);
         mainLayout.setSizeFull();
         mainLayout.setSpacing(true);
-        setCompositionRoot(mainLayout);
         setSizeFull();
 
         captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
@@ -42,7 +43,6 @@ public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
 
         Label filterIcon = new Label();
         filterIcon.setIcon(FontAwesome.SEARCH);
-        filterIcon.setDescription("Use los campos para filtrar");
         filterLayout.addComponent(filterIcon);
 
         mainComponentLayout.setSizeFull();
@@ -61,17 +61,6 @@ public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
     }
 
     @Override
-    public void addToolbarComponent(Component component) {
-        if (!headerLayout.isVisible()) {
-            headerLayout.setVisible(true);
-            mainLayout.addComponent(headerLayout, mainLayout.getComponentCount() - 1);
-        }
-
-        toolbarLayout.setVisible(true);
-        toolbarLayout.addComponent(component);
-    }
-
-    @Override
     public void setMainComponent(Component component) {
         mainComponentLayout.removeAllComponents();
         mainComponentLayout.addComponent(component);
@@ -86,6 +75,54 @@ public class VerticalCrudLayout extends CustomComponent implements CrudLayout {
 
         filterLayout.setVisible(true);
         filterLayout.addComponent(component);
+    }
+
+    @Override
+    public void addToolbarComponent(Component component) {
+        if (!headerLayout.isVisible()) {
+            headerLayout.setVisible(true);
+            mainLayout.addComponent(headerLayout, mainLayout.getComponentCount() - 1);
+        }
+
+        toolbarLayout.setVisible(true);
+        toolbarLayout.addComponent(component);
+    }
+
+    private void showWindow(String caption, Component crudForm) {
+        VerticalLayout windowLayout = new VerticalLayout(crudForm);
+        windowLayout.setSizeUndefined();
+        windowLayout.setMargin(true);
+
+        formWindow = new Window(caption, windowLayout);
+        formWindow.setModal(true);
+        UI.getCurrent().addWindow(formWindow);
+    }
+
+    @Override
+    public void showReadForm(String caption, Component formComponent) {
+
+    }
+
+    @Override
+    public void showAddForm(String caption, Component formComponent) {
+        showWindow(caption, formComponent);
+    }
+
+    @Override
+    public void showUpdateForm(String caption, Component formComponent) {
+        showWindow(caption, formComponent);
+    }
+
+    @Override
+    public void showDeleteForm(String caption, Component formComponent) {
+        showWindow(caption, formComponent);
+    }
+
+    @Override
+    public void hideForm() {
+        if (formWindow != null) {
+            formWindow.close();
+        }
     }
 
 }

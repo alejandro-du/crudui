@@ -1,18 +1,19 @@
 package org.vaadin.crudui.impl.crud;
 
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.event.SelectionEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.*;
-import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.AbstractCrudComponent;
 import org.vaadin.crudui.CrudFieldConfiguration;
 import org.vaadin.crudui.CrudFormConfiguration;
 import org.vaadin.crudui.CrudLayout;
-import org.vaadin.crudui.impl.layout.VerticalCrudLayout;
+import org.vaadin.crudui.impl.layout.WindowBasedCrudLayout;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +33,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private String saveCaption = "Save";
     private String savedCaption = "Saved";
     private String formErrorMessage = "Fix the errors and try again";
+    private String okCaption = "Ok";
 
     private Button findAllButton;
     private Button addButton;
@@ -41,28 +43,28 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private BeanItemContainer<T> container;
 
     public GridBasedCrudComponent(Class<T> domainType) {
-        this(domainType, new VerticalCrudLayout());
+        this(domainType, new WindowBasedCrudLayout());
     }
 
     public GridBasedCrudComponent(Class<T> domainType, CrudLayout mainLayout) {
         super(domainType, mainLayout);
 
-        findAllButton = new Button("", this::refreshTableButtonClicked);
+        findAllButton = new Button("", e -> refreshTableButtonClicked());
         findAllButton.setIcon(FontAwesome.REFRESH);
         setFindAllCaption(findAllCaption);
         mainLayout.addToolbarComponent(findAllButton);
 
-        addButton = new Button("", this::addButtonClicked);
+        addButton = new Button("", e -> addButtonClicked());
         addButton.setIcon(FontAwesome.PLUS_CIRCLE);
         setAddCaption(addCaption);
         mainLayout.addToolbarComponent(addButton);
 
-        updateButton = new Button("", this::updateButtonClicked);
+        updateButton = new Button("", e -> updateButtonClicked());
         updateButton.setIcon(FontAwesome.PENCIL);
         setUpdateCaption(updateCaption);
         mainLayout.addToolbarComponent(updateButton);
 
-        deleteButton = new Button("", this::deleteButtonClicked);
+        deleteButton = new Button("", e -> deleteButtonClicked());
         deleteButton.setIcon(FontAwesome.TIMES);
         setDeleteCaption(deleteCaption);
         mainLayout.addToolbarComponent(deleteButton);
@@ -71,7 +73,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
         grid.setSizeFull();
         grid.setContainerDataSource(container = new BeanItemContainer<>(domainType));
-        grid.addSelectionListener(e -> updateButtons());
+        grid.addSelectionListener(e -> gridSelectionChanged());
         mainLayout.setMainComponent(grid);
     }
 
@@ -131,24 +133,41 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         addAll(all);
     }
 
+    private void refreshTableButtonClicked() {
+        refreshGrid();
+        Notification.show(String.format(rowCountCaption, container.size()));
+    }
+
     private void updateButtons() {
         boolean enabled = grid.getSelectedRow() != null;
         updateButton.setEnabled(enabled);
         deleteButton.setEnabled(enabled);
     }
 
-    private void refreshTableButtonClicked(ClickEvent event) {
-        refreshGrid();
-        Notification.show(String.format(rowCountCaption, container.size()));
+    private void gridSelectionChanged() {
+        updateButtons();
+        T domainObject = (T) grid.getSelectedRow();
+
+        if (domainObject != null) {
+            Component crudForm = buildForm("", domainObject, updateFormVisiblePropertyIds, updateFormDisabledPropertyIds, updateFormFieldCaptions, true, okCaption, null, null, e -> {
+                grid.select(null);
+            });
+
+            mainLayout.showReadForm("", crudForm);
+        } else {
+            mainLayout.hideForm();
+        }
     }
 
-    private void addButtonClicked(ClickEvent event) {
+    private void addButtonClicked() {
         try {
             T domainObject = domainType.newInstance();
-            showFormWindow(addCaption, domainObject, addFormVisiblePropertyIds, null, addFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
+            Component crudForm = buildForm(addCaption, domainObject, addFormVisiblePropertyIds, null, addFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
                 addOperation.accept(domainObject);
                 Notification.show(savedCaption);
             });
+
+            mainLayout.showAddForm(addCaption, crudForm);
 
         } catch (InstantiationException e1) {
             e1.printStackTrace();
@@ -157,35 +176,30 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         }
     }
 
-    private void updateButtonClicked(ClickEvent event) {
+    private void updateButtonClicked() {
         T domainObject = (T) grid.getSelectedRow();
 
-        showFormWindow(updateCaption, domainObject, updateFormVisiblePropertyIds, updateFormDisabledPropertyIds, updateFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
+        Component crudForm = buildForm(updateCaption, domainObject, updateFormVisiblePropertyIds, updateFormDisabledPropertyIds, updateFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
             updateOperation.accept(domainObject);
             Notification.show(savedCaption);
         });
+
+        mainLayout.showUpdateForm(updateCaption, crudForm);
     }
 
-    private void deleteButtonClicked(ClickEvent event) {
+    private void deleteButtonClicked() {
         T domainObject = (T) grid.getSelectedRow();
 
-        showFormWindow(deleteCaption, domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, deleteCaption, FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
+        Component crudForm = buildForm(deleteCaption, domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, deleteCaption, FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
             deleteOperation.accept(domainObject);
             grid.select(null);
             Notification.show(deletedCaption);
         });
+
+        mainLayout.showDeleteForm(deleteCaption, crudForm);
     }
 
-    private void showFormWindow(String windowTitle, T domainObject, List<Object> visiblePropertyIds, List<Object> disabledPropertyIds, List<String> fieldCaptions, boolean readOnly, String buttonCaption, Resource buttonIcon, String buttonStyle, ClickListener buttonClickListener) {
-        Window window = new Window(windowTitle);
-        window.setModal(true);
-        UI.getCurrent().addWindow(window);
-
-        VerticalLayout windowLayout = new VerticalLayout();
-        windowLayout.setSizeUndefined();
-        windowLayout.setMargin(true);
-        window.setContent(windowLayout);
-
+    private Component buildForm(String caption, T domainObject, List<Object> visiblePropertyIds, List<Object> disabledPropertyIds, List<String> fieldCaptions, boolean readOnly, String buttonCaption, Resource buttonIcon, String buttonStyle, ClickListener buttonClickListener) {
         List<CrudFieldConfiguration> fieldConfigurations = buildFieldConfigurations(domainObject, visiblePropertyIds, disabledPropertyIds, fieldCaptions, readOnly);
         CrudFormConfiguration formConfiguration = new CrudFormConfiguration(
                 fieldConfigurations,
@@ -196,12 +210,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
                 e -> {
                     buttonClickListener.buttonClick(e);
                     refreshGrid();
-                    window.close();
+                    mainLayout.hideForm();
+                    gridSelectionChanged();
                 }
         );
 
-        Component crudForm = getCrudFormFactory().buildNewForm(domainObject, formConfiguration);
-        windowLayout.addComponent(crudForm);
+        return getCrudFormFactory().buildNewForm(domainObject, formConfiguration);
     }
 
     public Button getFindAllButton() {
@@ -257,6 +271,10 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public void setFormErrorMessage(String formErrorMessage) {
         this.formErrorMessage = formErrorMessage;
+    }
+
+    public void setOkCaption(String okCaption) {
+        this.okCaption = okCaption;
     }
 
 }

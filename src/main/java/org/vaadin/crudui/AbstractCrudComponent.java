@@ -5,7 +5,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import org.vaadin.crudui.impl.form.VerticalCrudFormFactory;
-import org.vaadin.crudui.impl.layout.VerticalCrudLayout;
+import org.vaadin.crudui.impl.layout.WindowBasedCrudLayout;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -40,7 +40,7 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
     protected CrudFormFactory<T> crudFormFactory;
 
     public AbstractCrudComponent(Class<T> domainType) {
-        this(domainType, new VerticalCrudLayout());
+        this(domainType, new WindowBasedCrudLayout());
     }
 
     public AbstractCrudComponent(Class<T> domainType, CrudLayout mainLayout) {
