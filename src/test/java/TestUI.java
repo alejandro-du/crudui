@@ -6,6 +6,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.CrudComponent;
 import org.vaadin.crudui.CrudListener;
 import org.vaadin.crudui.impl.crud.GridBasedCrudComponent;
+import org.vaadin.crudui.impl.form.GridLayoutCrudFormFactory;
 import org.vaadin.jetty.VaadinJettyServer;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class TestUI extends UI implements CrudListener<User> {
 
     private static ArrayList<User> users = new ArrayList<>();
 
-    TabSheet tabSheet = new TabSheet();
+    private TabSheet tabSheet = new TabSheet();
 
     @Override
     protected void init(VaadinRequest request) {
@@ -61,6 +62,7 @@ public class TestUI extends UI implements CrudListener<User> {
 
     private CrudComponent getConfiguredCrud() {
         GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
+        crud.setCrudFormFactory(new GridLayoutCrudFormFactory<>(2, 2));
         crud.setCrudListener(this);
         crud.setVisiblePropertyIds("name", "birthDate", "email");
         crud.setAddFormVisiblePropertyIds("name", "birthDate", "email", "password");

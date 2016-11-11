@@ -193,7 +193,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
                 }
         );
 
-        Component crudForm = crudFormFactory.buildNewForm(domainObject, formConfiguration);
+        Component crudForm = getCrudFormFactory().buildNewForm(domainObject, formConfiguration);
         windowLayout.addComponent(crudForm);
     }
 

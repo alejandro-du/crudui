@@ -110,6 +110,7 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
         return mainLayout;
     }
 
+    @Override
     public void setCrudFormFactory(CrudFormFactory<T> crudFormFactory) {
         this.crudFormFactory = crudFormFactory;
     }
