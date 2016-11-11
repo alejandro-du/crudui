@@ -1,6 +1,7 @@
 package org.vaadin.crudui.impl.crud;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.SelectionEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
@@ -30,7 +31,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private String rowCountCaption = "%d row(s) found";
     private String saveCaption = "Save";
     private String savedCaption = "Saved";
-    private String selectRowCaption = "Select a row";
     private String formErrorMessage = "Fix the errors and try again";
 
     private Button findAllButton;
@@ -67,8 +67,11 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         setDeleteCaption(deleteCaption);
         mainLayout.addToolbarComponent(deleteButton);
 
+        updateButtons();
+
         grid.setSizeFull();
         grid.setContainerDataSource(container = new BeanItemContainer<>(domainType));
+        grid.addSelectionListener(e -> updateButtons());
         mainLayout.setMainComponent(grid);
     }
 
@@ -128,6 +131,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         addAll(all);
     }
 
+    private void updateButtons() {
+        boolean enabled = grid.getSelectedRow() != null;
+        updateButton.setEnabled(enabled);
+        deleteButton.setEnabled(enabled);
+    }
+
     private void refreshTableButtonClicked(ClickEvent event) {
         refreshGrid();
         Notification.show(String.format(rowCountCaption, container.size()));
@@ -151,27 +160,20 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private void updateButtonClicked(ClickEvent event) {
         T domainObject = (T) grid.getSelectedRow();
 
-        if (domainObject != null) {
-            showFormWindow(updateCaption, domainObject, updateFormVisiblePropertyIds, updateFormDisabledPropertyIds, updateFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
-                updateOperation.accept(domainObject);
-                Notification.show(savedCaption);
-            });
-        } else {
-            Notification.show(selectRowCaption);
-        }
+        showFormWindow(updateCaption, domainObject, updateFormVisiblePropertyIds, updateFormDisabledPropertyIds, updateFormFieldCaptions, false, saveCaption, FontAwesome.SAVE, ValoTheme.BUTTON_PRIMARY, e -> {
+            updateOperation.accept(domainObject);
+            Notification.show(savedCaption);
+        });
     }
 
     private void deleteButtonClicked(ClickEvent event) {
         T domainObject = (T) grid.getSelectedRow();
 
-        if (domainObject != null) {
-            showFormWindow(deleteCaption, domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, deleteCaption, FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
-                deleteOperation.accept(domainObject);
-                Notification.show(deletedCaption);
-            });
-        } else {
-            Notification.show(selectRowCaption);
-        }
+        showFormWindow(deleteCaption, domainObject, deleteFormVisiblePropertyIds, null, deleteFormFieldCaptions, true, deleteCaption, FontAwesome.TIMES, ValoTheme.BUTTON_DANGER, e -> {
+            deleteOperation.accept(domainObject);
+            grid.select(null);
+            Notification.show(deletedCaption);
+        });
     }
 
     private void showFormWindow(String windowTitle, T domainObject, List<Object> visiblePropertyIds, List<Object> disabledPropertyIds, List<String> fieldCaptions, boolean readOnly, String buttonCaption, Resource buttonIcon, String buttonStyle, ClickListener buttonClickListener) {
@@ -251,10 +253,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public void setSavedCaption(String savedCaption) {
         this.savedCaption = savedCaption;
-    }
-
-    public void setSelectRowCaption(String selectRowCaption) {
-        this.selectRowCaption = selectRowCaption;
     }
 
     public void setFormErrorMessage(String formErrorMessage) {
