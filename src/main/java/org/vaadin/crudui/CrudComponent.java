@@ -1,6 +1,7 @@
 package org.vaadin.crudui;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -37,7 +38,9 @@ public interface CrudComponent<T> extends Component {
 
     CrudLayout getMainLayout();
 
-    void setCrudFormBuilder(CrudFormBuilder<T> crudFormBuilder);
+    CrudFormFactory<T> getCrudFormFactory();
+
+    void setCrudFormFactory(CrudFormFactory<T> crudFormFactory);
 
     void setAddOperation(Consumer<T> addOperation);
 
@@ -50,5 +53,9 @@ public interface CrudComponent<T> extends Component {
     void setOperations(Consumer<T> addOperation, Consumer<T> updateOperation, Consumer<T> deleteOperation, Supplier<Collection<T>> findAllOperation);
 
     void setCrudListener(CrudListener<T> crudListener);
+
+    void setFieldType(Object propertyId, Class<? extends Field> fieldClass);
+
+    void setFieldCreationListener(Object propertyId, Consumer<Field> listener);
 
 }
