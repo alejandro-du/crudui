@@ -17,6 +17,7 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
     protected Window formWindow;
+    protected String formWindowWidth = "500px";
 
     public WindowBasedCrudLayout() {
         setCompositionRoot(mainLayout);
@@ -90,10 +91,11 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
 
     private void showWindow(String caption, Component crudForm) {
         VerticalLayout windowLayout = new VerticalLayout(crudForm);
-        windowLayout.setSizeUndefined();
+        windowLayout.setWidth("100%");
         windowLayout.setMargin(true);
 
         formWindow = new Window(caption, windowLayout);
+        formWindow.setWidth(formWindowWidth);
         formWindow.setModal(true);
         UI.getCurrent().addWindow(formWindow);
     }
@@ -123,6 +125,10 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
         if (formWindow != null) {
             formWindow.close();
         }
+    }
+
+    public void setFormWindowWidth(String formWindowWidth) {
+        this.formWindowWidth = formWindowWidth;
     }
 
 }
