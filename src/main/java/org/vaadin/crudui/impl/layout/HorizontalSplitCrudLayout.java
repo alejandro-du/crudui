@@ -33,7 +33,7 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
         leftLayout.setSizeFull();
         leftLayout.setSpacing(true);
 
-        rightLayout.setSizeFull();
+        rightLayout.setWidth("100%");
         rightLayout.setSpacing(true);
 
         captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
