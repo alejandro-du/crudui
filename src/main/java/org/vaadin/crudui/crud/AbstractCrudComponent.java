@@ -7,8 +7,8 @@ import com.vaadin.ui.Field;
 import org.vaadin.crudui.form.CrudFieldConfiguration;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.VerticalCrudFormFactory;
-import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 import org.vaadin.crudui.layout.CrudLayout;
+import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -38,6 +38,7 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
 
     protected Map<Object, Class<? extends Field>> fieldTypes = new HashMap<>();
     protected Map<Object, Consumer<Field>> fieldCreationListeners = new HashMap<>();
+    protected Map<Object, Supplier<Field>> fieldProviders = new HashMap<>();
 
     protected CrudLayout mainLayout;
     protected CrudFormFactory<T> crudFormFactory;
@@ -171,6 +172,11 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
         fieldCreationListeners.put(propertyId, listener);
     }
 
+    @Override
+    public void setFieldProvider(Object propertyId, Supplier<Field> fieldProvider) {
+        fieldProviders.put(propertyId, fieldProvider);
+    }
+
     protected List<CrudFieldConfiguration> buildFieldConfigurations(T domainObject, List<Object> visiblePropertyIds, List<Object> disabledPropertyIds, List<String> fieldCaptions, boolean readOnly) {
         ArrayList<CrudFieldConfiguration> fieldConfigurations = new ArrayList<>();
 
@@ -185,7 +191,8 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
                     disabledPropertyIds == null || !disabledPropertyIds.contains(propertyId),
                     !fieldCaptions.isEmpty() ? fieldCaptions.get(i) : DefaultFieldFactory.createCaptionByPropertyId(propertyId),
                     fieldType != null ? fieldType : Field.class,
-                    creationListener != null ? creationListener : field -> { }
+                    creationListener != null ? creationListener : field -> { },
+                    fieldProviders.get(propertyId)
             );
 
             fieldConfigurations.add(fieldConfiguration);

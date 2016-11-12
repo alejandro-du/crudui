@@ -3,6 +3,7 @@ package org.vaadin.crudui.form;
 import com.vaadin.ui.Field;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class CrudFieldConfiguration {
 
@@ -18,13 +19,16 @@ public class CrudFieldConfiguration {
 
     private Consumer<Field> creationListener;
 
+    private Supplier<Field> fieldProvider;
+
     public CrudFieldConfiguration(
             Object propertyId,
             boolean readOnly,
             boolean enabled,
             String caption,
             Class<? extends Field> fieldType,
-            Consumer<Field> creationListener
+            Consumer<Field> creationListener,
+            Supplier<Field> fieldProvider
     ) {
         this.propertyId = propertyId;
         this.readOnly = readOnly;
@@ -32,6 +36,7 @@ public class CrudFieldConfiguration {
         this.caption = caption;
         this.fieldType = fieldType;
         this.creationListener = creationListener;
+        this.fieldProvider = fieldProvider;
     }
 
     public Object getPropertyId() {
@@ -80,6 +85,14 @@ public class CrudFieldConfiguration {
 
     public void setCreationListener(Consumer<Field> creationListener) {
         this.creationListener = creationListener;
+    }
+
+    public Supplier<Field> getFieldProvider() {
+        return fieldProvider;
+    }
+
+    public void setFieldProvider(Supplier<Field> fieldProvider) {
+        this.fieldProvider = fieldProvider;
     }
 
 }

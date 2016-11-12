@@ -60,4 +60,5 @@ public interface CrudComponent<T> extends Component {
 
     void setFieldCreationListener(Object propertyId, Consumer<Field> listener);
 
+    void setFieldProvider(Object propertyId, Supplier<Field> fieldProvider);
 }

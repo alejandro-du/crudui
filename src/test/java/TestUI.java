@@ -87,10 +87,11 @@ public class TestUI extends UI implements CrudListener<User> {
         crud.setFieldType("password", PasswordField.class);
         crud.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
         crud.setFieldType("mainGroup", ComboBox.class);
-        crud.setFieldCreationListener("mainGroup", field -> {
-            ComboBox comboBox = (ComboBox) field;
+        crud.setFieldProvider("mainGroup", () -> {
+            ComboBox comboBox = new ComboBox();
             comboBox.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
             comboBox.setItemCaptionPropertyId("name");
+            return comboBox;
         });
         crud.setFieldCreationListener("groups", field -> {
             OptionGroup optionGroup = (OptionGroup) field;
