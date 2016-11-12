@@ -4,11 +4,11 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.themes.ValoTheme;
-import org.vaadin.crudui.CrudComponent;
-import org.vaadin.crudui.CrudListener;
-import org.vaadin.crudui.impl.crud.GridBasedCrudComponent;
-import org.vaadin.crudui.impl.form.GridLayoutCrudFormFactory;
-import org.vaadin.crudui.impl.layout.HorizontalSplitCrudLayout;
+import org.vaadin.crudui.crud.CrudComponent;
+import org.vaadin.crudui.crud.CrudListener;
+import org.vaadin.crudui.crud.impl.GridBasedCrudComponent;
+import org.vaadin.crudui.form.impl.GridLayoutCrudFormFactory;
+import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 import org.vaadin.jetty.VaadinJettyServer;
 
 import java.util.Collection;
@@ -76,7 +76,7 @@ public class TestUI extends UI implements CrudListener<User> {
         crud.setCrudFormFactory(new GridLayoutCrudFormFactory<>(2, 2));
 
         crud.setAddFormVisiblePropertyIds("name", "birthDate", "email", "password", "groups", "mainGroup", "active");
-        crud.setUpdateFormVisiblePropertyIds("name", "birthDate", "email", "password", "groups", "mainGroup", "active");
+        crud.setUpdateFormVisiblePropertyIds("name", "birthDate", "email", "groups", "mainGroup", "active");
         crud.setDeleteFormVisiblePropertyIds("name", "email", "active");
 
         crud.getGridContainer().addNestedContainerBean("mainGroup");
@@ -91,6 +91,11 @@ public class TestUI extends UI implements CrudListener<User> {
             ComboBox comboBox = (ComboBox) field;
             comboBox.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
             comboBox.setItemCaptionPropertyId("name");
+        });
+        crud.setFieldCreationListener("groups", field -> {
+            OptionGroup optionGroup = (OptionGroup) field;
+            optionGroup.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
+            optionGroup.setItemCaptionPropertyId("name");
         });
 
         crud.setAddCaption("Add new user");

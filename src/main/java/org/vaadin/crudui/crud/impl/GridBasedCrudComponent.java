@@ -1,4 +1,4 @@
-package org.vaadin.crudui.impl.crud;
+package org.vaadin.crudui.crud.impl;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
@@ -9,11 +9,11 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.themes.ValoTheme;
-import org.vaadin.crudui.AbstractCrudComponent;
-import org.vaadin.crudui.CrudFieldConfiguration;
-import org.vaadin.crudui.CrudFormConfiguration;
-import org.vaadin.crudui.CrudLayout;
-import org.vaadin.crudui.impl.layout.WindowBasedCrudLayout;
+import org.vaadin.crudui.crud.AbstractCrudComponent;
+import org.vaadin.crudui.form.CrudFieldConfiguration;
+import org.vaadin.crudui.form.CrudFormConfiguration;
+import org.vaadin.crudui.layout.CrudLayout;
+import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 import java.util.Collection;
 import java.util.List;

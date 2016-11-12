@@ -1,11 +1,14 @@
-package org.vaadin.crudui;
+package org.vaadin.crudui.crud;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
-import org.vaadin.crudui.impl.form.VerticalCrudFormFactory;
-import org.vaadin.crudui.impl.layout.WindowBasedCrudLayout;
+import org.vaadin.crudui.form.CrudFieldConfiguration;
+import org.vaadin.crudui.form.CrudFormFactory;
+import org.vaadin.crudui.form.impl.VerticalCrudFormFactory;
+import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
+import org.vaadin.crudui.layout.CrudLayout;
 
 import java.util.*;
 import java.util.function.Consumer;

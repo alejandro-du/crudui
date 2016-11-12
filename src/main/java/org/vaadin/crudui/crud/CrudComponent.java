@@ -1,7 +1,9 @@
-package org.vaadin.crudui;
+package org.vaadin.crudui.crud;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
+import org.vaadin.crudui.form.CrudFormFactory;
+import org.vaadin.crudui.layout.CrudLayout;
 
 import java.util.Collection;
 import java.util.function.Consumer;

@@ -1,7 +1,8 @@
-package org.vaadin.crudui;
+package org.vaadin.crudui.form;
 
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Button;
+import org.vaadin.crudui.form.CrudFieldConfiguration;
 
 import java.util.List;
 

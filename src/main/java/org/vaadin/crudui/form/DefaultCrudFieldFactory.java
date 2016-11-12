@@ -1,4 +1,4 @@
-package org.vaadin.crudui;
+package org.vaadin.crudui.form;
 
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.ui.AbstractTextField;

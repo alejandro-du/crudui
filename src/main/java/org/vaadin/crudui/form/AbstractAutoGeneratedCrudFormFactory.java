@@ -1,4 +1,4 @@
-package org.vaadin.crudui;
+package org.vaadin.crudui.form;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;

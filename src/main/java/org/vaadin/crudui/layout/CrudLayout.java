@@ -1,4 +1,4 @@
-package org.vaadin.crudui;
+package org.vaadin.crudui.layout;
 
 import com.vaadin.ui.Component;
 

@@ -1,9 +1,9 @@
-package org.vaadin.crudui.impl.layout;
+package org.vaadin.crudui.layout.impl;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.vaadin.crudui.CrudLayout;
+import org.vaadin.crudui.layout.CrudLayout;
 
 /**
  * @author Alejandro Duarte
