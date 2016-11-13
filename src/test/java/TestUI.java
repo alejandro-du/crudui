@@ -48,6 +48,7 @@ public class TestUI extends UI implements CrudListener<User> {
 
         addCrud(getDefaultCrudWithNoListeners(), "Default (no listeners)");
         addCrud(getDefaultCrudWithListeners(), "Default (with listeners)");
+        addCrud(getDefaultCrudWithFixes(), "Default (with fixes)");
         addCrud(getConfiguredCrud(), "Configured");
     }
 
@@ -69,6 +70,28 @@ public class TestUI extends UI implements CrudListener<User> {
         return crud;
     }
 
+    private CrudComponent getDefaultCrudWithFixes() {
+        GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
+        crud.setCrudListener(this);
+
+        crud.setFieldProvider("groups", () -> {
+            OptionGroup optionGroup = new OptionGroup();
+            optionGroup.setMultiSelect(true);
+            optionGroup.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
+            optionGroup.setItemCaptionPropertyId("name");
+            return optionGroup;
+        });
+
+        crud.setFieldProvider("mainGroup", () -> {
+            ComboBox comboBox = new ComboBox();
+            comboBox.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
+            comboBox.setItemCaptionPropertyId("name");
+            return comboBox;
+        });
+
+        return crud;
+    }
+
     private CrudComponent getConfiguredCrud() {
         GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class, new HorizontalSplitCrudLayout());
         crud.setCrudListener(this);
@@ -86,17 +109,18 @@ public class TestUI extends UI implements CrudListener<User> {
 
         crud.setFieldType("password", PasswordField.class);
         crud.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
-        crud.setFieldType("mainGroup", ComboBox.class);
+        crud.setFieldProvider("groups", () -> {
+            OptionGroup optionGroup = new OptionGroup();
+            optionGroup.setMultiSelect(true);
+            optionGroup.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
+            optionGroup.setItemCaptionPropertyId("name");
+            return optionGroup;
+        });
         crud.setFieldProvider("mainGroup", () -> {
             ComboBox comboBox = new ComboBox();
             comboBox.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
             comboBox.setItemCaptionPropertyId("name");
             return comboBox;
-        });
-        crud.setFieldCreationListener("groups", field -> {
-            OptionGroup optionGroup = (OptionGroup) field;
-            optionGroup.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
-            optionGroup.setItemCaptionPropertyId("name");
         });
 
         crud.setAddCaption("Add new user");
