@@ -1,16 +1,13 @@
 package org.vaadin.crudui.crud;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
-import org.vaadin.crudui.form.CrudFieldConfiguration;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -21,100 +18,35 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
 
     protected Class<T> domainType;
 
-    protected List<Object> addFormVisiblePropertyIds;
-    protected List<String> addFormFieldCaptions = new ArrayList<>();
-
-    protected List<Object> updateFormVisiblePropertyIds;
-    protected List<String> updateFormFieldCaptions = new ArrayList<>();
-    protected List<Object> updateFormDisabledPropertyIds = new ArrayList<>();
-
-    protected List<Object> deleteFormVisiblePropertyIds;
-    protected List<String> deleteFormFieldCaptions = new ArrayList<>();
-
     protected Consumer<T> addOperation = t -> { };
     protected Consumer<T> updateOperation = t -> { };
     protected Consumer<T> deleteOperation = t -> { };
+
     protected Supplier<Collection<T>> findAllOperation = () -> Collections.emptyList();
 
-    protected Map<Object, Class<? extends Field>> fieldTypes = new HashMap<>();
-    protected Map<Object, Consumer<Field>> fieldCreationListeners = new HashMap<>();
-    protected Map<Object, Supplier<Field>> fieldProviders = new HashMap<>();
-
-    protected CrudLayout mainLayout;
+    protected CrudLayout crudLayout;
     protected CrudFormFactory<T> crudFormFactory;
 
     public AbstractCrudComponent(Class<T> domainType) {
         this(domainType, new WindowBasedCrudLayout());
     }
 
-    public AbstractCrudComponent(Class<T> domainType, CrudLayout mainLayout) {
+    public AbstractCrudComponent(Class<T> domainType, CrudLayout crudLayout) {
         this.domainType = domainType;
-        this.mainLayout = mainLayout;
-        crudFormFactory = new VerticalCrudFormFactory<T>();
-        addFormVisiblePropertyIds = discoverPropertyIds(domainType);
-        updateFormVisiblePropertyIds = discoverPropertyIds(domainType);
-        deleteFormVisiblePropertyIds = discoverPropertyIds(domainType);
+        this.crudLayout = crudLayout;
+        crudFormFactory = new VerticalCrudFormFactory<T>(domainType);
 
-        setCompositionRoot(mainLayout);
+        setCompositionRoot(crudLayout);
         setSizeFull();
-    }
-
-    protected List<Object> discoverPropertyIds(Class<T> domainType) {
-        BeanItemContainer<T> propertyIdsHelper = new BeanItemContainer<T>(domainType);
-        return new ArrayList<>(propertyIdsHelper.getContainerPropertyIds());
     }
 
     @Override
     public void setCaption(String caption) {
-        mainLayout.setCaption(caption);
+        crudLayout.setCaption(caption);
     }
 
-    @Override
-    public void setAddFormVisiblePropertyIds(Object... addFormVisiblePropertyIds) {
-        this.addFormVisiblePropertyIds = Arrays.asList(addFormVisiblePropertyIds);
-    }
-
-    @Override
-    public void setUpdateFormVisiblePropertyIds(Object... updateFormVisiblePropertyIds) {
-        this.updateFormVisiblePropertyIds = Arrays.asList(updateFormVisiblePropertyIds);
-    }
-
-    @Override
-    public void setDeleteFormVisiblePropertyIds(Object... deleteFormVisiblePropertyIds) {
-        this.deleteFormVisiblePropertyIds = Arrays.asList(deleteFormVisiblePropertyIds);
-    }
-
-    @Override
-    public void setVisiblePropertyIds(Object... visiblePropertyIds) {
-        this.addFormVisiblePropertyIds =
-                this.updateFormVisiblePropertyIds =
-                        this.deleteFormVisiblePropertyIds =
-                                Arrays.asList(visiblePropertyIds);
-    }
-
-    @Override
-    public void setUpdateFormDisabledPropertyIds(Object... updateFormDisabledPropertyIds) {
-        this.updateFormDisabledPropertyIds = Arrays.asList(updateFormDisabledPropertyIds);
-    }
-
-    @Override
-    public void setAddFormFieldCaptions(String... addFormFieldCaptions) {
-        this.addFormFieldCaptions = Arrays.asList(addFormFieldCaptions);
-    }
-
-    @Override
-    public void setUpdateFormFieldCaptions(String... updateFormFieldCaptions) {
-        this.updateFormFieldCaptions = Arrays.asList(updateFormFieldCaptions);
-    }
-
-    @Override
-    public void setDeleteFormFieldCaptions(String... deleteFormFieldCaptions) {
-        this.deleteFormFieldCaptions = Arrays.asList(deleteFormFieldCaptions);
-    }
-
-    @Override
-    public CrudLayout getMainLayout() {
-        return mainLayout;
+    public CrudLayout getCrudLayout() {
+        return crudLayout;
     }
 
     @Override
@@ -143,11 +75,11 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
     }
 
     @Override
-    public void setOperations(Consumer<T> addOperation, Consumer<T> updateOperation, Consumer<T> deleteOperation, Supplier<Collection<T>> findAllOperation) {
+    public void setOperations(Supplier<Collection<T>> findAllOperation, Consumer<T> addOperation, Consumer<T> updateOperation, Consumer<T> deleteOperation) {
+        setFindAllOperation(findAllOperation);
         setAddOperation(addOperation);
         setUpdateOperation(updateOperation);
         setDeleteOperation(deleteOperation);
-        setFindAllOperation(findAllOperation);
     }
 
     public CrudFormFactory<T> getCrudFormFactory() {
@@ -160,45 +92,6 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
         setUpdateOperation(crudListener::update);
         setDeleteOperation(crudListener::delete);
         setFindAllOperation(crudListener::findAll);
-    }
-
-    @Override
-    public void setFieldType(Object propertyId, Class<? extends Field> fieldClass) {
-        fieldTypes.put(propertyId, fieldClass);
-    }
-
-    @Override
-    public void setFieldCreationListener(Object propertyId, Consumer<Field> listener) {
-        fieldCreationListeners.put(propertyId, listener);
-    }
-
-    @Override
-    public void setFieldProvider(Object propertyId, Supplier<Field> fieldProvider) {
-        fieldProviders.put(propertyId, fieldProvider);
-    }
-
-    protected List<CrudFieldConfiguration> buildFieldConfigurations(T domainObject, List<Object> visiblePropertyIds, List<Object> disabledPropertyIds, List<String> fieldCaptions, boolean readOnly) {
-        ArrayList<CrudFieldConfiguration> fieldConfigurations = new ArrayList<>();
-
-        for (int i = 0; i < visiblePropertyIds.size(); i++) {
-            Object propertyId = visiblePropertyIds.get(i);
-            Class fieldType = fieldTypes.get(propertyId);
-            Consumer<Field> creationListener = fieldCreationListeners.get(propertyId);
-
-            CrudFieldConfiguration fieldConfiguration = new CrudFieldConfiguration(
-                    propertyId,
-                    readOnly,
-                    disabledPropertyIds == null || !disabledPropertyIds.contains(propertyId),
-                    !fieldCaptions.isEmpty() ? fieldCaptions.get(i) : DefaultFieldFactory.createCaptionByPropertyId(propertyId),
-                    fieldType != null ? fieldType : Field.class,
-                    creationListener != null ? creationListener : field -> { },
-                    fieldProviders.get(propertyId)
-            );
-
-            fieldConfigurations.add(fieldConfiguration);
-        }
-
-        return fieldConfigurations;
     }
 
 }

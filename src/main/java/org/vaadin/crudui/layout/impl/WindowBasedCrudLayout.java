@@ -3,7 +3,11 @@ package org.vaadin.crudui.layout.impl;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.vaadin.crudui.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Alejandro Duarte
@@ -18,6 +22,8 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
     protected Window formWindow;
     protected String formWindowWidth = "500px";
+
+    protected Map<CrudOperation, String> windowCaptions = new HashMap<>();
 
     public WindowBasedCrudLayout() {
         setCompositionRoot(mainLayout);
@@ -49,6 +55,10 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
         mainComponentLayout.setSizeFull();
         mainLayout.addComponent(mainComponentLayout);
         mainLayout.setExpandRatio(mainComponentLayout, 1);
+
+        setWindowCaption(CrudOperation.ADD, "Add");
+        setWindowCaption(CrudOperation.UPDATE, "Update");
+        setWindowCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
     }
 
     @Override
@@ -89,8 +99,8 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
         toolbarLayout.addComponent(component);
     }
 
-    private void showWindow(String caption, Component crudForm) {
-        VerticalLayout windowLayout = new VerticalLayout(crudForm);
+    private void showWindow(String caption, Component form) {
+        VerticalLayout windowLayout = new VerticalLayout(form);
         windowLayout.setWidth("100%");
         windowLayout.setMargin(true);
 
@@ -101,23 +111,10 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
     }
 
     @Override
-    public void showReadForm(String caption, Component formComponent) {
-
-    }
-
-    @Override
-    public void showAddForm(String caption, Component formComponent) {
-        showWindow(caption, formComponent);
-    }
-
-    @Override
-    public void showUpdateForm(String caption, Component formComponent) {
-        showWindow(caption, formComponent);
-    }
-
-    @Override
-    public void showDeleteForm(String caption, Component formComponent) {
-        showWindow(caption, formComponent);
+    public void showForm(CrudOperation operation, Component form) {
+        if (!operation.equals(CrudOperation.READ)) {
+            showWindow(windowCaptions.get(operation), form);
+        }
     }
 
     @Override
@@ -125,6 +122,10 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
         if (formWindow != null) {
             formWindow.close();
         }
+    }
+
+    public void setWindowCaption(CrudOperation operation, String caption) {
+        windowCaptions.put(operation, caption);
     }
 
     public void setFormWindowWidth(String formWindowWidth) {

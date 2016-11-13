@@ -8,12 +8,12 @@ import java.util.Collection;
  */
 public interface CrudListener<T> extends Serializable {
 
+    Collection<T> findAll();
+
     void add(T domainObjectToAdd);
 
     void update(T domainObjectToUpdate);
 
     void delete(T domainObjectToDelete);
-
-    Collection<T> findAll();
 
 }

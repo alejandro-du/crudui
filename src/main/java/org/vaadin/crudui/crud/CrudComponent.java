@@ -1,7 +1,6 @@
 package org.vaadin.crudui.crud;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 
@@ -14,35 +13,19 @@ import java.util.function.Supplier;
  */
 public interface CrudComponent<T> extends Component {
 
-    void setAddOptionVisible(boolean visible);
+    void setAddOperationVisible(boolean visible);
 
-    void setUpdateOptionVisible(boolean visible);
+    void setUpdateOperationVisible(boolean visible);
 
-    void setDeleteOptionVisible(boolean visible);
+    void setDeleteOperationVisible(boolean visible);
 
-    void setFindAllOptionVisible(boolean visible);
-
-    void setAddFormVisiblePropertyIds(Object... addFormVisiblePropertyIds);
-
-    void setUpdateFormVisiblePropertyIds(Object... updateFormVisiblePropertyIds);
-
-    void setDeleteFormVisiblePropertyIds(Object... deleteFormVisiblePropertyIds);
-
-    void setVisiblePropertyIds(Object... visiblePropertyIds);
-
-    void setUpdateFormDisabledPropertyIds(Object... updateFormDisabledPropertyIds);
-
-    void setAddFormFieldCaptions(String... addFormFieldCaptions);
-
-    void setUpdateFormFieldCaptions(String... updateFormFieldCaptions);
-
-    void setDeleteFormFieldCaptions(String... deleteFormFieldCaptions);
-
-    CrudLayout getMainLayout();
+    void setFindAllOperationVisible(boolean visible);
 
     CrudFormFactory<T> getCrudFormFactory();
 
     void setCrudFormFactory(CrudFormFactory<T> crudFormFactory);
+
+    void setFindAllOperation(Supplier<Collection<T>> findAllOperation);
 
     void setAddOperation(Consumer<T> addOperation);
 
@@ -50,15 +33,10 @@ public interface CrudComponent<T> extends Component {
 
     void setDeleteOperation(Consumer<T> deleteOperation);
 
-    void setFindAllOperation(Supplier<Collection<T>> findAllOperation);
-
-    void setOperations(Consumer<T> addOperation, Consumer<T> updateOperation, Consumer<T> deleteOperation, Supplier<Collection<T>> findAllOperation);
+    void setOperations(Supplier<Collection<T>> findAllOperation, Consumer<T> addOperation, Consumer<T> updateOperation, Consumer<T> deleteOperation);
 
     void setCrudListener(CrudListener<T> crudListener);
 
-    void setFieldType(Object propertyId, Class<? extends Field> fieldClass);
+    CrudLayout getCrudLayout();
 
-    void setFieldCreationListener(Object propertyId, Consumer<Field> listener);
-
-    void setFieldProvider(Object propertyId, Supplier<Field> fieldProvider);
 }

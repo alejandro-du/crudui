@@ -4,6 +4,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.vaadin.crudui.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
 
 /**
@@ -108,29 +109,10 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
         toolbarLayout.addComponent(component);
     }
 
-    private void showForm(String caption, Component crudForm) {
+    @Override
+    public void showForm(CrudOperation operation, Component form) {
         formComponentLayout.removeAllComponents();
-        formComponentLayout.addComponent(crudForm);
-    }
-
-    @Override
-    public void showReadForm(String caption, Component formComponent) {
-        showForm(caption, formComponent);
-    }
-
-    @Override
-    public void showAddForm(String caption, Component formComponent) {
-        showForm(caption, formComponent);
-    }
-
-    @Override
-    public void showUpdateForm(String caption, Component formComponent) {
-        showForm(caption, formComponent);
-    }
-
-    @Override
-    public void showDeleteForm(String caption, Component formComponent) {
-        showForm(caption, formComponent);
+        formComponentLayout.addComponent(form);
     }
 
     @Override

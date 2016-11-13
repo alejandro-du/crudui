@@ -1,90 +1,72 @@
 package org.vaadin.crudui.form;
 
-import com.vaadin.server.Resource;
-import com.vaadin.ui.Button;
-import org.vaadin.crudui.form.CrudFieldConfiguration;
+import com.vaadin.ui.Field;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte.
  */
 public class CrudFormConfiguration {
 
-    private List<CrudFieldConfiguration> crudFieldConfigurations;
+    protected List<Object> visiblePropertyIds = new ArrayList<>();
+    protected List<Object> disabledPropertyIds = new ArrayList<>();
+    protected List<String> fieldCaptions = new ArrayList<>();
+    protected Map<Object, Class<? extends Field>> fieldTypes = new HashMap<>();
+    protected Map<Object, Consumer<Field>> fieldCreationListeners = new HashMap<>();
+    protected Map<Object, Supplier<Field>> fieldProviders = new HashMap<>();
 
-    private String buttonCaption;
-
-    private String errorMessage;
-
-    private Resource buttonIcon;
-
-    private String buttonStyle;
-
-    private Button.ClickListener buttonClickListener;
-
-    public CrudFormConfiguration(
-            List<CrudFieldConfiguration> crudFieldConfigurations,
-            String buttonCaption,
-            String errorMessage,
-            Resource buttonIcon,
-            String buttonStyle,
-            Button.ClickListener buttonClickListener
-    ) {
-        this.crudFieldConfigurations = crudFieldConfigurations;
-        this.buttonCaption = buttonCaption;
-        this.errorMessage = errorMessage;
-        this.buttonIcon = buttonIcon;
-        this.buttonStyle = buttonStyle;
-        this.buttonClickListener = buttonClickListener;
+    public List<Object> getVisiblePropertyIds() {
+        return visiblePropertyIds;
     }
 
-    public List<CrudFieldConfiguration> getCrudFieldConfigurations() {
-        return crudFieldConfigurations;
+    public void setVisiblePropertyIds(List<Object> visiblePropertyIds) {
+        this.visiblePropertyIds = visiblePropertyIds;
     }
 
-    public void setCrudFieldConfigurations(List<CrudFieldConfiguration> crudFieldConfigurations) {
-        this.crudFieldConfigurations = crudFieldConfigurations;
+    public List<Object> getDisabledPropertyIds() {
+        return disabledPropertyIds;
     }
 
-    public String getButtonCaption() {
-        return buttonCaption;
+    public void setDisabledPropertyIds(List<Object> disabledPropertyIds) {
+        this.disabledPropertyIds = disabledPropertyIds;
     }
 
-    public void setButtonCaption(String buttonCaption) {
-        this.buttonCaption = buttonCaption;
+    public List<String> getFieldCaptions() {
+        return fieldCaptions;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public void setFieldCaptions(List<String> fieldCaptions) {
+        this.fieldCaptions = fieldCaptions;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public Map<Object, Class<? extends Field>> getFieldTypes() {
+        return fieldTypes;
     }
 
-    public Resource getButtonIcon() {
-        return buttonIcon;
+    public void setFieldTypes(Map<Object, Class<? extends Field>> fieldTypes) {
+        this.fieldTypes = fieldTypes;
     }
 
-    public void setButtonIcon(Resource buttonIcon) {
-        this.buttonIcon = buttonIcon;
+    public Map<Object, Consumer<Field>> getFieldCreationListeners() {
+        return fieldCreationListeners;
     }
 
-    public String getButtonStyle() {
-        return buttonStyle;
+    public void setFieldCreationListeners(Map<Object, Consumer<Field>> fieldCreationListeners) {
+        this.fieldCreationListeners = fieldCreationListeners;
     }
 
-    public void setButtonStyle(String buttonStyle) {
-        this.buttonStyle = buttonStyle;
+    public Map<Object, Supplier<Field>> getFieldProviders() {
+        return fieldProviders;
     }
 
-    public Button.ClickListener getButtonClickListener() {
-        return buttonClickListener;
-    }
-
-    public void setButtonClickListener(Button.ClickListener buttonClickListener) {
-        this.buttonClickListener = buttonClickListener;
+    public void setFieldProviders(Map<Object, Supplier<Field>> fieldProviders) {
+        this.fieldProviders = fieldProviders;
     }
 
 }

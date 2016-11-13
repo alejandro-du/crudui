@@ -1,6 +1,7 @@
 package org.vaadin.crudui.layout;
 
 import com.vaadin.ui.Component;
+import org.vaadin.crudui.CrudOperation;
 
 /**
  * @author Alejandro Duarte
@@ -15,13 +16,7 @@ public interface CrudLayout extends Component {
 
     void addToolbarComponent(Component component);
 
-    void showReadForm(String caption, Component formComponent);
-
-    void showAddForm(String caption, Component formComponent);
-
-    void showUpdateForm(String caption, Component formComponent);
-
-    void showDeleteForm(String caption, Component formComponent);
+    void showForm(CrudOperation operation, Component form);
 
     void hideForm();
 
