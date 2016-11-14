@@ -124,8 +124,7 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
         String caption = formCaptions.get(operation);
         if (caption != null) {
             Label label = new Label(caption);
-            label.addStyleName(ValoTheme.LABEL_BOLD);
-            label.addStyleName(ValoTheme.LABEL_LARGE);
+            label.addStyleName(ValoTheme.LABEL_COLORED);
             formCaptionLayout.removeAllComponents();
             formCaptionLayout.addComponent(label);
             rightLayout.addComponent(formCaptionLayout, 1);
