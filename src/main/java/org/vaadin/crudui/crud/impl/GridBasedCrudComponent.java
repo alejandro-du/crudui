@@ -44,18 +44,22 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     protected void initLayout() {
         findAllButton = new Button("", e -> findAllButtonClicked());
+        findAllButton.setDescription("Refresh list");
         findAllButton.setIcon(FontAwesome.REFRESH);
         crudLayout.addToolbarComponent(findAllButton);
 
         addButton = new Button("", e -> addButtonClicked());
+        addButton.setDescription("Add");
         addButton.setIcon(FontAwesome.PLUS_CIRCLE);
         crudLayout.addToolbarComponent(addButton);
 
         updateButton = new Button("", e -> updateButtonClicked());
+        updateButton.setDescription("Update");
         updateButton.setIcon(FontAwesome.PENCIL);
         crudLayout.addToolbarComponent(updateButton);
 
         deleteButton = new Button("", e -> deleteButtonClicked());
+        deleteButton.setDescription("Delete");
         deleteButton.setIcon(FontAwesome.TIMES);
         crudLayout.addToolbarComponent(deleteButton);
 
