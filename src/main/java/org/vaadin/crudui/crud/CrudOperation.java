@@ -1,4 +1,4 @@
-package org.vaadin.crudui;
+package org.vaadin.crudui.crud;
 
 /**
  * @author Alejandro Duarte.

@@ -2,7 +2,7 @@ package org.vaadin.crudui.form;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
-import org.vaadin.crudui.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
 import java.util.function.Consumer;

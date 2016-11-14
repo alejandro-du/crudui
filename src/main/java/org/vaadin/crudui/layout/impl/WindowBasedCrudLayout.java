@@ -3,7 +3,7 @@ package org.vaadin.crudui.layout.impl;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.vaadin.crudui.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
 
 import java.util.HashMap;

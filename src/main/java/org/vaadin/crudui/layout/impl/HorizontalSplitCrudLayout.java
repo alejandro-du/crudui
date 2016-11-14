@@ -4,8 +4,11 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.vaadin.crudui.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Alejandro Duarte.
@@ -22,6 +25,9 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
     protected VerticalLayout formComponentLayout = new VerticalLayout();
+    protected VerticalLayout formCaptionLayout = new VerticalLayout();
+
+    protected Map<CrudOperation, String> formCaptions = new HashMap<>();
 
     public HorizontalSplitCrudLayout() {
         setCompositionRoot(mainLayout);
@@ -66,9 +72,13 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
         leftLayout.addComponent(mainComponentLayout);
         leftLayout.setExpandRatio(mainComponentLayout, 1);
 
+        formCaptionLayout.setMargin(new MarginInfo(false, true, false, true));
+
         formComponentLayout.setSizeFull();
         rightLayout.addComponent(formComponentLayout);
         rightLayout.setExpandRatio(formComponentLayout, 1);
+
+        setFormCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
     }
 
     @Override
@@ -111,6 +121,18 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
 
     @Override
     public void showForm(CrudOperation operation, Component form) {
+        String caption = formCaptions.get(operation);
+        if (caption != null) {
+            Label label = new Label(caption);
+            label.addStyleName(ValoTheme.LABEL_BOLD);
+            label.addStyleName(ValoTheme.LABEL_LARGE);
+            formCaptionLayout.removeAllComponents();
+            formCaptionLayout.addComponent(label);
+            rightLayout.addComponent(formCaptionLayout, 1);
+        } else {
+            rightLayout.removeComponent(formCaptionLayout);
+        }
+
         formComponentLayout.removeAllComponents();
         formComponentLayout.addComponent(form);
     }
@@ -118,6 +140,11 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
     @Override
     public void hideForm() {
         formComponentLayout.removeAllComponents();
+        rightLayout.removeComponent(formCaptionLayout);
+    }
+
+    public void setFormCaption(CrudOperation operation, String caption) {
+        formCaptions.put(operation, caption);
     }
 
 }

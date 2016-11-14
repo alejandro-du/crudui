@@ -6,8 +6,7 @@ import org.vaadin.crudui.form.impl.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -18,11 +17,10 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
 
     protected Class<T> domainType;
 
+    protected Supplier<Collection<T>> findAllOperation = () -> Collections.emptyList();
     protected Consumer<T> addOperation = t -> { };
     protected Consumer<T> updateOperation = t -> { };
     protected Consumer<T> deleteOperation = t -> { };
-
-    protected Supplier<Collection<T>> findAllOperation = () -> Collections.emptyList();
 
     protected CrudLayout crudLayout;
     protected CrudFormFactory<T> crudFormFactory;
@@ -82,6 +80,7 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
         setDeleteOperation(deleteOperation);
     }
 
+    @Override
     public CrudFormFactory<T> getCrudFormFactory() {
         return crudFormFactory;
     }

@@ -8,7 +8,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.themes.ValoTheme;
-import org.vaadin.crudui.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperation;
 
 import java.util.*;
 import java.util.function.Consumer;

@@ -1,7 +1,7 @@
 package org.vaadin.crudui.layout;
 
 import com.vaadin.ui.Component;
-import org.vaadin.crudui.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperation;
 
 /**
  * @author Alejandro Duarte

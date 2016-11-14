@@ -6,12 +6,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
-import org.vaadin.crudui.CrudOperation;
 import org.vaadin.crudui.crud.AbstractCrudComponent;
+import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperationException;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -127,51 +129,42 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     protected void addButtonClicked() {
         try {
             T domainObject = domainType.newInstance();
-            Component form = crudFormFactory.buildNewForm(CrudOperation.ADD, domainObject, false, object -> {
-                addOperation.accept(domainObject);
-                crudLayout.hideForm();
-                refreshGrid();
-                grid.select(null);
+            showForm(CrudOperation.ADD, domainObject, addOperation, false, savedMessage, () -> {
                 grid.select(domainObject);
-                Notification.show(savedMessage);
             });
-
-            crudLayout.showForm(CrudOperation.ADD, form);
-
-        } catch (InstantiationException e1) {
-            e1.printStackTrace();
-        } catch (IllegalAccessException e2) {
-            e2.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
     protected void updateButtonClicked() {
         T domainObject = (T) grid.getSelectedRow();
-
-        Component form = crudFormFactory.buildNewForm(CrudOperation.UPDATE, domainObject, false, object -> {
-            updateOperation.accept(domainObject);
-            crudLayout.hideForm();
-            refreshGrid();
-            grid.select(null);
-            grid.select(domainObject);
-            Notification.show(savedMessage);
-        });
-
-        crudLayout.showForm(CrudOperation.UPDATE, form);
+        showForm(CrudOperation.UPDATE, domainObject, updateOperation, false, savedMessage, () -> { });
     }
 
     protected void deleteButtonClicked() {
         T domainObject = (T) grid.getSelectedRow();
+        showForm(CrudOperation.DELETE, domainObject, deleteOperation, true, deletedMessage, () -> { });
+    }
 
-        Component form = crudFormFactory.buildNewForm(CrudOperation.DELETE, domainObject, true, object -> {
-            deleteOperation.accept(domainObject);
-            crudLayout.hideForm();
-            refreshGrid();
-            grid.select(null);
-            Notification.show(deletedMessage);
+    protected void showForm(CrudOperation operation, T domainObject, Consumer<T> crudOperationListener, boolean readOnly, String successMessage, Runnable operationPerformedListener) {
+        Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly, object -> {
+            try {
+                crudOperationListener.accept(domainObject);
+                crudLayout.hideForm();
+                refreshGrid();
+                grid.select(null);
+                Notification.show(successMessage);
+                operationPerformedListener.run();
+
+            } catch (CrudOperationException e) {
+                Notification.show(e.getMessage());
+            }
         });
 
-        crudLayout.showForm(CrudOperation.DELETE, form);
+        crudLayout.showForm(operation, form);
     }
 
     public Grid getGrid() {
