@@ -100,6 +100,7 @@ public class TestUI extends UI implements CrudListener<User> {
         crud.getGridContainer().addNestedContainerBean("mainGroup");
         crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup.name", "active");
         crud.getGrid().getColumn("mainGroup.name").setHeaderCaption("Main group");
+
         crud.getGrid().getColumn("birthDate").setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
 
         formFactory.setFieldType("password", PasswordField.class);

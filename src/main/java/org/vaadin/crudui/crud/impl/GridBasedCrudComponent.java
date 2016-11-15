@@ -134,7 +134,9 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         try {
             T domainObject = domainType.newInstance();
             showForm(CrudOperation.ADD, domainObject, addOperation, false, savedMessage, () -> {
-                grid.select(domainObject);
+                if (container.containsId(domainObject)) {
+                    grid.select(domainObject);
+                }
             });
         } catch (InstantiationException e) {
             e.printStackTrace();
