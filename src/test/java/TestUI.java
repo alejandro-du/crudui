@@ -92,10 +92,12 @@ public class TestUI extends UI implements CrudListener<User> {
         GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
         crud.setCrudFormFactory(formFactory);
 
-        formFactory.setVisiblePropertyIds(CrudOperation.READ, "name", "birthDate", "email", "groups", "mainGroup", "active");
+        formFactory.setVisiblePropertyIds(CrudOperation.READ, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
         formFactory.setVisiblePropertyIds(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
-        formFactory.setVisiblePropertyIds(CrudOperation.UPDATE, "name", "birthDate", "email", "groups", "mainGroup", "active");
+        formFactory.setVisiblePropertyIds(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
         formFactory.setVisiblePropertyIds(CrudOperation.DELETE, "name", "email");
+
+        formFactory.setDisabledPropertyIds("id");
 
         crud.getGridContainer().addNestedContainerBean("mainGroup");
         crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup.name", "active");
