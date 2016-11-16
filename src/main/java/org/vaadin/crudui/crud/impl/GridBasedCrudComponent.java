@@ -147,7 +147,11 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     protected void updateButtonClicked() {
         T domainObject = (T) grid.getSelectedRow();
-        showForm(CrudOperation.UPDATE, domainObject, updateOperation, false, savedMessage, () -> { });
+        showForm(CrudOperation.UPDATE, domainObject, updateOperation, false, savedMessage, () -> {
+            if (container.containsId(domainObject)) {
+                grid.select(domainObject);
+            }
+        });
     }
 
     protected void deleteButtonClicked() {
