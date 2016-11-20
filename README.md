@@ -29,10 +29,10 @@ layout.addComponent(crud);
 Use lambda expressions or method references to delegate CRUD operations to your backend:
 
 ```
-crud.setAddOperation(user -> backend.add(user));
+crud.setFindAllOperation(() -> backend.findAll());
+crud.setAddOperation(backend::add);
 crud.setUpdateOperation(backend::update);
 crud.setDeleteOperation(backend::delete);
-crud.setFindAllOperation(backend::findAll);
 ```
 
 ## Advanced usage
@@ -46,13 +46,13 @@ crud.setCrudListener(new CrudListener<User>() {
         return backend.findAllUsers();
     }
     @Override
-    public void add(User user) {
-        backend.add(user);
+    public User add(User user) {
+        return backend.add(user);
     }
 
     @Override
-    public void update(User user) {
-        backend.update(user);
+    public User update(User user) {
+        return backend.update(user);
     }
 
     @Override
