@@ -9,12 +9,11 @@ import com.vaadin.ui.Notification;
 import org.vaadin.crudui.crud.AbstractCrudComponent;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.CrudOperationException;
+import org.vaadin.crudui.crud.FindAllCrudOperationListener;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 import java.util.Collection;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte
@@ -92,14 +91,14 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     @Override
-    public void setFindAllOperation(Supplier<Collection<T>> findAllOperation) {
+    public void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation) {
         super.setFindAllOperation(findAllOperation);
         refreshGrid();
     }
 
     public void refreshGrid() {
         container.removeAllItems();
-        Collection all = findAllOperation.get();
+        Collection all = findAllOperation.findAll();
         container.addAll(all);
     }
 
@@ -114,7 +113,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         T domainObject = (T) grid.getSelectedRow();
 
         if (domainObject != null) {
-            Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, object -> {
+            Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, event -> {
                 grid.select(null);
             });
 
@@ -133,9 +132,12 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     protected void addButtonClicked() {
         try {
             T domainObject = domainType.newInstance();
-            showForm(CrudOperation.ADD, domainObject, addOperation, false, savedMessage, () -> {
-                if (container.containsId(domainObject)) {
-                    grid.select(domainObject);
+            showForm(CrudOperation.ADD, domainObject, false, savedMessage, event -> {
+                T addedObject = addOperation.perform(domainObject);
+                refreshGrid();
+                if (container.containsId(addedObject)) {
+                    grid.select(addedObject);
+                    grid.scrollTo(addedObject);
                 }
             });
         } catch (InstantiationException e) {
@@ -147,27 +149,32 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     protected void updateButtonClicked() {
         T domainObject = (T) grid.getSelectedRow();
-        showForm(CrudOperation.UPDATE, domainObject, updateOperation, false, savedMessage, () -> {
-            if (container.containsId(domainObject)) {
-                grid.select(domainObject);
+        showForm(CrudOperation.UPDATE, domainObject, false, savedMessage, event -> {
+            T updatedObject = updateOperation.perform(domainObject);
+            grid.select(null);
+            refreshGrid();
+            if (container.containsId(updatedObject)) {
+                grid.select(updatedObject);
+                grid.scrollTo(updatedObject);
             }
         });
     }
 
     protected void deleteButtonClicked() {
         T domainObject = (T) grid.getSelectedRow();
-        showForm(CrudOperation.DELETE, domainObject, deleteOperation, true, deletedMessage, () -> { });
+        showForm(CrudOperation.DELETE, domainObject, true, deletedMessage, event -> {
+            deleteOperation.perform(domainObject);
+            refreshGrid();
+            grid.select(null);
+        });
     }
 
-    protected void showForm(CrudOperation operation, T domainObject, Consumer<T> crudOperationListener, boolean readOnly, String successMessage, Runnable operationPerformedListener) {
-        Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly, object -> {
+    protected void showForm(CrudOperation operation, T domainObject, boolean readOnly, String successMessage, Button.ClickListener buttonClickListener) {
+        Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly, event -> {
             try {
-                crudOperationListener.accept(domainObject);
                 crudLayout.hideForm();
-                refreshGrid();
-                grid.select(null);
                 Notification.show(successMessage);
-                operationPerformedListener.run();
+                buttonClickListener.buttonClick(event);
 
             } catch (CrudOperationException e) {
                 Notification.show(e.getMessage());

@@ -128,13 +128,14 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     @Override
-    public void add(User user) {
+    public User add(User user) {
         users.add(user);
+        return user;
     }
 
     @Override
-    public void update(User user) {
-        // nothing to do
+    public User update(User user) {
+        return user;
     }
 
     @Override

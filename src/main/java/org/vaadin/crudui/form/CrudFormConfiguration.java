@@ -2,24 +2,23 @@ package org.vaadin.crudui.form;
 
 import com.vaadin.ui.Field;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte.
  */
-public class CrudFormConfiguration {
+public class CrudFormConfiguration implements Serializable {
 
     protected List<Object> visiblePropertyIds = new ArrayList<>();
     protected List<Object> disabledPropertyIds = new ArrayList<>();
     protected List<String> fieldCaptions = new ArrayList<>();
     protected Map<Object, Class<? extends Field>> fieldTypes = new HashMap<>();
-    protected Map<Object, Consumer<Field>> fieldCreationListeners = new HashMap<>();
-    protected Map<Object, Supplier<Field>> fieldProviders = new HashMap<>();
+    protected Map<Object, FieldCreationListener> fieldCreationListeners = new HashMap<>();
+    protected Map<Object, FieldProvider> fieldProviders = new HashMap<>();
 
     public List<Object> getVisiblePropertyIds() {
         return visiblePropertyIds;
@@ -53,19 +52,19 @@ public class CrudFormConfiguration {
         this.fieldTypes = fieldTypes;
     }
 
-    public Map<Object, Consumer<Field>> getFieldCreationListeners() {
+    public Map<Object, FieldCreationListener> getFieldCreationListeners() {
         return fieldCreationListeners;
     }
 
-    public void setFieldCreationListeners(Map<Object, Consumer<Field>> fieldCreationListeners) {
+    public void setFieldCreationListeners(Map<Object, FieldCreationListener> fieldCreationListeners) {
         this.fieldCreationListeners = fieldCreationListeners;
     }
 
-    public Map<Object, Supplier<Field>> getFieldProviders() {
+    public Map<Object, FieldProvider> getFieldProviders() {
         return fieldProviders;
     }
 
-    public void setFieldProviders(Map<Object, Supplier<Field>> fieldProviders) {
+    public void setFieldProviders(Map<Object, FieldProvider> fieldProviders) {
         this.fieldProviders = fieldProviders;
     }
 

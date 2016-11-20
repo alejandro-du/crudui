@@ -1,19 +1,18 @@
 package org.vaadin.crudui.form;
 
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte
  */
 public interface CrudFormFactory<T> extends Serializable {
 
-    Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, Consumer<T> crudOperationListener);
+    Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, Button.ClickListener buttonClickListener);
 
     void setVisiblePropertyIds(CrudOperation operation, Object... propertyIds);
 
@@ -31,12 +30,12 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void setFieldType(Object propertyId, Class<? extends Field> type);
 
-    void setFieldCreationListener(CrudOperation operation, Object propertyId, Consumer<Field> listener);
+    void setFieldCreationListener(CrudOperation operation, Object propertyId, FieldCreationListener listener);
 
-    void setFieldCreationListener(Object propertyId, Consumer<Field> listener);
+    void setFieldCreationListener(Object propertyId, FieldCreationListener listener);
 
-    void setFieldProvider(CrudOperation operation, Object propertyId, Supplier<Field> provider);
+    void setFieldProvider(CrudOperation operation, Object propertyId, FieldProvider provider);
 
-    void setFieldProvider(Object propertyId, Supplier<Field> provider);
+    void setFieldProvider(Object propertyId, FieldProvider provider);
 
 }

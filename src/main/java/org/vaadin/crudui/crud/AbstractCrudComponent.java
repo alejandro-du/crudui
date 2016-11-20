@@ -6,9 +6,7 @@ import org.vaadin.crudui.form.impl.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Collections;
 
 /**
  * @author Alejandro Duarte
@@ -17,10 +15,10 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
 
     protected Class<T> domainType;
 
-    protected Supplier<Collection<T>> findAllOperation = () -> Collections.emptyList();
-    protected Consumer<T> addOperation = t -> { };
-    protected Consumer<T> updateOperation = t -> { };
-    protected Consumer<T> deleteOperation = t -> { };
+    protected FindAllCrudOperationListener<T> findAllOperation = () -> Collections.emptyList();
+    protected AddOperationListener<T> addOperation = t -> { return null; };
+    protected UpdateOperationListener<T> updateOperation = t -> { return null; };
+    protected DeleteOperationListener<T> deleteOperation = t -> { };
 
     protected CrudLayout crudLayout;
     protected CrudFormFactory<T> crudFormFactory;
@@ -53,27 +51,27 @@ public abstract class AbstractCrudComponent<T> extends CustomComponent implement
     }
 
     @Override
-    public void setAddOperation(Consumer<T> addOperation) {
-        this.addOperation = addOperation;
-    }
-
-    @Override
-    public void setUpdateOperation(Consumer<T> updateOperation) {
-        this.updateOperation = updateOperation;
-    }
-
-    @Override
-    public void setDeleteOperation(Consumer<T> deleteOperation) {
-        this.deleteOperation = deleteOperation;
-    }
-
-    @Override
-    public void setFindAllOperation(Supplier<Collection<T>> findAllOperation) {
+    public void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation) {
         this.findAllOperation = findAllOperation;
     }
 
     @Override
-    public void setOperations(Supplier<Collection<T>> findAllOperation, Consumer<T> addOperation, Consumer<T> updateOperation, Consumer<T> deleteOperation) {
+    public void setAddOperation(AddOperationListener<T> addOperation) {
+        this.addOperation = addOperation;
+    }
+
+    @Override
+    public void setUpdateOperation(UpdateOperationListener<T> updateOperation) {
+        this.updateOperation = updateOperation;
+    }
+
+    @Override
+    public void setDeleteOperation(DeleteOperationListener<T> deleteOperation) {
+        this.deleteOperation = deleteOperation;
+    }
+
+    @Override
+    public void setOperations(FindAllCrudOperationListener<T> findAllOperation, AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation, DeleteOperationListener<T> deleteOperation) {
         setFindAllOperation(findAllOperation);
         setAddOperation(addOperation);
         setUpdateOperation(updateOperation);

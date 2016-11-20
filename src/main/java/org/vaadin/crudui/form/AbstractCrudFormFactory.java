@@ -6,8 +6,6 @@ import org.vaadin.crudui.crud.CrudOperation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte
@@ -57,22 +55,22 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     }
 
     @Override
-    public void setFieldCreationListener(CrudOperation operation, Object propertyId, Consumer<Field> listener) {
+    public void setFieldCreationListener(CrudOperation operation, Object propertyId, FieldCreationListener listener) {
         getConfiguration(operation).getFieldCreationListeners().put(propertyId, listener);
     }
 
     @Override
-    public void setFieldCreationListener(Object propertyId, Consumer<Field> listener) {
+    public void setFieldCreationListener(Object propertyId, FieldCreationListener listener) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldCreationListener(operation, propertyId, listener));
     }
 
     @Override
-    public void setFieldProvider(CrudOperation operation, Object propertyId, Supplier<Field> provider) {
+    public void setFieldProvider(CrudOperation operation, Object propertyId, FieldProvider provider) {
         getConfiguration(operation).getFieldProviders().put(propertyId, provider);
     }
 
     @Override
-    public void setFieldProvider(Object propertyId, Supplier<Field> provider) {
+    public void setFieldProvider(Object propertyId, FieldProvider provider) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldProvider(operation, propertyId, provider));
     }
 
