@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public interface CrudFormFactory<T> extends Serializable {
 
-    Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, Button.ClickListener buttonClickListener);
+    Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, Button.ClickListener cancelButtonClickListener, Button.ClickListener operationButtonClickListener);
 
     void setVisiblePropertyIds(CrudOperation operation, Object... propertyIds);
 

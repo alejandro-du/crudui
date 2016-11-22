@@ -113,7 +113,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         T domainObject = (T) grid.getSelectedRow();
 
         if (domainObject != null) {
-            Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, event -> {
+            Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, null, event -> {
                 grid.select(null);
             });
 
@@ -170,16 +170,23 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     protected void showForm(CrudOperation operation, T domainObject, boolean readOnly, String successMessage, Button.ClickListener buttonClickListener) {
-        Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly, event -> {
-            try {
-                crudLayout.hideForm();
-                Notification.show(successMessage);
-                buttonClickListener.buttonClick(event);
+        Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly,
+                event -> {
+                    Object selected = grid.getSelectedRow();
+                    crudLayout.hideForm();
+                    grid.select(null);
+                    grid.select(selected);
+                },
+                event -> {
+                    try {
+                        crudLayout.hideForm();
+                        Notification.show(successMessage);
+                        buttonClickListener.buttonClick(event);
 
-            } catch (CrudOperationException e) {
-                Notification.show(e.getMessage());
-            }
-        });
+                    } catch (CrudOperationException e) {
+                        Notification.show(e.getMessage());
+                    }
+                });
 
         crudLayout.showForm(operation, form);
     }
