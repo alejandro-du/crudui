@@ -1,6 +1,6 @@
 package org.vaadin.crudui.crud.impl;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.provider.Query;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -29,8 +29,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private Button addButton;
     private Button updateButton;
     private Button deleteButton;
-    private Grid grid = new Grid();
-    private BeanItemContainer<T> container;
+    private Grid<T> grid = new Grid<>();
 
     public GridBasedCrudComponent(Class<T> domainType) {
         this(domainType, new WindowBasedCrudLayout());
@@ -63,7 +62,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         crudLayout.addToolbarComponent(deleteButton);
 
         grid.setSizeFull();
-        grid.setContainerDataSource(container = new BeanItemContainer<>(domainType));
         grid.addSelectionListener(e -> gridSelectionChanged());
         crudLayout.setMainComponent(grid);
 
@@ -97,24 +95,23 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     public void refreshGrid() {
-        container.removeAllItems();
         Collection all = findAllOperation.findAll();
-        container.addAll(all);
+        grid.setItems(all);
     }
 
     protected void updateButtons() {
-        boolean enabled = grid.getSelectedRow() != null;
-        updateButton.setEnabled(enabled);
-        deleteButton.setEnabled(enabled);
+        boolean rowSelected = grid.asSingleSelect().isEmpty();
+        updateButton.setEnabled(rowSelected);
+        deleteButton.setEnabled(rowSelected);
     }
 
     protected void gridSelectionChanged() {
         updateButtons();
-        T domainObject = (T) grid.getSelectedRow();
+        T domainObject = grid.asSingleSelect().getValue();
 
         if (domainObject != null) {
             Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, null, event -> {
-                grid.select(null);
+                grid.asSingleSelect().clear();
             });
 
             crudLayout.showForm(CrudOperation.READ, form);
@@ -124,9 +121,9 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     protected void findAllButtonClicked() {
-        grid.select(null);
+        grid.asSingleSelect().clear();
         refreshGrid();
-        Notification.show(String.format(rowCountCaption, container.size()));
+        Notification.show(String.format(rowCountCaption, grid.getDataProvider().size(new Query())));
     }
 
     protected void addButtonClicked() {
@@ -136,7 +133,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
                 T addedObject = addOperation.perform(domainObject);
                 refreshGrid();
                 if (container.containsId(addedObject)) {
-                    grid.select(addedObject);
+                    grid.asSingleSelect().setValue(addedObject);
                     grid.scrollTo(addedObject);
                 }
             });
@@ -148,34 +145,34 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     protected void updateButtonClicked() {
-        T domainObject = (T) grid.getSelectedRow();
+        T domainObject = grid.asSingleSelect().getValue();
         showForm(CrudOperation.UPDATE, domainObject, false, savedMessage, event -> {
             T updatedObject = updateOperation.perform(domainObject);
-            grid.select(null);
+            grid.asSingleSelect().clear();
             refreshGrid();
             if (container.containsId(updatedObject)) {
-                grid.select(updatedObject);
+                grid.asSingleSelect().setValue(updatedObject);
                 grid.scrollTo(updatedObject);
             }
         });
     }
 
     protected void deleteButtonClicked() {
-        T domainObject = (T) grid.getSelectedRow();
+        T domainObject = grid.asSingleSelect().getValue();
         showForm(CrudOperation.DELETE, domainObject, true, deletedMessage, event -> {
             deleteOperation.perform(domainObject);
             refreshGrid();
-            grid.select(null);
+            grid.asSingleSelect().clear();
         });
     }
 
     protected void showForm(CrudOperation operation, T domainObject, boolean readOnly, String successMessage, Button.ClickListener buttonClickListener) {
         Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly,
                 event -> {
-                    Object selected = grid.getSelectedRow();
+                    T selected = grid.asSingleSelect().getValue();
                     crudLayout.hideForm();
-                    grid.select(null);
-                    grid.select(selected);
+                    grid.asSingleSelect().clear();
+                    grid.asSingleSelect().setValue(selected);
                 },
                 event -> {
                     try {
@@ -193,10 +190,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public Grid getGrid() {
         return grid;
-    }
-
-    public BeanItemContainer getGridContainer() {
-        return container;
     }
 
     public Button getFindAllButton() {

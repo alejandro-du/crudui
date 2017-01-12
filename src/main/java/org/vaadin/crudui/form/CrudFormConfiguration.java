@@ -1,6 +1,6 @@
 package org.vaadin.crudui.form;
 
-import com.vaadin.ui.Field;
+import com.vaadin.data.HasValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class CrudFormConfiguration implements Serializable {
     protected List<Object> visiblePropertyIds = new ArrayList<>();
     protected List<Object> disabledPropertyIds = new ArrayList<>();
     protected List<String> fieldCaptions = new ArrayList<>();
-    protected Map<Object, Class<? extends Field>> fieldTypes = new HashMap<>();
+    protected Map<Object, Class<? extends HasValue>> fieldTypes = new HashMap<>();
     protected Map<Object, FieldCreationListener> fieldCreationListeners = new HashMap<>();
     protected Map<Object, FieldProvider> fieldProviders = new HashMap<>();
 
@@ -44,11 +44,11 @@ public class CrudFormConfiguration implements Serializable {
         this.fieldCaptions = fieldCaptions;
     }
 
-    public Map<Object, Class<? extends Field>> getFieldTypes() {
+    public Map<Object, Class<? extends HasValue>> getFieldTypes() {
         return fieldTypes;
     }
 
-    public void setFieldTypes(Map<Object, Class<? extends Field>> fieldTypes) {
+    public void setFieldTypes(Map<Object, Class<? extends HasValue>> fieldTypes) {
         this.fieldTypes = fieldTypes;
     }
 

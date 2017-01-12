@@ -1,8 +1,8 @@
 package org.vaadin.crudui.form;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
@@ -26,9 +26,9 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void setFieldCaptions(String... captions);
 
-    void setFieldType(CrudOperation operation, Object propertyId, Class<? extends Field> type);
+    void setFieldType(CrudOperation operation, Object propertyId, Class<? extends HasValue> type);
 
-    void setFieldType(Object propertyId, Class<? extends Field> type);
+    void setFieldType(Object propertyId, Class<? extends HasValue> type);
 
     void setFieldCreationListener(CrudOperation operation, Object propertyId, FieldCreationListener listener);
 

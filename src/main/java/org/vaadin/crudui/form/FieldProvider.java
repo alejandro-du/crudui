@@ -1,6 +1,6 @@
 package org.vaadin.crudui.form;
 
-import com.vaadin.ui.Field;
+import com.vaadin.data.HasValue;
 
 import java.io.Serializable;
 
@@ -10,6 +10,6 @@ import java.io.Serializable;
 @FunctionalInterface
 public interface FieldProvider extends Serializable {
 
-    Field buildField();
+    HasValue buildField();
 
 }

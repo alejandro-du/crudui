@@ -1,6 +1,6 @@
 package org.vaadin.crudui.form;
 
-import com.vaadin.ui.Field;
+import com.vaadin.data.HasValue;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.util.Arrays;
@@ -45,12 +45,12 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     }
 
     @Override
-    public void setFieldType(CrudOperation operation, Object propertyId, Class<? extends Field> type) {
+    public void setFieldType(CrudOperation operation, Object propertyId, Class<? extends HasValue> type) {
         getConfiguration(operation).getFieldTypes().put(propertyId, type);
     }
 
     @Override
-    public void setFieldType(Object propertyId, Class<? extends Field> type) {
+    public void setFieldType(Object propertyId, Class<? extends HasValue> type) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldType(operation, propertyId, type));
     }
 
