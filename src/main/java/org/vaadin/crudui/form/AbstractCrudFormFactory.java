@@ -15,23 +15,23 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     protected Map<CrudOperation, CrudFormConfiguration> configurations = new HashMap<>();
 
     @Override
-    public void setVisiblePropertyIds(CrudOperation operation, Object... propertyIds) {
-        getConfiguration(operation).setVisiblePropertyIds(Arrays.asList(propertyIds));
+    public void setVisibleProperties(CrudOperation operation, String... properties) {
+        getConfiguration(operation).setVisibleProperties(Arrays.asList(properties));
     }
 
     @Override
-    public void setVisiblePropertyIds(Object... propertyIds) {
-        Arrays.stream(CrudOperation.values()).forEach(operation -> setVisiblePropertyIds(operation, propertyIds));
+    public void setVisibleProperties(String... properties) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> setVisibleProperties(operation, properties));
     }
 
     @Override
-    public void setDisabledPropertyIds(CrudOperation operation, Object... propertyIds) {
-        getConfiguration(operation).setDisabledPropertyIds(Arrays.asList(propertyIds));
+    public void setDisabledProperties(CrudOperation operation, String... properties) {
+        getConfiguration(operation).setDisabledProperties(Arrays.asList(properties));
     }
 
     @Override
-    public void setDisabledPropertyIds(Object... propertyIds) {
-        Arrays.stream(CrudOperation.values()).forEach(operation -> setDisabledPropertyIds(operation, propertyIds));
+    public void setDisabledProperties(String... properties) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> setDisabledProperties(operation, properties));
     }
 
     @Override
@@ -45,33 +45,33 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     }
 
     @Override
-    public void setFieldType(CrudOperation operation, Object propertyId, Class<? extends HasValue> type) {
-        getConfiguration(operation).getFieldTypes().put(propertyId, type);
+    public void setFieldType(CrudOperation operation, String property, Class<? extends HasValue> type) {
+        getConfiguration(operation).getFieldTypes().put(property, type);
     }
 
     @Override
-    public void setFieldType(Object propertyId, Class<? extends HasValue> type) {
-        Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldType(operation, propertyId, type));
+    public void setFieldType(String property, Class<? extends HasValue> type) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldType(operation, property, type));
     }
 
     @Override
-    public void setFieldCreationListener(CrudOperation operation, Object propertyId, FieldCreationListener listener) {
-        getConfiguration(operation).getFieldCreationListeners().put(propertyId, listener);
+    public void setFieldCreationListener(CrudOperation operation, String property, FieldCreationListener listener) {
+        getConfiguration(operation).getFieldCreationListeners().put(property, listener);
     }
 
     @Override
-    public void setFieldCreationListener(Object propertyId, FieldCreationListener listener) {
-        Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldCreationListener(operation, propertyId, listener));
+    public void setFieldCreationListener(String property, FieldCreationListener listener) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldCreationListener(operation, property, listener));
     }
 
     @Override
-    public void setFieldProvider(CrudOperation operation, Object propertyId, FieldProvider provider) {
-        getConfiguration(operation).getFieldProviders().put(propertyId, provider);
+    public void setFieldProvider(CrudOperation operation, String property, FieldProvider provider) {
+        getConfiguration(operation).getFieldProviders().put(property, provider);
     }
 
     @Override
-    public void setFieldProvider(Object propertyId, FieldProvider provider) {
-        Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldProvider(operation, propertyId, provider));
+    public void setFieldProvider(String property, FieldProvider provider) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldProvider(operation, property, provider));
     }
 
     protected CrudFormConfiguration getConfiguration(CrudOperation operation) {

@@ -13,27 +13,27 @@ import java.util.Map;
  */
 public class CrudFormConfiguration implements Serializable {
 
-    protected List<Object> visiblePropertyIds = new ArrayList<>();
-    protected List<Object> disabledPropertyIds = new ArrayList<>();
+    protected List<String> visibleProperties = new ArrayList<>();
+    protected List<String> disabledProperties = new ArrayList<>();
     protected List<String> fieldCaptions = new ArrayList<>();
     protected Map<Object, Class<? extends HasValue>> fieldTypes = new HashMap<>();
     protected Map<Object, FieldCreationListener> fieldCreationListeners = new HashMap<>();
     protected Map<Object, FieldProvider> fieldProviders = new HashMap<>();
 
-    public List<Object> getVisiblePropertyIds() {
-        return visiblePropertyIds;
+    public List<String> getVisibleProperties() {
+        return visibleProperties;
     }
 
-    public void setVisiblePropertyIds(List<Object> visiblePropertyIds) {
-        this.visiblePropertyIds = visiblePropertyIds;
+    public void setVisibleProperties(List<String> visibleProperties) {
+        this.visibleProperties = visibleProperties;
     }
 
-    public List<Object> getDisabledPropertyIds() {
-        return disabledPropertyIds;
+    public List<String> getDisabledProperties() {
+        return disabledProperties;
     }
 
-    public void setDisabledPropertyIds(List<Object> disabledPropertyIds) {
-        this.disabledPropertyIds = disabledPropertyIds;
+    public void setDisabledProperties(List<String> disabledProperties) {
+        this.disabledProperties = disabledProperties;
     }
 
     public List<String> getFieldCaptions() {

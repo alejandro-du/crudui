@@ -1,8 +1,6 @@
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.crud.CrudComponent;
 import org.vaadin.crudui.crud.CrudListener;
@@ -68,17 +66,14 @@ public class TestUI extends UI implements CrudListener<User> {
         crud.setCrudListener(this);
 
         crud.getCrudFormFactory().setFieldProvider("groups", () -> {
-            OptionGroup optionGroup = new OptionGroup();
-            optionGroup.setMultiSelect(true);
-            optionGroup.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
-            optionGroup.setItemCaptionPropertyId("name");
-            return optionGroup;
+            CheckBoxGroup<Group> checkBoxes = new CheckBoxGroup("Groups", groups);
+            checkBoxes.setItemCaptionGenerator(Group::getName);
+            return checkBoxes;
         });
 
         crud.getCrudFormFactory().setFieldProvider("mainGroup", () -> {
-            ComboBox comboBox = new ComboBox();
-            comboBox.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
-            comboBox.setItemCaptionPropertyId("name");
+            ComboBox<Group> comboBox = new ComboBox<>("Main group", groups);
+            comboBox.setItemCaptionGenerator(Group::getName);
             return comboBox;
         });
 
@@ -92,32 +87,25 @@ public class TestUI extends UI implements CrudListener<User> {
         GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
         crud.setCrudFormFactory(formFactory);
 
-        formFactory.setVisiblePropertyIds(CrudOperation.READ, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
-        formFactory.setVisiblePropertyIds(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
-        formFactory.setVisiblePropertyIds(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
-        formFactory.setVisiblePropertyIds(CrudOperation.DELETE, "name", "email");
+        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "groups", "mainGroup.name", "active");
+        formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
+        formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
+        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email");
 
-        formFactory.setDisabledPropertyIds("id");
+        formFactory.setDisabledProperties("id");
 
-        crud.getGridContainer().addNestedContainerBean("mainGroup");
-        crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup.name", "active");
-        crud.getGrid().getColumn("mainGroup.name").setHeaderCaption("Main group");
-
-        crud.getGrid().getColumn("birthDate").setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
+        //crud.getGrid().getColumn("birthDate").setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
 
         formFactory.setFieldType("password", PasswordField.class);
         formFactory.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
         formFactory.setFieldProvider("groups", () -> {
-            OptionGroup optionGroup = new OptionGroup();
-            optionGroup.setMultiSelect(true);
-            optionGroup.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
-            optionGroup.setItemCaptionPropertyId("name");
-            return optionGroup;
+            CheckBoxGroup<Group> checkboxes = new CheckBoxGroup<>("Groups", groups);
+            checkboxes.setItemCaptionGenerator(Group::getName);
+            return checkboxes;
         });
         formFactory.setFieldProvider("mainGroup", () -> {
-            ComboBox comboBox = new ComboBox();
-            comboBox.setContainerDataSource(new BeanItemContainer<>(Group.class, groups));
-            comboBox.setItemCaptionPropertyId("name");
+            ComboBox<Group> comboBox = new ComboBox<>("Main group", groups);
+            comboBox.setItemCaptionGenerator(Group::getName);
             return comboBox;
         });
 

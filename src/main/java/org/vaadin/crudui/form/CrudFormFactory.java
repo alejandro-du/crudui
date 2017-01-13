@@ -14,28 +14,28 @@ public interface CrudFormFactory<T> extends Serializable {
 
     Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, Button.ClickListener cancelButtonClickListener, Button.ClickListener operationButtonClickListener);
 
-    void setVisiblePropertyIds(CrudOperation operation, Object... propertyIds);
+    void setVisibleProperties(CrudOperation operation, String... properties);
 
-    void setVisiblePropertyIds(Object... propertyIds);
+    void setVisibleProperties(String... properties);
 
-    void setDisabledPropertyIds(CrudOperation operation, Object... propertyIds);
+    void setDisabledProperties(CrudOperation operation, String... properties);
 
-    void setDisabledPropertyIds(Object... propertyIds);
+    void setDisabledProperties(String... properties);
 
     void setFieldCaptions(CrudOperation operation, String... captions);
 
     void setFieldCaptions(String... captions);
 
-    void setFieldType(CrudOperation operation, Object propertyId, Class<? extends HasValue> type);
+    void setFieldType(CrudOperation operation, String property, Class<? extends HasValue> type);
 
-    void setFieldType(Object propertyId, Class<? extends HasValue> type);
+    void setFieldType(String property, Class<? extends HasValue> type);
 
-    void setFieldCreationListener(CrudOperation operation, Object propertyId, FieldCreationListener listener);
+    void setFieldCreationListener(CrudOperation operation, String property, FieldCreationListener listener);
 
-    void setFieldCreationListener(Object propertyId, FieldCreationListener listener);
+    void setFieldCreationListener(String property, FieldCreationListener listener);
 
-    void setFieldProvider(CrudOperation operation, Object propertyId, FieldProvider provider);
+    void setFieldProvider(CrudOperation operation, String property, FieldProvider provider);
 
-    void setFieldProvider(Object propertyId, FieldProvider provider);
+    void setFieldProvider(String property, FieldProvider provider);
 
 }

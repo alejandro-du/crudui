@@ -31,6 +31,8 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private Button deleteButton;
     private Grid<T> grid = new Grid<>();
 
+    Collection<T> items;
+
     public GridBasedCrudComponent(Class<T> domainType) {
         this(domainType, new WindowBasedCrudLayout());
     }
@@ -95,8 +97,8 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     public void refreshGrid() {
-        Collection all = findAllOperation.findAll();
-        grid.setItems(all);
+        items = findAllOperation.findAll();
+        grid.setItems(items);
     }
 
     protected void updateButtons() {
@@ -132,9 +134,9 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
             showForm(CrudOperation.ADD, domainObject, false, savedMessage, event -> {
                 T addedObject = addOperation.perform(domainObject);
                 refreshGrid();
-                if (container.containsId(addedObject)) {
+                if (items.contains(addedObject)) {
                     grid.asSingleSelect().setValue(addedObject);
-                    grid.scrollTo(addedObject);
+                    // TODO: grid.scrollTo(addedObject);
                 }
             });
         } catch (InstantiationException e) {
@@ -150,9 +152,9 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
             T updatedObject = updateOperation.perform(domainObject);
             grid.asSingleSelect().clear();
             refreshGrid();
-            if (container.containsId(updatedObject)) {
+            if (items.contains(updatedObject)) {
                 grid.asSingleSelect().setValue(updatedObject);
-                grid.scrollTo(updatedObject);
+                // TODO: grid.scrollTo(updatedObject);
             }
         });
     }
