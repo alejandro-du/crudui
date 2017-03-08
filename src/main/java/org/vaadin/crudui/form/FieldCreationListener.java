@@ -1,6 +1,6 @@
 package org.vaadin.crudui.form;
 
-import com.vaadin.ui.Field;
+import com.vaadin.v7.ui.Field;
 
 import java.io.Serializable;
 

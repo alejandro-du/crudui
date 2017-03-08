@@ -1,10 +1,10 @@
 package org.vaadin.crudui.crud.impl;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
+import com.vaadin.v7.ui.Grid;
 import com.vaadin.ui.Notification;
 import org.vaadin.crudui.crud.AbstractCrudComponent;
 import org.vaadin.crudui.crud.CrudOperation;

@@ -1,9 +1,10 @@
-import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.DateRenderer;
-import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.*;
+import com.vaadin.v7.ui.renderers.DateRenderer;
 import org.vaadin.crudui.crud.CrudComponent;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -20,7 +21,7 @@ import java.util.Set;
 /**
  * @author Alejandro Duarte
  */
-@Theme(ValoTheme.THEME_NAME)
+@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 public class TestUI extends UI implements CrudListener<User> {
 
     public static void main(String[] args) throws Exception {
