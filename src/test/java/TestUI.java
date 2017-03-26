@@ -10,8 +10,8 @@ import org.vaadin.crudui.form.impl.GridLayoutCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 import org.vaadin.jetty.VaadinJettyServer;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -31,7 +31,7 @@ public class TestUI extends UI implements CrudListener<User> {
         groups.add(admins);
 
         for (long i = 1; i <= 20; i++) {
-            users.add(new User("User " + i, new Date(), "email" + i + "@test.com", "password" + i, true, employees, groups));
+            users.add(new User("User " + i, LocalDate.now(), "email" + i + "@test.com", "password" + i, true, employees, groups));
         }
     }
 

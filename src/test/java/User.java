@@ -2,6 +2,7 @@ import org.apache.bval.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +22,7 @@ public class User {
     private String name;
 
     @Past
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @NotNull
     @Email
@@ -40,7 +41,7 @@ public class User {
         this.id = nextId++;
     }
 
-    public User(String name, Date birthDate, String email, String password, Boolean active, Group mainGroup, Set<Group> groups) {
+    public User(String name, LocalDate birthDate, String email, String password, Boolean active, Group mainGroup, Set<Group> groups) {
         this();
         this.name = name;
         this.birthDate = birthDate;
@@ -67,11 +68,11 @@ public class User {
         this.name = name;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

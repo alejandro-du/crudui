@@ -29,7 +29,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private Button addButton;
     private Button updateButton;
     private Button deleteButton;
-    private Grid<T> grid = new Grid<>();
+    private Grid<T> grid;
 
     Collection<T> items;
 
@@ -63,6 +63,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         deleteButton.setIcon(FontAwesome.TIMES);
         crudLayout.addToolbarComponent(deleteButton);
 
+        grid = new Grid<>(domainType);
         grid.setSizeFull();
         grid.addSelectionListener(e -> gridSelectionChanged());
         crudLayout.setMainComponent(grid);
