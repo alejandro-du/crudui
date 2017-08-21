@@ -102,7 +102,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     }
 
     protected void updateButtons() {
-        boolean rowSelected = grid.asSingleSelect().isEmpty();
+        boolean rowSelected = !grid.asSingleSelect().isEmpty();
         updateButton.setEnabled(rowSelected);
         deleteButton.setEnabled(rowSelected);
     }
@@ -190,7 +190,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         crudLayout.showForm(operation, form);
     }
 
-    public Grid getGrid() {
+    public Grid<T> getGrid() {
         return grid;
     }
 
