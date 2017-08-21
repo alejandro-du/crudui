@@ -68,7 +68,7 @@ Use a different `CrudLayout` implementation:
 GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class, new HorizontalSplitCrudLayout());
 ```
 
-Set a different `CrudFormFactory` implentation:
+Set a different `CrudFormFactory` implementation:
 
 ```
 GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
