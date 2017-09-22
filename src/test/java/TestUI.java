@@ -1,6 +1,8 @@
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
+import com.vaadin.ui.renderers.LocalDateRenderer;
+import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.crud.CrudComponent;
 import org.vaadin.crudui.crud.CrudListener;
@@ -87,14 +89,16 @@ public class TestUI extends UI implements CrudListener<User> {
         GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
         crud.setCrudFormFactory(formFactory);
 
-        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "groups", "mainGroup.name", "active");
+        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
         formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
         formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
         formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email");
 
         formFactory.setDisabledProperties("id");
 
-        //crud.getGrid().getColumn("birthDate").setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
+        crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup", "active");
+        crud.getGrid().getColumn("mainGroup").setRenderer(group -> ((Group) group).getName(), new TextRenderer());
+        crud.getGrid().getColumn("birthDate").setRenderer(new LocalDateRenderer("uuuu-MM-d"));
 
         formFactory.setFieldType("password", PasswordField.class);
         formFactory.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));

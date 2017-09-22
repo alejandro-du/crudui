@@ -37,10 +37,6 @@ public class DefaultFieldProvider implements FieldProvider {
             return comboBox;
         }
 
-        if (String.class.isAssignableFrom(type)) {
-            return new TextField();
-        }
-
         return new TextField();
     }
 
