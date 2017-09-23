@@ -38,9 +38,11 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
         setSizeFull();
 
         leftLayout.setSizeFull();
+        leftLayout.setMargin(false);
         leftLayout.setSpacing(true);
 
         rightLayout.setWidth("100%");
+        rightLayout.setMargin(false);
         rightLayout.setSpacing(true);
 
         captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
@@ -69,12 +71,14 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
         filterLayout.addComponent(filterIcon);
 
         mainComponentLayout.setSizeFull();
+        mainComponentLayout.setMargin(false);
         leftLayout.addComponent(mainComponentLayout);
         leftLayout.setExpandRatio(mainComponentLayout, 1);
 
         formCaptionLayout.setMargin(new MarginInfo(false, true, false, true));
 
         formComponentLayout.setSizeFull();
+        formComponentLayout.setMargin(false);
         rightLayout.addComponent(formComponentLayout);
         rightLayout.setExpandRatio(formComponentLayout, 1);
 

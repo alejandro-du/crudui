@@ -28,6 +28,7 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
     public WindowBasedCrudLayout() {
         setCompositionRoot(mainLayout);
         mainLayout.setSizeFull();
+        mainLayout.setMargin(false);
         mainLayout.setSpacing(true);
         setSizeFull();
 
@@ -53,6 +54,7 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
         filterLayout.addComponent(filterIcon);
 
         mainComponentLayout.setSizeFull();
+        mainComponentLayout.setMargin(false);
         mainLayout.addComponent(mainComponentLayout);
         mainLayout.setExpandRatio(mainComponentLayout, 1);
 
@@ -102,7 +104,7 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
     private void showWindow(String caption, Component form) {
         VerticalLayout windowLayout = new VerticalLayout(form);
         windowLayout.setWidth("100%");
-        windowLayout.setMargin(true);
+        windowLayout.setMargin(false);
 
         formWindow = new Window(caption, windowLayout);
         formWindow.setWidth(formWindowWidth);
