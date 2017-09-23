@@ -101,7 +101,7 @@ public class TestUI extends UI implements CrudListener<User> {
         formFactory.setDisabledProperties("id");
 
         crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup", "active");
-        crud.getGrid().getColumn("mainGroup").setRenderer(group -> ((Group) group).getName(), new TextRenderer());
+        crud.getGrid().getColumn("mainGroup").setRenderer(group -> group == null ? "" : ((Group) group).getName(), new TextRenderer());
         ((Grid.Column<User, Date>) crud.getGrid().getColumn("birthDate")).setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
 
         formFactory.setFieldType("password", PasswordField.class);
