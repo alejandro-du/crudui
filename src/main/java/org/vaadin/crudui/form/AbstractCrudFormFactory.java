@@ -74,6 +74,16 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldProvider(operation, property, provider));
     }
 
+    @Override
+    public void setUseBeanValidation(CrudOperation operation, boolean useBeanValidation) {
+        getConfiguration(operation).setUseBeanValidation(useBeanValidation);
+    }
+
+    @Override
+    public void setUseBeanValidation(boolean useBeanValidation) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> setUseBeanValidation(operation, useBeanValidation));
+    }
+
     protected CrudFormConfiguration getConfiguration(CrudOperation operation) {
         configurations.putIfAbsent(operation, new CrudFormConfiguration());
         return configurations.get(operation);

@@ -8,6 +8,7 @@ import com.vaadin.ui.TextField;
 import org.vaadin.crudui.form.FieldProvider;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author Alejandro Duarte.
@@ -26,7 +27,7 @@ public class DefaultFieldProvider implements FieldProvider {
             return new CheckBox();
         }
 
-        if (LocalDate.class.isAssignableFrom(type)) {
+        if (LocalDate.class.isAssignableFrom(type) || Date.class.isAssignableFrom(type)) {
             return new DateField();
         }
 

@@ -1,7 +1,7 @@
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.LocalDateRenderer;
+import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.crud.CrudComponent;
@@ -12,7 +12,9 @@ import org.vaadin.crudui.form.impl.GridLayoutCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 import org.vaadin.jetty.VaadinJettyServer;
 
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -33,7 +35,7 @@ public class TestUI extends UI implements CrudListener<User> {
         groups.add(admins);
 
         for (long i = 1; i <= 20; i++) {
-            users.add(new User("User " + i, LocalDate.now(), "email" + i + "@test.com", "password" + i, true, employees, groups));
+            users.add(new User("User " + i, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), "email" + i + "@test.com", "password" + i, true, employees, groups));
         }
     }
 
@@ -89,6 +91,8 @@ public class TestUI extends UI implements CrudListener<User> {
         GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
         crud.setCrudFormFactory(formFactory);
 
+        formFactory.setUseBeanValidation(true);
+
         formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
         formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
         formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
@@ -98,7 +102,7 @@ public class TestUI extends UI implements CrudListener<User> {
 
         crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup", "active");
         crud.getGrid().getColumn("mainGroup").setRenderer(group -> ((Group) group).getName(), new TextRenderer());
-        crud.getGrid().getColumn("birthDate").setRenderer(new LocalDateRenderer("uuuu-MM-d"));
+        ((Grid.Column<User, Date>) crud.getGrid().getColumn("birthDate")).setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
 
         formFactory.setFieldType("password", PasswordField.class);
         formFactory.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
