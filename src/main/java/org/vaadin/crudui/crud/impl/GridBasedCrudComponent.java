@@ -140,9 +140,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
                     // TODO: grid.scrollTo(addedObject);
                 }
             });
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
