@@ -11,8 +11,6 @@ import java.util.Set;
  */
 public class User {
 
-    private static Long nextId = 1l; // just for testing ;)
-
     @NotNull
     private Long id;
 
@@ -36,11 +34,11 @@ public class User {
     private Set<Group> groups = new HashSet<>();
 
     public User() {
-        this.id = nextId++;
     }
 
-    public User(String name, Date birthDate, String email, String password, Boolean active, Group mainGroup, Set<Group> groups) {
+    public User(Long id, String name, Date birthDate, String email, String password, Boolean active, Group mainGroup, Set<Group> groups) {
         this();
+        this.id = id;
         this.name = name;
         this.birthDate = birthDate;
         this.email = email;

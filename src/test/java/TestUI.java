@@ -18,12 +18,16 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Alejandro Duarte
  */
 @Theme(ValoTheme.THEME_NAME)
 public class TestUI extends UI implements CrudListener<User> {
+
+    private static AtomicLong nextId = new AtomicLong(1);
 
     public static void main(String[] args) throws Exception {
         VaadinJettyServer server = new VaadinJettyServer(8080, TestUI.class);
@@ -34,8 +38,9 @@ public class TestUI extends UI implements CrudListener<User> {
         groups.add(employees);
         groups.add(admins);
 
-        for (long i = 1; i <= 20; i++) {
-            users.add(new User("User " + i, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), "email" + i + "@test.com", "password" + i, true, employees, groups));
+        while(nextId.get() <= 50) {
+            users.add(new User(nextId.get(), "User " + nextId, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), "email" + nextId + "@test.com", "password" + nextId, true, employees, groups));
+            nextId.incrementAndGet();
         }
     }
 
@@ -125,6 +130,7 @@ public class TestUI extends UI implements CrudListener<User> {
 
     @Override
     public User add(User user) {
+        user.setId(nextId.getAndIncrement());
         users.add(user);
         return user;
     }
