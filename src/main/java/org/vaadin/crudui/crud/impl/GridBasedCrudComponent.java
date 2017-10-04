@@ -21,7 +21,6 @@ import java.util.Collection;
 public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     private String rowCountCaption = "%d items(s) found";
-    private String okCaption = "Ok";
     private String savedMessage = "Item saved";
     private String deletedMessage = "Item deleted";
 
@@ -211,10 +210,6 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public void setRowCountCaption(String rowCountCaption) {
         this.rowCountCaption = rowCountCaption;
-    }
-
-    public void setOkCaption(String okCaption) {
-        this.okCaption = okCaption;
     }
 
     public void setSavedMessage(String savedMessage) {
