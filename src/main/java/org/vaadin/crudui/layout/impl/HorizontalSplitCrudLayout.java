@@ -1,8 +1,14 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
@@ -13,7 +19,7 @@ import java.util.Map;
 /**
  * @author Alejandro Duarte.
  */
-public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLayout {
+public class HorizontalSplitCrudLayout extends Composite implements CrudLayout {
 
     protected HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();
     protected VerticalLayout leftLayout = new VerticalLayout();
@@ -67,7 +73,7 @@ public class HorizontalSplitCrudLayout extends CustomComponent implements CrudLa
         leftHeaderLayout.addComponent(filterLayout);
 
         Label filterIcon = new Label();
-        filterIcon.setIcon(FontAwesome.SEARCH);
+        filterIcon.setIcon(VaadinIcons.SEARCH);
         filterLayout.addComponent(filterIcon);
 
         mainComponentLayout.setSizeFull();

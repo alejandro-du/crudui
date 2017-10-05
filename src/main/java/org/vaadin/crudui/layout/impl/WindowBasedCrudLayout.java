@@ -1,7 +1,14 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Composite;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
@@ -12,7 +19,7 @@ import java.util.Map;
 /**
  * @author Alejandro Duarte
  */
-public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout {
+public class WindowBasedCrudLayout extends Composite implements CrudLayout {
 
     protected VerticalLayout mainLayout = new VerticalLayout();
     protected Label captionLabel = new Label();
@@ -50,7 +57,7 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
         headerLayout.addComponent(filterLayout);
 
         Label filterIcon = new Label();
-        filterIcon.setIcon(FontAwesome.SEARCH);
+        filterIcon.setIcon(VaadinIcons.SEARCH);
         filterLayout.addComponent(filterIcon);
 
         mainComponentLayout.setSizeFull();
@@ -109,6 +116,7 @@ public class WindowBasedCrudLayout extends CustomComponent implements CrudLayout
         formWindow = new Window(caption, windowLayout);
         formWindow.setWidth(formWindowWidth);
         formWindow.setModal(true);
+        formWindow.center();
         UI.getCurrent().addWindow(formWindow);
     }
 

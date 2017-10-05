@@ -21,6 +21,9 @@ public class User {
     private Date birthDate;
 
     @NotNull
+    private Integer phoneNumber;
+
+    @NotNull
     @Email
     private String email;
 
@@ -36,12 +39,13 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, Date birthDate, String email, String password, Boolean active, Group mainGroup, Set<Group> groups) {
+    public User(Long id, String name, Date birthDate, String email, Integer phoneNumber , String password, Boolean active, Group mainGroup, Set<Group> groups) {
         this();
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.password = password;
         this.active = active;
         this.mainGroup = mainGroup;
@@ -78,6 +82,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Integer phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPassword() {

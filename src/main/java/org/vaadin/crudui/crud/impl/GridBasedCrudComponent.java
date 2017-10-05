@@ -1,12 +1,13 @@
 package org.vaadin.crudui.crud.impl;
 
 import com.vaadin.data.provider.Query;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
 import org.vaadin.crudui.crud.AbstractCrudComponent;
+import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.CrudOperationException;
 import org.vaadin.crudui.crud.FindAllCrudOperationListener;
@@ -14,6 +15,7 @@ import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
@@ -23,6 +25,7 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     private String rowCountCaption = "%d items(s) found";
     private String savedMessage = "Item saved";
     private String deletedMessage = "Item deleted";
+    private Consumer<Exception> errorConsumer;
 
     private Button findAllButton;
     private Button addButton;
@@ -36,6 +39,11 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
         this(domainType, new WindowBasedCrudLayout());
     }
 
+    public GridBasedCrudComponent(Class<T> domainType, CrudListener<T> crudListener) {
+        this(domainType, new WindowBasedCrudLayout());
+        setCrudListener(crudListener);
+    }
+
     public GridBasedCrudComponent(Class<T> domainType, CrudLayout crudLayout) {
         super(domainType, crudLayout);
         initLayout();
@@ -44,22 +52,22 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
     protected void initLayout() {
         findAllButton = new Button("", e -> findAllButtonClicked());
         findAllButton.setDescription("Refresh list");
-        findAllButton.setIcon(FontAwesome.REFRESH);
+        findAllButton.setIcon(VaadinIcons.REFRESH);
         crudLayout.addToolbarComponent(findAllButton);
 
         addButton = new Button("", e -> addButtonClicked());
         addButton.setDescription("Add");
-        addButton.setIcon(FontAwesome.PLUS_CIRCLE);
+        addButton.setIcon(VaadinIcons.PLUS);
         crudLayout.addToolbarComponent(addButton);
 
         updateButton = new Button("", e -> updateButtonClicked());
         updateButton.setDescription("Update");
-        updateButton.setIcon(FontAwesome.PENCIL);
+        updateButton.setIcon(VaadinIcons.PENCIL);
         crudLayout.addToolbarComponent(updateButton);
 
         deleteButton = new Button("", e -> deleteButtonClicked());
         deleteButton.setDescription("Delete");
-        deleteButton.setIcon(FontAwesome.TIMES);
+        deleteButton.setIcon(VaadinIcons.TRASH);
         crudLayout.addToolbarComponent(deleteButton);
 
         grid = new Grid<>(domainType);
@@ -177,11 +185,18 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
                 event -> {
                     try {
                         crudLayout.hideForm();
-                        Notification.show(successMessage);
                         buttonClickListener.buttonClick(event);
+                        Notification.show(successMessage);
 
                     } catch (CrudOperationException e) {
-                        Notification.show(e.getMessage());
+                        Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+                    } catch (Exception e) {
+                        if (errorConsumer != null) {
+                            errorConsumer.accept(e);
+                        } else {
+                            Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+                            throw new RuntimeException("Error executing " + operation.name() + " operation", e);
+                        }
                     }
                 });
 
@@ -218,6 +233,10 @@ public class GridBasedCrudComponent<T> extends AbstractCrudComponent<T> {
 
     public void setDeletedMessage(String deletedMessage) {
         this.deletedMessage = deletedMessage;
+    }
+
+    public void setErrorConsumer(Consumer<Exception> errorConsumer) {
+        this.errorConsumer = errorConsumer;
     }
 
 }

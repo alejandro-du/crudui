@@ -1,6 +1,6 @@
 package org.vaadin.crudui.crud;
 
-import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Composite;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
@@ -11,13 +11,13 @@ import java.util.Collections;
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractCrudComponent<T> extends CustomComponent implements CrudComponent<T> {
+public abstract class AbstractCrudComponent<T> extends Composite implements CrudComponent<T> {
 
     protected Class<T> domainType;
 
     protected FindAllCrudOperationListener<T> findAllOperation = () -> Collections.emptyList();
-    protected AddOperationListener<T> addOperation = t -> { return null; };
-    protected UpdateOperationListener<T> updateOperation = t -> { return null; };
+    protected AddOperationListener<T> addOperation = t -> null;
+    protected UpdateOperationListener<T> updateOperation = t -> null;
     protected DeleteOperationListener<T> deleteOperation = t -> { };
 
     protected CrudLayout crudLayout;

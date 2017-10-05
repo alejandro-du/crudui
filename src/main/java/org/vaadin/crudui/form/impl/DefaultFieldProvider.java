@@ -2,12 +2,14 @@ package org.vaadin.crudui.form.impl;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import org.vaadin.crudui.form.FieldProvider;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -23,7 +25,7 @@ public class DefaultFieldProvider implements FieldProvider {
 
     @Override
     public HasValue buildField() {
-        if (Boolean.class.isAssignableFrom(type)) {
+        if (Boolean.class.isAssignableFrom(type) || boolean.class == type) {
             return new CheckBox();
         }
 
@@ -38,7 +40,17 @@ public class DefaultFieldProvider implements FieldProvider {
             return comboBox;
         }
 
-        return new TextField();
+        if (Collection.class.isAssignableFrom(type)) {
+            CheckBoxGroup comboBox = new CheckBoxGroup();
+            return comboBox;
+        }
+
+        if (String.class.isAssignableFrom(type) || Number.class.isAssignableFrom(type)) {
+            return new TextField();
+        }
+
+        ComboBox comboBox = new ComboBox();
+        return comboBox;
     }
 
 }

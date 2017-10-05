@@ -1,6 +1,14 @@
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.*;
+import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
@@ -18,7 +26,6 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -33,13 +40,23 @@ public class TestUI extends UI implements CrudListener<User> {
         VaadinJettyServer server = new VaadinJettyServer(8080, TestUI.class);
         server.start();
 
-        Group employees = new Group("Employees", false);
-        Group admins = new Group("Admins", true);
-        groups.add(employees);
-        groups.add(admins);
+        for (int i = 1; i < 5; i++) {
+            Group group = new Group("Group " + i, false);
+            groups.add(group);
+        }
 
-        while(nextId.get() <= 50) {
-            users.add(new User(nextId.get(), "User " + nextId, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), "email" + nextId + "@test.com", "password" + nextId, true, employees, groups));
+        while (nextId.get() <= 50) {
+            users.add(new User(
+                    nextId.get(),
+                    "User " + nextId,
+                    Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    "email" + nextId + "@test.com",
+                    nextId.intValue() * 101001,
+                    "password" + nextId,
+                    true,
+                    groups.stream().findFirst().get(),
+                    groups));
+
             nextId.incrementAndGet();
         }
     }
@@ -67,7 +84,7 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     private CrudComponent getDefaultCrud() {
-        return new GridBasedCrudComponent<>(User.class);
+        return new GridBasedCrudComponent<>(User.class, this);
     }
 
     private CrudComponent getDefaultCrudWithFixes() {
@@ -98,14 +115,14 @@ public class TestUI extends UI implements CrudListener<User> {
 
         formFactory.setUseBeanValidation(true);
 
-        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
-        formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
-        formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "groups", "mainGroup", "active");
-        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email");
+        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "phoneNumber", "groups", "active", "mainGroup");
+        formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "phoneNumber", "groups", "password", "mainGroup", "active");
+        formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "phoneNumber", "password", "groups", "active", "mainGroup");
+        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "phoneNumber");
 
         formFactory.setDisabledProperties("id");
 
-        crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup", "active");
+        crud.getGrid().setColumns("name", "birthDate", "email", "phoneNumber", "mainGroup", "active");
         crud.getGrid().getColumn("mainGroup").setRenderer(group -> group == null ? "" : ((Group) group).getName(), new TextRenderer());
         ((Grid.Column<User, Date>) crud.getGrid().getColumn("birthDate")).setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
 
@@ -124,6 +141,7 @@ public class TestUI extends UI implements CrudListener<User> {
 
         formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
         crud.setRowCountCaption("%d user(s) found");
+        crud.setErrorConsumer(e -> Notification.show("Custom error message (simulated error)", Notification.Type.ERROR_MESSAGE));
 
         return crud;
     }
@@ -137,6 +155,9 @@ public class TestUI extends UI implements CrudListener<User> {
 
     @Override
     public User update(User user) {
+        if (user.getId().equals(1l)) {
+            throw new RuntimeException("A simulated error has occurred");
+        }
         return user;
     }
 
