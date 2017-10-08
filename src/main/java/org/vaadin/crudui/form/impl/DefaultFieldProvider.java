@@ -45,7 +45,8 @@ public class DefaultFieldProvider implements FieldProvider {
             return comboBox;
         }
 
-        if (String.class.isAssignableFrom(type) || Number.class.isAssignableFrom(type)) {
+        if (String.class.isAssignableFrom(type) || Character.class.isAssignableFrom(type) || Byte.class.isAssignableFrom(type)
+        		|| Number.class.isAssignableFrom(type) || type.isPrimitive()) {
             return new TextField();
         }
 
