@@ -9,6 +9,7 @@ import com.vaadin.ui.Notification;
 import org.vaadin.crudui.crud.AbstractCrud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperationException;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.form.factory.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
@@ -149,11 +150,18 @@ public class GridCrud<T> extends AbstractCrud<T> {
         try {
             T domainObject = domainType.newInstance();
             showForm(CrudOperation.ADD, domainObject, false, savedMessage, event -> {
-                T addedObject = addOperation.perform(domainObject);
-                refreshGrid();
-                if (items.contains(addedObject)) {
-                    grid.asSingleSelect().setValue(addedObject);
-                    // TODO: grid.scrollTo(addedObject);
+                try {
+                    T addedObject = addOperation.perform(domainObject);
+                    refreshGrid();
+                    if (items.contains(addedObject)) {
+                        grid.asSingleSelect().setValue(addedObject);
+                        // TODO: grid.scrollTo(addedObject);
+                    }
+                } catch (CrudOperationException e1) {
+                    refreshGrid();
+                } catch (Exception e2) {
+                    refreshGrid();
+                    throw e2;
                 }
             });
         } catch (InstantiationException | IllegalAccessException e) {
@@ -164,12 +172,19 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected void updateButtonClicked() {
         T domainObject = grid.asSingleSelect().getValue();
         showForm(CrudOperation.UPDATE, domainObject, false, savedMessage, event -> {
-            T updatedObject = updateOperation.perform(domainObject);
-            grid.asSingleSelect().clear();
-            refreshGrid();
-            if (items.contains(updatedObject)) {
-                grid.asSingleSelect().setValue(updatedObject);
-                // TODO: grid.scrollTo(updatedObject);
+            try {
+                T updatedObject = updateOperation.perform(domainObject);
+                grid.asSingleSelect().clear();
+                refreshGrid();
+                if (items.contains(updatedObject)) {
+                    grid.asSingleSelect().setValue(updatedObject);
+                    // TODO: grid.scrollTo(updatedObject);
+                }
+            } catch (CrudOperationException e1) {
+                refreshGrid();
+            } catch (Exception e2) {
+                refreshGrid();
+                throw e2;
             }
         });
     }
@@ -177,9 +192,16 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected void deleteButtonClicked() {
         T domainObject = grid.asSingleSelect().getValue();
         showForm(CrudOperation.DELETE, domainObject, true, deletedMessage, event -> {
-            deleteOperation.perform(domainObject);
-            refreshGrid();
-            grid.asSingleSelect().clear();
+            try {
+                deleteOperation.perform(domainObject);
+                refreshGrid();
+                grid.asSingleSelect().clear();
+            } catch (CrudOperationException e1) {
+                refreshGrid();
+            } catch (Exception e2) {
+                refreshGrid();
+                throw e2;
+            }
         });
     }
 
