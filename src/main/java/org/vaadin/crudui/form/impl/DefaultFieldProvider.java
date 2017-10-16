@@ -34,7 +34,7 @@ public class DefaultFieldProvider implements FieldProvider {
         }
 
         if (Enum.class.isAssignableFrom(type)) {
-            Object[] values = type.getDeclaringClass().getEnumConstants();
+            Object[] values = type.getEnumConstants();
             ComboBox comboBox = new ComboBox();
             comboBox.setItems(values);
             return comboBox;
