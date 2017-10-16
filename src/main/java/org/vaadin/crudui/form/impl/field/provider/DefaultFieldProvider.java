@@ -1,4 +1,4 @@
-package org.vaadin.crudui.form.impl;
+package org.vaadin.crudui.form.impl.field.provider;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.ui.CheckBox;

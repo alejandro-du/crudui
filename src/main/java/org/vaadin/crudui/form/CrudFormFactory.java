@@ -6,6 +6,7 @@ import com.vaadin.ui.Component;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
@@ -41,5 +42,9 @@ public interface CrudFormFactory<T> extends Serializable {
     void setUseBeanValidation(CrudOperation operation, boolean useBeanValidation);
 
     void setUseBeanValidation(boolean useBeanValidation);
+
+    void setErrorListener(Consumer<Exception> errorListener);
+
+    void showError(CrudOperation operation, Exception e);
 
 }

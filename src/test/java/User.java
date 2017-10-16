@@ -2,6 +2,7 @@ import org.apache.bval.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,13 +22,14 @@ public class User {
     private Date birthDate;
 
     @NotNull
-    private Integer phoneNumber;
+    private int phoneNumber;
 
     @NotNull
     @Email
     private String email;
 
     @NotNull
+    @Size(min = 6, max = 100)
     private String password;
 
     private Boolean active = true;
@@ -35,6 +37,8 @@ public class User {
     private Group mainGroup;
 
     private Set<Group> groups = new HashSet<>();
+
+    private Gender gender;
 
     public User() {
     }
@@ -84,11 +88,11 @@ public class User {
         this.email = email;
     }
 
-    public Integer getPhoneNumber() {
+    public int getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(int phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -124,4 +128,11 @@ public class User {
         this.groups = groups;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 }

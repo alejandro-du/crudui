@@ -6,6 +6,7 @@ import org.vaadin.crudui.crud.CrudOperation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
@@ -13,6 +14,8 @@ import java.util.Map;
 public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
 
     protected Map<CrudOperation, CrudFormConfiguration> configurations = new HashMap<>();
+
+    protected Consumer<Exception> errorListener;
 
     @Override
     public void setVisibleProperties(CrudOperation operation, String... properties) {
@@ -82,6 +85,11 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     @Override
     public void setUseBeanValidation(boolean useBeanValidation) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setUseBeanValidation(operation, useBeanValidation));
+    }
+
+    @Override
+    public void setErrorListener(Consumer<Exception> errorListener) {
+        this.errorListener = errorListener;
     }
 
     protected CrudFormConfiguration getConfiguration(CrudOperation operation) {
