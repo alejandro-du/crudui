@@ -34,7 +34,7 @@ public class DefaultFieldProvider implements FieldProvider {
         }
 
         if (Enum.class.isAssignableFrom(type)) {
-            Object[] values = type.getDeclaringClass().getEnumConstants();
+            Object[] values = type.getEnumConstants();
             ComboBox comboBox = new ComboBox();
             comboBox.setItems(values);
             return comboBox;
@@ -45,7 +45,8 @@ public class DefaultFieldProvider implements FieldProvider {
             return comboBox;
         }
 
-        if (String.class.isAssignableFrom(type) || Number.class.isAssignableFrom(type)) {
+        if (String.class.isAssignableFrom(type) || Character.class.isAssignableFrom(type) || Byte.class.isAssignableFrom(type)
+        		|| Number.class.isAssignableFrom(type) || type.isPrimitive()) {
             return new TextField();
         }
 
