@@ -70,6 +70,8 @@ public class EditableGridCrud<T> extends GridCrud<T> {
     public EditableGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudListener<T> crudListener) {
         super(domainType, crudLayout, null, crudListener);
         crudFormFactory = new GridOnlyCrudFormFactory<>(domainType);
+        setAddOperationVisible(false);
+        setUpdateOperationVisible(false);
     }
 
     @Override
@@ -83,7 +85,14 @@ public class EditableGridCrud<T> extends GridCrud<T> {
             getCrudFormFactory().buildFields(CrudOperation.UPDATE, domainType.newInstance(), false);
             editor = grid.getEditor();
             editor.setEnabled(true);
-            editor.addSaveListener(e -> editorSaved());
+            editor.addSaveListener(e -> {
+                try {
+                    updateOperation.perform(e.getBean());
+                    Notification.show(savedMessage);
+                } catch (Exception ex) {
+                    crudFormFactory.showError(CrudOperation.UPDATE, ex);
+                }
+            });
 
             Binder<T> binder = getCrudFormFactory().getBinder();
             editor.setBinder(binder);
@@ -100,10 +109,6 @@ public class EditableGridCrud<T> extends GridCrud<T> {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    private void editorSaved() {
-        Notification.show(savedMessage);
     }
 
     @Override
