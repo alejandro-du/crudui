@@ -87,7 +87,12 @@ public class EditableGridCrud<T> extends GridCrud<T> {
             editor.setEnabled(true);
             editor.addSaveListener(e -> {
                 try {
-                    updateOperation.perform(e.getBean());
+                    T updatedObject = updateOperation.perform(e.getBean());
+                    refreshGrid();
+                    if (items.contains(updatedObject)) {
+                        grid.asSingleSelect().setValue(updatedObject);
+                        // TODO: grid.scrollTo(updatedObject);
+                    }
                     Notification.show(savedMessage);
                 } catch (Exception ex) {
                     crudFormFactory.showError(CrudOperation.UPDATE, ex);

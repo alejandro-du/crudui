@@ -1,5 +1,14 @@
-import org.apache.bval.constraints.Email;
+package org.vaadin.crudui.app;
 
+import org.apache.bval.constraints.Email;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -10,9 +19,12 @@ import java.util.Set;
 /**
  * @author Alejandro Duarte
  */
+@Entity
 public class User {
 
     @NotNull
+    @Id
+    @GeneratedValue
     private Long id;
 
     @NotNull
@@ -34,26 +46,28 @@ public class User {
 
     private Boolean active = true;
 
+    @ManyToOne
     private Group mainGroup;
 
+    @ManyToMany
+    @Fetch(FetchMode.JOIN)
     private Set<Group> groups = new HashSet<>();
 
     private Gender gender;
 
-    public User() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return id != null ? id.equals(user.id) : user.id == null;
     }
 
-    public User(Long id, String name, Date birthDate, String email, Integer phoneNumber , String password, Boolean active, Group mainGroup, Set<Group> groups) {
-        this();
-        this.id = id;
-        this.name = name;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.active = active;
-        this.mainGroup = mainGroup;
-        this.groups = groups;
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     public Long getId() {
