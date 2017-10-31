@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.metamodel.ManagedType;
+
 /**
  * @author Alejandro Duarte.
  */
@@ -20,6 +22,7 @@ public class CrudFormConfiguration implements Serializable {
     protected Map<Object, FieldCreationListener> fieldCreationListeners = new HashMap<>();
     protected Map<Object, FieldProvider> fieldProviders = new HashMap<>();
     protected boolean useBeanValidation;
+    protected ManagedType<?> jpaTypeForJpaValidation;
 
     public List<String> getVisibleProperties() {
         return visibleProperties;
@@ -76,4 +79,13 @@ public class CrudFormConfiguration implements Serializable {
     public void setUseBeanValidation(boolean useBeanValidation) {
         this.useBeanValidation = useBeanValidation;
     }
+
+	public ManagedType<?> getJpaTypeForJpaValidation() {
+		return jpaTypeForJpaValidation;
+	}
+
+	public void setJpaTypeForJpaValidation(ManagedType<?> jpaTypeForJpaValidation) {
+		this.jpaTypeForJpaValidation = jpaTypeForJpaValidation;
+	}
+
 }
