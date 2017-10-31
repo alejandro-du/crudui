@@ -10,7 +10,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
-import org.apache.bval.util.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 import org.vaadin.crudui.crud.Crud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -79,6 +80,7 @@ public class TestUI extends UI implements CrudListener<User> {
         crud.setCrudFormFactory(formFactory);
 
         formFactory.setUseBeanValidation(true);
+        formFactory.setJpaTypeForJpaValidation(JPAService.getFactory().getMetamodel().managedType(User.class));
 
         formFactory.setErrorListener(e -> Notification.show("Custom error message (simulated error)", Notification.Type.ERROR_MESSAGE));
 
