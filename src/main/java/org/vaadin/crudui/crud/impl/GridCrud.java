@@ -1,11 +1,8 @@
 package org.vaadin.crudui.crud.impl;
 
-import com.vaadin.data.provider.Query;
-import com.vaadin.icons.VaadinIcons;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Notification;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+
 import org.vaadin.crudui.crud.AbstractCrud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -15,7 +12,14 @@ import org.vaadin.crudui.form.impl.form.factory.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-import java.util.Collection;
+import com.vaadin.data.provider.Query;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Notification;
 
 /**
  * @author Alejandro Duarte
@@ -32,6 +36,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected Button deleteButton;
     protected Grid<T> grid;
 
+    protected LinkedHashMap<String, Button> exporterButtons = new LinkedHashMap<>();
     protected Collection<T> items;
 
     public GridCrud(Class<T> domainType) {
@@ -64,7 +69,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
         findAllButton.setDescription("Refresh list");
         findAllButton.setIcon(VaadinIcons.REFRESH);
         crudLayout.addToolbarComponent(findAllButton);
-
+        
         addButton = new Button("", e -> addButtonClicked());
         addButton.setDescription("Add");
         addButton.setIcon(VaadinIcons.PLUS);
@@ -84,6 +89,10 @@ public class GridCrud<T> extends AbstractCrud<T> {
         grid.setSizeFull();
         grid.addSelectionListener(e -> gridSelectionChanged());
         crudLayout.setMainComponent(grid);
+        
+        Button btn = new Button(FontAwesome.FILE_EXCEL_O.getHtml());
+        btn.setCaptionAsHtml(true);
+        addExporterMenu("EXCEL", btn);
 
         updateButtons();
     }
@@ -249,9 +258,20 @@ public class GridCrud<T> extends AbstractCrud<T> {
     public void setSavedMessage(String savedMessage) {
         this.savedMessage = savedMessage;
     }
-
+    
     public void setDeletedMessage(String deletedMessage) {
         this.deletedMessage = deletedMessage;
     }
+    
+    public Button getExporterMenu(String name) {
+    	return exporterButtons.get(name);
+    }
 
+    public GridCrud<T> addExporterMenu(String name, Button exporterButton) {
+    	exporterButtons.put(name, exporterButton);
+    	new FileDownloader(getExporter(name)).extend(exporterButton);
+        crudLayout.addToolbarComponent(exporterButton);
+
+    	return this;
+    }
 }

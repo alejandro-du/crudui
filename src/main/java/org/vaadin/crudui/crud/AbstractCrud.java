@@ -1,10 +1,17 @@
 package org.vaadin.crudui.crud;
 
-import com.vaadin.ui.Composite;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
+import org.vaadin.crudui.support.BeanExcelBuilder;
+import org.vaadin.crudui.support.ExcelOnDemandStreamResource;
 
-import java.util.Collections;
+import com.vaadin.server.Resource;
+import com.vaadin.ui.Composite;
 
 /**
  * @author Alejandro Duarte
@@ -17,6 +24,7 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
     protected AddOperationListener<T> addOperation = t -> null;
     protected UpdateOperationListener<T> updateOperation = t -> null;
     protected DeleteOperationListener<T> deleteOperation = t -> { };
+    protected Map<String, Resource> exportOperations = new HashMap<>();
 
     protected CrudLayout crudLayout;
     protected CrudFormFactory<T> crudFormFactory;
@@ -25,6 +33,13 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
         this.domainType = domainType;
         this.crudLayout = crudLayout;
         this.crudFormFactory = crudFormFactory;
+        exportOperations.put("EXCEL", new ExcelOnDemandStreamResource() {
+			
+			@Override
+			protected XSSFWorkbook getWorkbook() {
+				return new BeanExcelBuilder<T>(domainType).createExcelDocument(findAllOperation.findAll());
+			}
+		});
 
         if (crudListener != null) {
             setCrudListener(crudListener);
@@ -89,4 +104,15 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
         setFindAllOperation(crudListener::findAll);
     }
 
+    public void addExporter(String name, Resource exporter) {
+        exportOperations.put(name, exporter);
+    }
+
+    public void removeExporter(String name) {
+        exportOperations.remove(name);
+    }
+    
+    public Resource getExporter(String name) {
+    	return exportOperations.get(name);
+    }
 }
