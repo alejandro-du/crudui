@@ -1,5 +1,6 @@
 package org.vaadin.crudui.crud;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.ui.Component;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
@@ -21,7 +22,7 @@ public interface Crud<T> extends Component {
 
     void setCrudFormFactory(CrudFormFactory<T> crudFormFactory);
 
-    void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation);
+    void setDataProvider(DataProvider<T, ?> dataProvider);
 
     void setAddOperation(AddOperationListener<T> addOperation);
 
@@ -29,7 +30,7 @@ public interface Crud<T> extends Component {
 
     void setDeleteOperation(DeleteOperationListener<T> deleteOperation);
 
-    void setOperations(FindAllCrudOperationListener<T> findAllOperation, AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation, DeleteOperationListener<T> deleteOperation);
+    void setOperations(DataProvider<T, ?> dataProvider, AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation, DeleteOperationListener<T> deleteOperation);
 
     void setCrudListener(CrudListener<T> crudListener);
 
