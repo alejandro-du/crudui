@@ -28,6 +28,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.vaadin.data.BeanPropertySet;
 import com.vaadin.data.PropertyDefinition;
 import com.vaadin.data.PropertySet;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.shared.util.SharedUtil;
 
 public class BeanExcelBuilder<T> {
@@ -35,19 +37,18 @@ public class BeanExcelBuilder<T> {
 	public static final String dateCellStyleFormat = "m/d/yy";
 	public static final String dateTimeCellStyleFormat = "m/d/yy hh:mm:ss";
 
-	private Class<T> clazz;
 	private int startCol;
 	private int startRow;
-	private int currCol;
 	private String sheetName;
 	
 	private List<String> properties;
 	private List<String> columnsHeaders;
 	
 	private Map<String, String> formats = new HashMap<>();
+	private PropertySet<T> propertySet;
 	
 	public BeanExcelBuilder(Class<T> clazz) {
-		this.clazz = clazz;
+		this.propertySet = BeanPropertySet.get(clazz);
 	}
 	
 	protected XSSFSheet buildSheet(XSSFWorkbook wb) {
@@ -62,20 +63,21 @@ public class BeanExcelBuilder<T> {
 		return new XSSFWorkbook();
 	}
 	
-    public XSSFWorkbook createExcelDocument(Collection<T> beans) {
+	public XSSFWorkbook createExcelDocument(Collection<T> beans) {
+		return createExcelDocument(DataProvider.ofCollection(beans));
+	}    
+	
+	public XSSFWorkbook createExcelDocument(DataProvider<T, ?> dataProvider) {
         XSSFWorkbook wb = buildWorkBook();
         XSSFSheet s = buildSheet(wb);
-        PropertySet<T> propertySet = BeanPropertySet.get(clazz);
-        
-        int rn=0;
-        
-        int cn=0;
-        XSSFRow r = s.createRow(rn++);
+                
+        XSSFRow r = s.createRow(startRow);
         
         List<String> headers = columnsHeaders;
         if (headers==null) {
         	headers = propertySet.getProperties().map(pd -> SharedUtil.propertyIdToHumanFriendly(pd.getName())).collect(Collectors.toList());
         }
+        int cn=startCol;
         startHeaderRow(r);
         for (String ch : headers) {
             XSSFCell cell = r.createCell(cn++);
@@ -84,38 +86,40 @@ public class BeanExcelBuilder<T> {
         }
         endHeaderRow(r);
 
-        for(T bean: beans) {
-            r = s.createRow(rn++);
-            cn=0;
-                        	
-            currCol = startCol;
-            doStarRow(bean, r);
-            List<String> props = properties;
-            if (props==null) {
-            	props = propertySet.getProperties().map(pd -> pd.getName()).collect(Collectors.toList());
-            }
-            for(String propertyName : props) {
-            	
-                PropertyDefinition<T, ?> definition = propertySet
-                        .getProperty(propertyName)
-                        .orElseThrow(() -> new IllegalArgumentException(
-                                "Could not resolve property name " + propertyName
-                                        ));
-            	
-                Object value = definition.getGetter().apply(bean);
-                
-    			Cell cell = buildCell(r, currCol, definition);
-    			setCellValue(cell, value, definition);
-    			setCellStyle(cell, value, definition, formats.get(propertyName));
-    			currCol++;
-        	
-            }
-            doEndRow(bean, r);
-        	
-        }
+        dataProvider.fetch(new Query<>()).forEach(bean -> { buildRows(bean, s, startRow + 1); }
+  		);
        
         return wb;
     }
+	
+	protected void buildRows(T bean, XSSFSheet s, int rowNumber) {
+		XSSFRow r = s.createRow(rowNumber++);
+	                	
+	    int currCol = startCol;
+	    doStarRow(bean, r);
+	    List<String> props = properties;
+	    if (props==null) {
+	    	props = propertySet.getProperties().map(pd -> pd.getName()).collect(Collectors.toList());
+	    }
+	    for(String propertyName : props) {
+	    	
+	        PropertyDefinition<T, ?> definition = propertySet
+	                .getProperty(propertyName)
+	                .orElseThrow(() -> new IllegalArgumentException(
+	                        "Could not resolve property name " + propertyName
+	                                ));
+	    	
+	        Object value = definition.getGetter().apply(bean);
+	        
+			Cell cell = buildCell(r, currCol, definition);
+			setCellValue(cell, value, definition);
+			setCellStyle(cell, value, definition, formats.get(propertyName));
+			currCol++;
+		
+	    }
+	    doEndRow(bean, r);
+		
+	}
 
 	protected void endHeaderRow(XSSFRow r) {		
 	}
@@ -280,6 +284,6 @@ public class BeanExcelBuilder<T> {
 
 	public void setFormats(Map<String, String> formats) {
 		this.formats = formats;
-	}    
+	}
     
 }

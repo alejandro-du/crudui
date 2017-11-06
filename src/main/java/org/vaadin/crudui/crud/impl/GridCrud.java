@@ -12,6 +12,7 @@ import org.vaadin.crudui.form.impl.form.factory.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.Query;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FileDownloader;
@@ -40,27 +41,19 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected Collection<T> items;
 
     public GridCrud(Class<T> domainType) {
-        this(domainType, new WindowBasedCrudLayout(), new VerticalCrudFormFactory<>(domainType), null);
+        this(domainType, new WindowBasedCrudLayout(), new VerticalCrudFormFactory<>(domainType));
     }
 
     public GridCrud(Class<T> domainType, CrudLayout crudLayout) {
-        this(domainType, crudLayout, new VerticalCrudFormFactory<>(domainType), null);
+        this(domainType, crudLayout, new VerticalCrudFormFactory<>(domainType));
     }
 
     public GridCrud(Class<T> domainType, CrudFormFactory<T> crudFormFactory) {
-        this(domainType, new WindowBasedCrudLayout(), crudFormFactory, null);
-    }
-
-    public GridCrud(Class<T> domainType, CrudListener<T> crudListener) {
-        this(domainType, new WindowBasedCrudLayout(), new VerticalCrudFormFactory<>(domainType), crudListener);
+        this(domainType, new WindowBasedCrudLayout(), crudFormFactory);
     }
 
     public GridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory) {
-        this(domainType, crudLayout, crudFormFactory, null);
-    }
-
-    public GridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory, CrudListener<T> crudListener) {
-        super(domainType, crudLayout, crudFormFactory, crudListener);
+        super(domainType, crudLayout, crudFormFactory);
         initLayout();
     }
 
@@ -124,8 +117,13 @@ public class GridCrud<T> extends AbstractCrud<T> {
     }
 
     public void refreshGrid() {
-        items = findAllOperation.findAll();
-        grid.setItems(items);
+    	dataProvider.refreshAll();
+    }
+    
+    @Override
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+    	super.setDataProvider(dataProvider);
+    	grid.setDataProvider(dataProvider);
     }
 
     protected void updateButtons() {

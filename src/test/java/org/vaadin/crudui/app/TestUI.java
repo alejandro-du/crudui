@@ -1,5 +1,6 @@
 package org.vaadin.crudui.app;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
@@ -60,7 +61,9 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     private Crud getDefaultCrud() {
-        return new GridCrud<>(User.class, this);
+    	GridCrud<User> gridCrud = new GridCrud<>(User.class);
+    	gridCrud.setCrudListener(this);
+        return gridCrud;
     }
 
     private Crud getDefaultCrudWithFixes() {
@@ -108,7 +111,8 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     private Crud getEditableGridCrud() {
-        EditableGridCrud<User> crud = new EditableGridCrud<>(User.class, this);
+        EditableGridCrud<User> crud = new EditableGridCrud<>(User.class);
+        crud.setCrudListener(this);
 
         crud.getGrid().setColumns("name", "birthDate", "email", "phoneNumber", "password", "groups", "mainGroup", "active");
         crud.getCrudFormFactory().setVisibleProperties("name", "birthDate", "email", "phoneNumber", "password", "groups", "mainGroup", "active");
@@ -146,8 +150,11 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     @Override
-    public Collection<User> findAll() {
-        return UserRepository.findAll();
+    public DataProvider<User, ?> getDataProvider() {
+    	return DataProvider.fromCallbacks(
+    			q -> UserRepository.findAll().subList(q.getOffset(), q.getOffset()+q.getLimit()).stream()
+    			, q -> UserRepository.findAll().size()
+    			);
     }
 
 }

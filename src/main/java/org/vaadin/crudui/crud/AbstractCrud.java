@@ -10,6 +10,7 @@ import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.support.BeanExcelBuilder;
 import org.vaadin.crudui.support.ExcelOnDemandStreamResource;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Composite;
 
@@ -20,7 +21,7 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
 
     protected Class<T> domainType;
 
-    protected FindAllCrudOperationListener<T> findAllOperation = () -> Collections.emptyList();
+    protected DataProvider<T, ?> dataProvider;
     protected AddOperationListener<T> addOperation = t -> null;
     protected UpdateOperationListener<T> updateOperation = t -> null;
     protected DeleteOperationListener<T> deleteOperation = t -> { };
@@ -29,7 +30,7 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
     protected CrudLayout crudLayout;
     protected CrudFormFactory<T> crudFormFactory;
 
-    public AbstractCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory, CrudListener<T> crudListener) {
+    public AbstractCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory) {
         this.domainType = domainType;
         this.crudLayout = crudLayout;
         this.crudFormFactory = crudFormFactory;
@@ -37,13 +38,9 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
 			
 			@Override
 			protected XSSFWorkbook getWorkbook() {
-				return new BeanExcelBuilder<T>(domainType).createExcelDocument(findAllOperation.findAll());
+				return new BeanExcelBuilder<T>(domainType).createExcelDocument(dataProvider);
 			}
 		});
-
-        if (crudListener != null) {
-            setCrudListener(crudListener);
-        }
 
         setCompositionRoot(crudLayout);
         setSizeFull();
@@ -62,12 +59,12 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
     public void setCrudFormFactory(CrudFormFactory<T> crudFormFactory) {
         this.crudFormFactory = crudFormFactory;
     }
-
+    
     @Override
-    public void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation) {
-        this.findAllOperation = findAllOperation;
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+    	this.dataProvider = dataProvider;
     }
-
+    
     @Override
     public void setAddOperation(AddOperationListener<T> addOperation) {
         this.addOperation = addOperation;
@@ -84,8 +81,8 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
     }
 
     @Override
-    public void setOperations(FindAllCrudOperationListener<T> findAllOperation, AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation, DeleteOperationListener<T> deleteOperation) {
-        setFindAllOperation(findAllOperation);
+    public void setOperations(DataProvider<T, ?> dataProvider, AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation, DeleteOperationListener<T> deleteOperation) {
+        setDataProvider(dataProvider);
         setAddOperation(addOperation);
         setUpdateOperation(updateOperation);
         setDeleteOperation(deleteOperation);
@@ -98,10 +95,10 @@ public abstract class AbstractCrud<T> extends Composite implements Crud<T> {
 
     @Override
     public void setCrudListener(CrudListener<T> crudListener) {
+    	setDataProvider(crudListener.getDataProvider());
         setAddOperation(crudListener::add);
         setUpdateOperation(crudListener::update);
         setDeleteOperation(crudListener::delete);
-        setFindAllOperation(crudListener::findAll);
     }
 
     public void addExporter(String name, Resource exporter) {
