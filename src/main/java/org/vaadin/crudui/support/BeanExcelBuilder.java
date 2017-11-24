@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -86,7 +87,8 @@ public class BeanExcelBuilder<T> {
         }
         endHeaderRow(r);
 
-        dataProvider.fetch(new Query<>()).forEach(bean -> { buildRows(bean, s, startRow + 1); }
+        final AtomicInteger rownum = new AtomicInteger(startRow);
+        dataProvider.fetch(new Query<>()).forEach(bean -> { buildRows(bean, s, rownum.incrementAndGet()); }
   		);
        
         return wb;

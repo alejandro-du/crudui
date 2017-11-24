@@ -160,10 +160,8 @@ public class GridCrud<T> extends AbstractCrud<T> {
                 try {
                     T addedObject = addOperation.perform(domainObject);
                     refreshGrid();
-                    if (items.contains(addedObject)) {
                         grid.asSingleSelect().setValue(addedObject);
                         // TODO: grid.scrollTo(addedObject);
-                    }
                 } catch (CrudOperationException e1) {
                     refreshGrid();
                 } catch (Exception e2) {
@@ -183,10 +181,8 @@ public class GridCrud<T> extends AbstractCrud<T> {
                 T updatedObject = updateOperation.perform(domainObject);
                 grid.asSingleSelect().clear();
                 refreshGrid();
-                if (items.contains(updatedObject)) {
                     grid.asSingleSelect().setValue(updatedObject);
                     // TODO: grid.scrollTo(updatedObject);
-                }
             } catch (CrudOperationException e1) {
                 refreshGrid();
             } catch (Exception e2) {
