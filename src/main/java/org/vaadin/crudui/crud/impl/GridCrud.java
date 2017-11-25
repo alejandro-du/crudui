@@ -33,6 +33,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected Grid<T> grid;
 
     protected Collection<T> items;
+    private boolean clickRowToUpdate;
 
     public GridCrud(Class<T> domainType) {
         this(domainType, new WindowBasedCrudLayout(), new VerticalCrudFormFactory<>(domainType), null);
@@ -119,6 +120,10 @@ public class GridCrud<T> extends AbstractCrud<T> {
         grid.setItems(items);
     }
 
+    public void setClickRowToUpdate(boolean clickRowToUpdate) {
+        this.clickRowToUpdate = clickRowToUpdate;
+    }
+
     protected void updateButtons() {
         boolean rowSelected = !grid.asSingleSelect().isEmpty();
         updateButton.setEnabled(rowSelected);
@@ -135,6 +140,11 @@ public class GridCrud<T> extends AbstractCrud<T> {
             });
 
             crudLayout.showForm(CrudOperation.READ, form);
+
+            if (clickRowToUpdate) {
+                updateButtonClicked();
+            }
+
         } else {
             crudLayout.hideForm();
         }

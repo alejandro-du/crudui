@@ -10,7 +10,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 /**
  * @author Alejandro Duarte.
  */
-public class HorizontalSplitCrudLayout extends AbstractSplitCrudLayout {
+public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
 
     public HorizontalSplitCrudLayout() {
         secondComponentHeaderLayout.setMargin(new MarginInfo(false, false, false, true));
@@ -19,6 +19,9 @@ public class HorizontalSplitCrudLayout extends AbstractSplitCrudLayout {
     @Override
     protected AbstractSplitPanel getMainLayout() {
         HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();
+        mainLayout.setSizeFull();
+        mainLayout.setFirstComponent(firstComponent);
+        mainLayout.setSecondComponent(secondComponent);
         mainLayout.setSplitPosition(60, Sizeable.Unit.PERCENTAGE);
         return mainLayout;
     }

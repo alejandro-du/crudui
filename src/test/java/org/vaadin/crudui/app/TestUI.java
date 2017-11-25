@@ -34,7 +34,7 @@ public class TestUI extends UI implements CrudListener<User> {
 
     public static void main(String[] args) throws Exception {
         JPAService.init();
-        VaadinJettyServer server = new VaadinJettyServer(8080, TestUI.class);
+        VaadinJettyServer server = new VaadinJettyServer(9090, TestUI.class);
         server.start();
     }
 
@@ -101,6 +101,9 @@ public class TestUI extends UI implements CrudListener<User> {
 
         formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
         crud.setRowCountCaption("%d user(s) found");
+
+        crud.setClickRowToUpdate(true);
+        crud.setUpdateOperationVisible(false);
 
         return crud;
     }

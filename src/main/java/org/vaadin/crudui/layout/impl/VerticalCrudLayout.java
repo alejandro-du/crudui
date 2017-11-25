@@ -1,26 +1,19 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.AbstractSplitPanel;
+import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * @author Alejandro Duarte.
  */
-public class VerticalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
-
-    public VerticalSplitCrudLayout() {
-        secondComponentHeaderLayout.setMargin(new MarginInfo(false, false, true, false));
-    }
+public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
 
     @Override
-    protected AbstractSplitPanel getMainLayout() {
-        VerticalSplitPanel mainLayout = new VerticalSplitPanel();
-        mainLayout.setSizeFull();
-        mainLayout.setFirstComponent(firstComponent);
-        mainLayout.setSecondComponent(secondComponent);
+    protected AbstractComponentContainer getMainLayout() {
+        VerticalLayout mainLayout = new VerticalLayout(firstComponent, secondComponent);
+        mainLayout.setMargin(false);
         return mainLayout;
     }
 

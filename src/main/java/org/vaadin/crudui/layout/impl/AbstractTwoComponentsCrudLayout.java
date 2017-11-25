@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author Alejandro Duarte.
  */
-public abstract class AbstractSplitCrudLayout extends Composite implements CrudLayout {
+public abstract class AbstractTwoComponentsCrudLayout extends Composite implements CrudLayout {
 
     protected VerticalLayout firstComponent = new VerticalLayout();
     protected VerticalLayout secondComponent = new VerticalLayout();
@@ -28,12 +28,9 @@ public abstract class AbstractSplitCrudLayout extends Composite implements CrudL
 
     protected Map<CrudOperation, String> formCaptions = new HashMap<>();
 
-    public AbstractSplitCrudLayout() {
-        AbstractSplitPanel mainLayout = getMainLayout();
+    public AbstractTwoComponentsCrudLayout() {
+        AbstractComponentContainer mainLayout = getMainLayout();
         setCompositionRoot(mainLayout);
-        mainLayout.setSizeFull();
-        mainLayout.setFirstComponent(firstComponent);
-        mainLayout.setSecondComponent(secondComponent);
         setSizeFull();
 
         firstComponent.setSizeFull();
@@ -83,7 +80,7 @@ public abstract class AbstractSplitCrudLayout extends Composite implements CrudL
         setFormCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
     }
 
-    protected abstract AbstractSplitPanel getMainLayout();
+    protected abstract AbstractComponentContainer getMainLayout();
 
     protected abstract void addToolbarLayout(CssLayout toolbarLayout);
 
