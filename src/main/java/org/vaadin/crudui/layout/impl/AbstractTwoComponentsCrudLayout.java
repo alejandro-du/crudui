@@ -119,7 +119,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite implemen
             label.addStyleName(ValoTheme.LABEL_COLORED);
             formCaptionLayout.removeAllComponents();
             formCaptionLayout.addComponent(label);
-            secondComponent.addComponent(formCaptionLayout, 1);
+            secondComponent.addComponent(formCaptionLayout, secondComponent.getComponentCount() - 1);
         } else {
             secondComponent.removeComponent(formCaptionLayout);
         }
