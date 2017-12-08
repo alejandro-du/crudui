@@ -1,41 +1,39 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.VerticalSplitPanel;
 
 /**
  * @author Alejandro Duarte.
  */
-public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
+public class VerticalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
 
-    public HorizontalSplitCrudLayout() {
-        secondComponentHeaderLayout.setMargin(new MarginInfo(false, false, false, true));
+    public VerticalSplitCrudLayout() {
+        secondComponentHeaderLayout.setMargin(new MarginInfo(false, false, true, false));
     }
 
     @Override
     protected AbstractSplitPanel getMainLayout() {
-        HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();
+        VerticalSplitPanel mainLayout = new VerticalSplitPanel();
         mainLayout.setSizeFull();
         mainLayout.setFirstComponent(firstComponent);
         mainLayout.setSecondComponent(secondComponent);
-        mainLayout.setSplitPosition(60, Sizeable.Unit.PERCENTAGE);
         return mainLayout;
-        }
+    }
 
     @Override
     protected void addToolbarLayout(CssLayout toolbarLayout) {
-        secondComponentHeaderLayout.addComponent(toolbarLayout);
+        firstComponentHeaderLayout.addComponent(toolbarLayout);
     }
 
     @Override
     public void addToolbarComponent(Component component) {
-        if (!secondComponentHeaderLayout.isVisible()) {
-            secondComponentHeaderLayout.setVisible(true);
-            secondComponent.addComponent(secondComponentHeaderLayout, secondComponent.getComponentCount() - 1);
+        if (!firstComponentHeaderLayout.isVisible()) {
+            firstComponentHeaderLayout.setVisible(true);
+            firstComponent.addComponent(firstComponentHeaderLayout, firstComponent.getComponentCount() - 1);
         }
 
         toolbarLayout.setVisible(true);

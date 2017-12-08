@@ -39,6 +39,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
 
     protected LinkedHashMap<String, Button> exporterButtons = new LinkedHashMap<>();
     protected Collection<T> items;
+    private boolean clickRowToUpdate;
 
     public GridCrud(Class<T> domainType) {
         this(domainType, new WindowBasedCrudLayout(), new VerticalCrudFormFactory<>(domainType));
@@ -119,6 +120,10 @@ public class GridCrud<T> extends AbstractCrud<T> {
     public void refreshGrid() {
     	dataProvider.refreshAll();
     }
+
+    public void setClickRowToUpdate(boolean clickRowToUpdate) {
+        this.clickRowToUpdate = clickRowToUpdate;
+    }
     
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
@@ -142,6 +147,11 @@ public class GridCrud<T> extends AbstractCrud<T> {
             });
 
             crudLayout.showForm(CrudOperation.READ, form);
+
+            if (clickRowToUpdate) {
+                updateButtonClicked();
+            }
+
         } else {
             crudLayout.hideForm();
         }
@@ -211,10 +221,14 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected void showForm(CrudOperation operation, T domainObject, boolean readOnly, String successMessage, Button.ClickListener buttonClickListener) {
         Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly,
                 cancelClickEvent -> {
+                    if (clickRowToUpdate) {
+                        grid.asSingleSelect().clear();
+                    } else {
                     T selected = grid.asSingleSelect().getValue();
                     crudLayout.hideForm();
                     grid.asSingleSelect().clear();
                     grid.asSingleSelect().setValue(selected);
+                    }
                 },
                 operationPerformedClickEvent -> {
                     crudLayout.hideForm();
