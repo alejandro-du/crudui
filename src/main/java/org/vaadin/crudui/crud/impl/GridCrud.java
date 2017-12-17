@@ -131,6 +131,10 @@ public class GridCrud<T> extends AbstractCrud<T> {
     	grid.setDataProvider(dataProvider);
     }
 
+    public void setClickRowToUpdate(boolean clickRowToUpdate) {
+        this.clickRowToUpdate = clickRowToUpdate;
+    }
+
     protected void updateButtons() {
         boolean rowSelected = !grid.asSingleSelect().isEmpty();
         updateButton.setEnabled(rowSelected);
@@ -224,10 +228,10 @@ public class GridCrud<T> extends AbstractCrud<T> {
                     if (clickRowToUpdate) {
                         grid.asSingleSelect().clear();
                     } else {
-                    T selected = grid.asSingleSelect().getValue();
-                    crudLayout.hideForm();
-                    grid.asSingleSelect().clear();
-                    grid.asSingleSelect().setValue(selected);
+                        T selected = grid.asSingleSelect().getValue();
+                        crudLayout.hideForm();
+                        grid.asSingleSelect().clear();
+                        grid.asSingleSelect().setValue(selected);
                     }
                 },
                 operationPerformedClickEvent -> {

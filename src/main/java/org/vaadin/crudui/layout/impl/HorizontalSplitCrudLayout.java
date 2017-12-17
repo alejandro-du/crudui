@@ -24,7 +24,7 @@ public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
         mainLayout.setSecondComponent(secondComponent);
         mainLayout.setSplitPosition(60, Sizeable.Unit.PERCENTAGE);
         return mainLayout;
-        }
+    }
 
     @Override
     protected void addToolbarLayout(CssLayout toolbarLayout) {
