@@ -1,3 +1,7 @@
+[![Published on vaadin.com/directory](https://img.shields.io/vaadin-directory/status/crud-ui-add-on.svg)](https://img.shields.io/vaadin-directory/status/crud-ui-add-on.svg)
+[![Stars on vaadin.com/directory](https://img.shields.io/vaadin-directory/star/crud-ui-add-on.svg)](https://img.shields.io/vaadin-directory/star/crud-ui-add-on.svg)
+[![Latest version on vaadin.com/directory](https://img.shields.io/vaadin-directory/v/crud-ui-add-on.svg)](https://img.shields.io/vaadin-directory/v/crud-ui-add-on.svg)
+
 Crud UI Add-on provides an API to automatically generate CRUD-like UIs for any Java Bean at runtime.
 
 The API is defined through 4 interfaces:
