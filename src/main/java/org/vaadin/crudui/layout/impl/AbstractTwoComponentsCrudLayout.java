@@ -1,26 +1,32 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.icons.VaadinIcons;
-import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 /**
  * @author Alejandro Duarte.
  */
-public abstract class AbstractTwoComponentsCrudLayout extends Composite implements CrudLayout {
+public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> implements CrudLayout, HasSize {
 
     protected VerticalLayout firstComponent = new VerticalLayout();
     protected VerticalLayout secondComponent = new VerticalLayout();
-    protected Label captionLabel = new Label();
+    protected Div captionLabel = new Div();
     protected HorizontalLayout firstComponentHeaderLayout = new HorizontalLayout();
     protected HorizontalLayout secondComponentHeaderLayout = new HorizontalLayout();
-    protected CssLayout toolbarLayout = new CssLayout();
+    protected Div toolbarLayout = new Div();
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
     protected VerticalLayout formComponentLayout = new VerticalLayout();
@@ -29,8 +35,8 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite implemen
     protected Map<CrudOperation, String> formCaptions = new HashMap<>();
 
     public AbstractTwoComponentsCrudLayout() {
-        AbstractComponentContainer mainLayout = getMainLayout();
-        setCompositionRoot(mainLayout);
+        Component mainLayout = getMainLayout();
+        getContent().add(mainLayout);
         setSizeFull();
 
         firstComponent.setSizeFull();
@@ -41,10 +47,11 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite implemen
         secondComponent.setMargin(false);
         secondComponent.setSpacing(true);
 
-        captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
-        captionLabel.addStyleName(ValoTheme.LABEL_BOLD);
-        captionLabel.addStyleName(ValoTheme.LABEL_H3);
-        captionLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        // FIXME figure out replacement
+        // captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
+        // captionLabel.addStyleName(ValoTheme.LABEL_BOLD);
+        // captionLabel.addStyleName(ValoTheme.LABEL_H3);
+        // captionLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         captionLabel.setVisible(false);
 
         firstComponentHeaderLayout.setVisible(false);
@@ -54,84 +61,85 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite implemen
         secondComponentHeaderLayout.setSpacing(true);
 
         toolbarLayout.setVisible(false);
-        toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+        // FIXME figure out replacement
+        // toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         addToolbarLayout(toolbarLayout);
 
         filterLayout.setVisible(false);
         filterLayout.setSpacing(true);
-        firstComponentHeaderLayout.addComponent(filterLayout);
+        firstComponentHeaderLayout.add(filterLayout);
 
-        Label filterIcon = new Label();
-        filterIcon.setIcon(VaadinIcons.SEARCH);
-        filterLayout.addComponent(filterIcon);
+        Icon filterIcon = new Icon(VaadinIcons.SEARCH);
+        filterLayout.add(filterIcon);
 
         mainComponentLayout.setSizeFull();
         mainComponentLayout.setMargin(false);
-        firstComponent.addComponent(mainComponentLayout);
-        firstComponent.setExpandRatio(mainComponentLayout, 1);
+        firstComponent.add(mainComponentLayout);
+        firstComponent.setFlexGrow(1, mainComponentLayout);
 
-        formCaptionLayout.setMargin(new MarginInfo(false, true, false, true));
+        formCaptionLayout.setMargin(true);
 
         formComponentLayout.setSizeFull();
         formComponentLayout.setMargin(false);
-        secondComponent.addComponent(formComponentLayout);
-        secondComponent.setExpandRatio(formComponentLayout, 1);
+        secondComponent.add(formComponentLayout);
+        secondComponent.setFlexGrow(1, formComponentLayout);
 
         setFormCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
     }
 
-    protected abstract AbstractComponentContainer getMainLayout();
+    protected abstract Component getMainLayout();
 
-    protected abstract void addToolbarLayout(CssLayout toolbarLayout);
+    protected abstract void addToolbarLayout(Div toolbarLayout);
 
     @Override
     public void setCaption(String caption) {
         if (!captionLabel.isVisible()) {
             captionLabel.setVisible(true);
-            firstComponent.addComponent(captionLabel, 0);
+            firstComponent.getElement().insertChild(0, captionLabel.getElement());
         }
 
-        captionLabel.setValue(caption);
+        captionLabel.setText(caption);
     }
 
     @Override
     public void setMainComponent(Component component) {
-        mainComponentLayout.removeAllComponents();
-        mainComponentLayout.addComponent(component);
+        mainComponentLayout.removeAll();
+        mainComponentLayout.add(component);
     }
 
     @Override
     public void addFilterComponent(Component component) {
         if (!firstComponentHeaderLayout.isVisible()) {
             firstComponentHeaderLayout.setVisible(true);
-            firstComponent.addComponent(firstComponentHeaderLayout, firstComponent.getComponentCount() - 1);
+            firstComponent.getElement().insertChild(firstComponent.getComponentCount() - 1, firstComponentHeaderLayout.getElement());
         }
 
         filterLayout.setVisible(true);
-        filterLayout.addComponent(component);
+        filterLayout.add(component);
     }
 
     @Override
     public void showForm(CrudOperation operation, Component form) {
         String caption = formCaptions.get(operation);
         if (caption != null) {
-            Label label = new Label(caption);
-            label.addStyleName(ValoTheme.LABEL_COLORED);
-            formCaptionLayout.removeAllComponents();
-            formCaptionLayout.addComponent(label);
-            secondComponent.addComponent(formCaptionLayout, secondComponent.getComponentCount() - 1);
+            Div label = new Div(new Text(caption));
+            // FIXME figure out replacement
+            // label.addStyleName(ValoTheme.LABEL_COLORED);
+            formCaptionLayout.removeAll();
+            formCaptionLayout.add(label);
+            secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1, formCaptionLayout.getElement());
         } else {
-            secondComponent.removeComponent(formCaptionLayout);
+            secondComponent.remove(formCaptionLayout);
         }
 
-        formComponentLayout.removeAllComponents();
-        formComponentLayout.addComponent(form);
+        formComponentLayout.removeAll();
+        formComponentLayout.add(form);
     }
 
     @Override
     public void hideForm() {
-        formComponentLayout.removeAllComponents();
-        secondComponent.removeComponent(formCaptionLayout);
+        formComponentLayout.removeAll();
+        secondComponent.remove(formCaptionLayout);
     }
 
     public void setFormCaption(CrudOperation operation, String caption) {

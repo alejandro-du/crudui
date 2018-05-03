@@ -1,12 +1,13 @@
 package org.vaadin.crudui.layout;
 
-import com.vaadin.ui.Component;
 import org.vaadin.crudui.crud.CrudOperation;
+
+import com.vaadin.flow.component.Component;
 
 /**
  * @author Alejandro Duarte
  */
-public interface CrudLayout extends Component {
+public interface CrudLayout {
 
     void setCaption(String caption);
 

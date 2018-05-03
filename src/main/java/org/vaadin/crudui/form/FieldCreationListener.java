@@ -1,8 +1,8 @@
 package org.vaadin.crudui.form;
 
-import com.vaadin.data.HasValue;
-
 import java.io.Serializable;
+
+import com.vaadin.flow.component.HasValue;
 
 /**
  * @author Alejandro Duarte.

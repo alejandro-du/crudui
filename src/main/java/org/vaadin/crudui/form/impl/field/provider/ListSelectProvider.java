@@ -1,14 +1,14 @@
 package org.vaadin.crudui.form.impl.field.provider;
 
-import com.vaadin.ui.ItemCaptionGenerator;
-import com.vaadin.ui.ListSelect;
-
 import java.util.Collection;
+
+import com.vaadin.flow.component.ItemLabelGenerator;
+import com.vaadin.flow.component.listbox.ListBox;
 
 /**
  * @author Alejandro Duarte
  */
-public class ListSelectProvider<T> extends AbstractListingProvider<ListSelect<T>, T> {
+public class ListSelectProvider<T> extends AbstractListingProvider<ListBox<T>, T> {
 
     public ListSelectProvider(Collection<T> items) {
         super(items);
@@ -18,14 +18,15 @@ public class ListSelectProvider<T> extends AbstractListingProvider<ListSelect<T>
         super(caption, items);
     }
 
-    public ListSelectProvider(String caption, Collection<T> items, ItemCaptionGenerator<T> itemCaptionGenerator) {
+    public ListSelectProvider(String caption, Collection<T> items, ItemLabelGenerator<T> itemCaptionGenerator) {
         super(caption, items, itemCaptionGenerator);
     }
 
     @Override
-    protected ListSelect<T> buildAbstractListing() {
-        ListSelect<T> field = new ListSelect<>(caption, items);
-        field.setItemCaptionGenerator(itemCaptionGenerator);
+    protected ListBox<T> buildAbstractListing() {
+        ListBox<T> field = new ListBox<>();
+        field.setItems(items);
+        // FIXME missing item label generator for ListBox. Replace with renderer
         return field;
     }
 

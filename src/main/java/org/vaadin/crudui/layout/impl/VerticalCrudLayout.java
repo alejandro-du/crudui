@@ -1,9 +1,8 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 /**
  * @author Alejandro Duarte.
@@ -11,26 +10,26 @@ import com.vaadin.ui.VerticalLayout;
 public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
 
     @Override
-    protected AbstractComponentContainer getMainLayout() {
+    protected Component getMainLayout() {
         VerticalLayout mainLayout = new VerticalLayout(firstComponent, secondComponent);
         mainLayout.setMargin(false);
         return mainLayout;
     }
 
     @Override
-    protected void addToolbarLayout(CssLayout toolbarLayout) {
-        firstComponentHeaderLayout.addComponent(toolbarLayout);
+    protected void addToolbarLayout(Div toolbarLayout) {
+        firstComponentHeaderLayout.add(toolbarLayout);
     }
 
     @Override
     public void addToolbarComponent(Component component) {
         if (!firstComponentHeaderLayout.isVisible()) {
             firstComponentHeaderLayout.setVisible(true);
-            firstComponent.addComponent(firstComponentHeaderLayout, firstComponent.getComponentCount() - 1);
+            firstComponent.getElement().insertChild(firstComponent.getComponentCount() - 1, firstComponentHeaderLayout.getElement());
         }
 
         toolbarLayout.setVisible(true);
-        toolbarLayout.addComponent(component);
+        toolbarLayout.add(component);
     }
 
 }

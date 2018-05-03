@@ -1,31 +1,31 @@
 package org.vaadin.crudui.app;
 
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.renderers.DateRenderer;
-import com.vaadin.ui.renderers.TextRenderer;
+import java.time.ZoneId;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
 import org.apache.bval.util.StringUtils;
-import org.vaadin.crudui.crud.Crud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.impl.EditableGridCrud;
 import org.vaadin.crudui.crud.impl.GridCrud;
-import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.form.factory.GridLayoutCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 import org.vaadin.jetty.VaadinJettyServer;
 
-import java.sql.Date;
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.data.renderer.LocalDateRenderer;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.server.VaadinRequest;
 
 /**
  * @author Alejandro Duarte
@@ -34,16 +34,16 @@ public class TestUI extends UI implements CrudListener<User> {
 
     public static void main(String[] args) throws Exception {
         JPAService.init();
-        VaadinJettyServer server = new VaadinJettyServer(9090, TestUI.class);
+        VaadinJettyServer server = new VaadinJettyServer(9090);
         server.start();
     }
 
-    private TabSheet tabSheet = new TabSheet();
+    private Tabs tabSheet = new Tabs();
 
     @Override
     protected void init(VaadinRequest request) {
         tabSheet.setSizeFull();
-        setContent(tabSheet);
+        add(tabSheet);
 
         addCrud(getDefaultCrud(), "Default");
         addCrud(getDefaultCrudWithFixes(), "Default (with fixes)");
@@ -51,27 +51,28 @@ public class TestUI extends UI implements CrudListener<User> {
         addCrud(getEditableGridCrud(), "Editable Grid");
     }
 
-    private void addCrud(Crud crud, String caption) {
+    private void addCrud(Component crud, String caption) {
         VerticalLayout layout = new VerticalLayout(crud);
         layout.setSizeFull();
         layout.setMargin(true);
-        tabSheet.addTab(layout, caption);
+        Tab tab = new Tab(layout);
+        tab.setLabel(caption);
+        tabSheet.add(tab);
     }
 
-    private Crud getDefaultCrud() {
+    private Component getDefaultCrud() {
         return new GridCrud<>(User.class, this);
     }
 
-    private Crud getDefaultCrudWithFixes() {
+    private Component getDefaultCrudWithFixes() {
         GridCrud<User> crud = new GridCrud<>(User.class);
         crud.setCrudListener(this);
-        crud.getCrudFormFactory().setFieldProvider("groups", new CheckBoxGroupProvider<>(GroupRepository.findAll()));
         crud.getCrudFormFactory().setFieldProvider("mainGroup", new ComboBoxProvider<>(GroupRepository.findAll()));
 
         return crud;
     }
 
-    private Crud getConfiguredCrud() {
+    private Component getConfiguredCrud() {
         GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
         crud.setCrudListener(this);
 
@@ -80,24 +81,37 @@ public class TestUI extends UI implements CrudListener<User> {
 
         formFactory.setUseBeanValidation(true);
 
-        formFactory.setErrorListener(e -> Notification.show("Custom error message (simulated error)", Notification.Type.ERROR_MESSAGE));
+        formFactory.setErrorListener(e -> Notification.show("Custom error message (simulated error)"));
 
-        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "phoneNumber", "groups", "active", "mainGroup");
-        formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "phoneNumber", "groups", "password", "mainGroup", "active");
-        formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "phoneNumber", "password", "groups", "active", "mainGroup");
+        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "phoneNumber",
+                "groups", "active", "mainGroup");
+        formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "phoneNumber", "groups",
+                "password", "mainGroup", "active");
+        formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "phoneNumber",
+                "password", "groups", "active", "mainGroup");
         formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "phoneNumber");
 
         formFactory.setDisabledProperties("id");
 
-        crud.getGrid().setColumns("name", "birthDate", "email", "phoneNumber", "mainGroup", "active");
-        crud.getGrid().getColumn("mainGroup").setRenderer(group -> group == null ? "" : ((Group) group).getName(), new TextRenderer());
-        ((Grid.Column<User, Date>) crud.getGrid().getColumn("birthDate")).setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
+        // FIXME no way to set only Grid column order??
+        // crud.getGrid().setColumns("name", "birthDate", "email",
+        // "phoneNumber",
+        // "mainGroup", "active");
+        crud.getGrid().removeColumnByKey("mainGroup");
+        crud.getGrid().removeColumnByKey("birthDate");
+        crud.getGrid().addColumn(new TextRenderer<User>(user -> user == null ? "" : user.getMainGroup().getName()))
+                .setHeader("Main group");
+        crud.getGrid()
+                .addColumn(new LocalDateRenderer<User>(
+                        user -> user.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        "%1$tY-%1$tm-%1$te"))
+                .setHeader("Birthdate");
 
         formFactory.setFieldType("password", PasswordField.class);
-        formFactory.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
+        formFactory.setFieldCreationListener("birthDate", field -> ((DatePicker) field).setLocale(Locale.US));
 
-        formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), Group::getName));
-        formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), Group::getName));
+        formFactory.setFieldProvider("mainGroup",
+                new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), Group::getName));
 
         formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
         crud.setRowCountCaption("%d user(s) found");
@@ -108,19 +122,29 @@ public class TestUI extends UI implements CrudListener<User> {
         return crud;
     }
 
-    private Crud getEditableGridCrud() {
+    private Component getEditableGridCrud() {
         EditableGridCrud<User> crud = new EditableGridCrud<>(User.class, this);
 
-        crud.getGrid().setColumns("name", "birthDate", "email", "phoneNumber", "password", "groups", "mainGroup", "active");
-        crud.getCrudFormFactory().setVisibleProperties("name", "birthDate", "email", "phoneNumber", "password", "groups", "mainGroup", "active");
+        // FIXME no setColumns in Grid
+        // crud.getGrid().setColumns("name", "birthDate", "email",
+        // "phoneNumber",
+        // "password", "groups", "mainGroup",
+        // "active");
+        crud.getCrudFormFactory().setVisibleProperties("name", "birthDate", "email", "phoneNumber", "password",
+                "groups", "mainGroup", "active");
 
-        crud.getGrid().getColumn("password").setRenderer(user -> "********", new TextRenderer());
-        crud.getGrid().getColumn("mainGroup").setRenderer(group -> group == null ? "" : ((Group) group).getName(), new TextRenderer());
-        crud.getGrid().getColumn("groups").setRenderer(groups -> StringUtils.join(((Set<Group>) groups).stream().map(g -> g.getName()).collect(Collectors.toList()), ", "), new TextRenderer());
+        crud.getGrid().removeColumnByKey("password");
+        crud.getGrid().removeColumnByKey("mainGroup");
+        crud.getGrid().removeColumnByKey("groups");
+
+        crud.getGrid().addColumn(new TextRenderer<User>(user -> "********")).setHeader("Password");
+        crud.getGrid().addColumn(new TextRenderer<User>(user -> user == null ? "" : user.getMainGroup().getName()));
+        crud.getGrid().addColumn(new TextRenderer<User>(user -> StringUtils
+                .join((user.getGroups()).stream().map(g -> g.getName()).collect(Collectors.toList()), ", ")));
 
         crud.getCrudFormFactory().setFieldType("password", PasswordField.class);
-        crud.getCrudFormFactory().setFieldProvider("groups", new CheckBoxGroupProvider<>(null, GroupRepository.findAll(), group -> group.getName()));
-        crud.getCrudFormFactory().setFieldProvider("mainGroup", new ComboBoxProvider<>(null, GroupRepository.findAll(), group -> group.getName()));
+        crud.getCrudFormFactory().setFieldProvider("mainGroup",
+                new ComboBoxProvider<>(null, GroupRepository.findAll(), group -> group.getName()));
 
         crud.getCrudFormFactory().setUseBeanValidation(true);
 

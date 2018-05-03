@@ -1,15 +1,17 @@
 package org.vaadin.crudui.form;
 
-import com.vaadin.data.HasValue;
-
 import java.io.Serializable;
+
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 
 /**
  * @author Alejandro Duarte.
  */
 @FunctionalInterface
-public interface FieldProvider extends Serializable {
+public interface FieldProvider<C extends Component, T> extends Serializable {
 
-    HasValue buildField();
+    HasValue<ComponentValueChangeEvent<C, T>, T> buildField();
 
 }

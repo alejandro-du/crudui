@@ -1,69 +1,71 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.icons.VaadinIcons;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Composite;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 /**
  * @author Alejandro Duarte
  */
-public class WindowBasedCrudLayout extends Composite implements CrudLayout {
+public class WindowBasedCrudLayout extends Composite<Div> implements CrudLayout, HasSize {
 
     protected VerticalLayout mainLayout = new VerticalLayout();
-    protected Label captionLabel = new Label();
+    protected Span captionLabel = new Span();
     protected HorizontalLayout headerLayout = new HorizontalLayout();
-    protected CssLayout toolbarLayout = new CssLayout();
+    protected Div toolbarLayout = new Div();
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
-    protected Window formWindow;
+    protected Dialog formWindow;
     protected String formWindowWidth = "500px";
 
     protected Map<CrudOperation, String> windowCaptions = new HashMap<>();
 
     public WindowBasedCrudLayout() {
-        setCompositionRoot(mainLayout);
+        getContent().add(mainLayout);
         mainLayout.setSizeFull();
         mainLayout.setMargin(false);
         mainLayout.setSpacing(true);
         setSizeFull();
-
-        captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
-        captionLabel.addStyleName(ValoTheme.LABEL_BOLD);
-        captionLabel.addStyleName(ValoTheme.LABEL_H3);
-        captionLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        // FIXME find out Lumo styles
+        // captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
+        // captionLabel.addStyleName(ValoTheme.LABEL_BOLD);
+        // captionLabel.addStyleName(ValoTheme.LABEL_H3);
+        // captionLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         captionLabel.setVisible(false);
 
         headerLayout.setVisible(false);
         headerLayout.setSpacing(true);
 
         toolbarLayout.setVisible(false);
-        toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-        headerLayout.addComponent(toolbarLayout);
+        // FIXME find out Lumo style equivalent
+        // toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+        headerLayout.add(toolbarLayout);
 
         filterLayout.setVisible(false);
         filterLayout.setSpacing(true);
-        headerLayout.addComponent(filterLayout);
+        headerLayout.add(filterLayout);
 
-        Label filterIcon = new Label();
-        filterIcon.setIcon(VaadinIcons.SEARCH);
-        filterLayout.addComponent(filterIcon);
+        Icon filterIcon = new Icon(VaadinIcons.SEARCH);
+        filterLayout.add(filterIcon);
 
         mainComponentLayout.setSizeFull();
         mainComponentLayout.setMargin(false);
-        mainLayout.addComponent(mainComponentLayout);
-        mainLayout.setExpandRatio(mainComponentLayout, 1);
+        mainLayout.add(mainComponentLayout);
+        mainLayout.setFlexGrow(1, mainComponentLayout);
 
         setWindowCaption(CrudOperation.ADD, "Add");
         setWindowCaption(CrudOperation.UPDATE, "Update");
@@ -74,38 +76,38 @@ public class WindowBasedCrudLayout extends Composite implements CrudLayout {
     public void setCaption(String caption) {
         if (!captionLabel.isVisible()) {
             captionLabel.setVisible(true);
-            mainLayout.addComponent(captionLabel, 0);
+            mainLayout.getElement().insertChild(0, captionLabel.getElement());
         }
 
-        captionLabel.setValue(caption);
+        captionLabel.setText(caption);
     }
 
     @Override
     public void setMainComponent(Component component) {
-        mainComponentLayout.removeAllComponents();
-        mainComponentLayout.addComponent(component);
+        mainComponentLayout.removeAll();
+        mainComponentLayout.add(component);
     }
 
     @Override
     public void addFilterComponent(Component component) {
         if (!headerLayout.isVisible()) {
             headerLayout.setVisible(true);
-            mainLayout.addComponent(headerLayout, mainLayout.getComponentCount() - 1);
+            mainLayout.getElement().insertChild(mainLayout.getComponentCount() - 1, headerLayout.getElement());
         }
 
         filterLayout.setVisible(true);
-        filterLayout.addComponent(component);
+        filterLayout.add(component);
     }
 
     @Override
     public void addToolbarComponent(Component component) {
         if (!headerLayout.isVisible()) {
             headerLayout.setVisible(true);
-            mainLayout.addComponent(headerLayout, mainLayout.getComponentCount() - 1);
+            mainLayout.getElement().insertChild(mainLayout.getComponentCount() - 1, headerLayout.getElement());
         }
 
         toolbarLayout.setVisible(true);
-        toolbarLayout.addComponent(component);
+        toolbarLayout.add(component);
     }
 
     private void showWindow(String caption, Component form) {
@@ -113,11 +115,9 @@ public class WindowBasedCrudLayout extends Composite implements CrudLayout {
         windowLayout.setWidth("100%");
         windowLayout.setMargin(false);
 
-        formWindow = new Window(caption, windowLayout);
+        formWindow = new Dialog(new Label(caption), windowLayout);
         formWindow.setWidth(formWindowWidth);
-        formWindow.setModal(true);
-        formWindow.center();
-        UI.getCurrent().addWindow(formWindow);
+        formWindow.open();
     }
 
     @Override

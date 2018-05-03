@@ -5,7 +5,7 @@
     <groupId>org.vaadin.crudui</groupId>
     <artifactId>crudui</artifactId>
     <packaging>jar</packaging>
-    <version>2.3.0</version>
+    <version>2.4-SNAPSHOT</version>
     <name>Crud UI Add-on</name>
 
     <prerequisites>
@@ -13,11 +13,16 @@
     </prerequisites>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <vaadin.version>8.2.0</vaadin.version>
-        <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <!-- Dependencies -->
+        <vaadin.version>10.0.0.beta9</vaadin.version>
+        <flow.maven.plugin.version>1.0.0.beta9</flow.maven.plugin.version>
+        <jetty.version>9.3.7.v20160115</jetty.version>
+        <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 
         <!-- ZIP Manifest fields -->
         <Implementation-Version>${project.version}</Implementation-Version>
@@ -60,6 +65,18 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-bom</artifactId>
+                <type>pom</type>
+                <scope>import</scope>
+                <version>${vaadin.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -69,11 +86,9 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-server</artifactId>
-            <version>${vaadin.version}</version>
+            <artifactId>vaadin-core</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -89,7 +104,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -111,21 +125,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client-compiled</artifactId>
-            <version>${vaadin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-themes</artifactId>
-            <version>${vaadin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.vaadin.jetty</groupId>
             <artifactId>jetty-vaadin</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

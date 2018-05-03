@@ -3,8 +3,9 @@ package org.vaadin.data.converter;
 import java.text.*;
 import java.util.*;
 
-import com.vaadin.data.*;
-import com.vaadin.data.converter.*;
+import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.AbstractStringToNumberConverter;
 
 public class StringToByteConverter extends AbstractStringToNumberConverter<Byte> {
 
@@ -52,8 +53,7 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
 
     @Override
     public Result<Byte> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value,
-                context.getLocale().orElse(null));
+        Result<Number> n = convertToNumber(value, context.getLocale().orElse(null));
         return n.flatMap(number -> {
             if (number == null) {
                 return Result.ok(null);

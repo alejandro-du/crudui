@@ -1,11 +1,9 @@
 package org.vaadin.crudui.layout.impl;
 
-import com.vaadin.server.Sizeable;
-import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.AbstractSplitPanel;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
 
 /**
  * @author Alejandro Duarte.
@@ -13,33 +11,32 @@ import com.vaadin.ui.HorizontalSplitPanel;
 public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
 
     public HorizontalSplitCrudLayout() {
-        secondComponentHeaderLayout.setMargin(new MarginInfo(false, false, false, true));
+        secondComponentHeaderLayout.setMargin(true);
     }
 
     @Override
-    protected AbstractSplitPanel getMainLayout() {
-        HorizontalSplitPanel mainLayout = new HorizontalSplitPanel();
+    protected SplitLayout getMainLayout() {
+        SplitLayout mainLayout = new SplitLayout(firstComponent, secondComponent);
+        mainLayout.setOrientation(Orientation.HORIZONTAL);
         mainLayout.setSizeFull();
-        mainLayout.setFirstComponent(firstComponent);
-        mainLayout.setSecondComponent(secondComponent);
-        mainLayout.setSplitPosition(60, Sizeable.Unit.PERCENTAGE);
+        mainLayout.setSplitterPosition(60);
         return mainLayout;
     }
 
     @Override
-    protected void addToolbarLayout(CssLayout toolbarLayout) {
-        secondComponentHeaderLayout.addComponent(toolbarLayout);
+    protected void addToolbarLayout(Div toolbarLayout) {
+        secondComponentHeaderLayout.add(toolbarLayout);
     }
 
     @Override
     public void addToolbarComponent(Component component) {
         if (!secondComponentHeaderLayout.isVisible()) {
             secondComponentHeaderLayout.setVisible(true);
-            secondComponent.addComponent(secondComponentHeaderLayout, secondComponent.getComponentCount() - 1);
+            secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1, secondComponentHeaderLayout.getElement());
         }
 
         toolbarLayout.setVisible(true);
-        toolbarLayout.addComponent(component);
+        toolbarLayout.add(component);
     }
 
 }

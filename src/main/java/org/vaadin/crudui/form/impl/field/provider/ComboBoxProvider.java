@@ -1,9 +1,9 @@
 package org.vaadin.crudui.form.impl.field.provider;
 
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.ItemCaptionGenerator;
-
 import java.util.Collection;
+
+import com.vaadin.flow.component.ItemLabelGenerator;
+import com.vaadin.flow.component.combobox.ComboBox;
 
 /**
  * @author Alejandro Duarte
@@ -18,14 +18,14 @@ public class ComboBoxProvider<T> extends AbstractListingProvider<ComboBox<T>, T>
         super(caption, items);
     }
 
-    public ComboBoxProvider(String caption, Collection<T> items, ItemCaptionGenerator<T> itemCaptionGenerator) {
+    public ComboBoxProvider(String caption, Collection<T> items, ItemLabelGenerator<T> itemCaptionGenerator) {
         super(caption, items, itemCaptionGenerator);
     }
 
     @Override
     protected ComboBox<T> buildAbstractListing() {
         ComboBox<T> field = new ComboBox<>(caption, items);
-        field.setItemCaptionGenerator(itemCaptionGenerator);
+        field.setItemLabelGenerator(itemCaptionGenerator);
         return field;
     }
 

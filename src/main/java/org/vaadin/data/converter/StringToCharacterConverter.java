@@ -1,6 +1,8 @@
 package org.vaadin.data.converter;
 
-import com.vaadin.data.*;
+import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.Converter;
 
 public class StringToCharacterConverter implements Converter<String, Character> {
 
@@ -10,7 +12,7 @@ public class StringToCharacterConverter implements Converter<String, Character> 
             return Result.ok(null);
         }
 
-        if (value.length()>1) {
+        if (value.length() > 1) {
             return Result.error("Could not convert '" + value);
         }
 

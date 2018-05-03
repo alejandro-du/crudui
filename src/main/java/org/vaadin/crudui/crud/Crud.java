@@ -1,13 +1,12 @@
 package org.vaadin.crudui.crud;
 
-import com.vaadin.ui.Component;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 
 /**
  * @author Alejandro Duarte
  */
-public interface Crud<T> extends Component {
+public interface Crud<T> {
 
     void setAddOperationVisible(boolean visible);
 

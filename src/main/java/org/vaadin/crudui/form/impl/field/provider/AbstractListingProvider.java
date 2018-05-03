@@ -1,22 +1,26 @@
 package org.vaadin.crudui.form.impl.field.provider;
 
-import com.vaadin.data.HasValue;
-import com.vaadin.ui.AbstractListing;
-import com.vaadin.ui.ItemCaptionGenerator;
+import java.util.Collection;
+
 import org.vaadin.crudui.form.FieldProvider;
 
-import java.util.Collection;
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.ItemLabelGenerator;
+import com.vaadin.flow.data.binder.HasDataProvider;
 
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractListingProvider<F extends AbstractListing, T> implements FieldProvider {
+public abstract class AbstractListingProvider<C extends Component & HasDataProvider<T> & HasValue<ComponentValueChangeEvent<C, T>, T>, T>
+        implements FieldProvider<C, T> {
 
     protected String caption;
     protected Collection<T> items;
-    protected ItemCaptionGenerator<T> itemCaptionGenerator;
+    protected ItemLabelGenerator<T> itemCaptionGenerator;
 
-    protected abstract F buildAbstractListing();
+    protected abstract C buildAbstractListing();
 
     public AbstractListingProvider(Collection<T> items) {
         this(null, items, t -> t == null ? "" : t.toString());
@@ -26,18 +30,19 @@ public abstract class AbstractListingProvider<F extends AbstractListing, T> impl
         this(caption, items, t -> t == null ? "" : t.toString());
     }
 
-    public AbstractListingProvider(String caption, Collection<T> items, ItemCaptionGenerator<T> itemCaptionGenerator) {
+    public AbstractListingProvider(String caption, Collection<T> items, ItemLabelGenerator<T> itemCaptionGenerator) {
         this.caption = caption;
         this.items = items;
         this.itemCaptionGenerator = itemCaptionGenerator;
     }
 
     @Override
-    public HasValue buildField() {
-        F field = buildAbstractListing();
-        field.setCaption(caption);
+    public HasValue<ComponentValueChangeEvent<C, T>, T> buildField() {
+        C field = buildAbstractListing();
+        // FIXME missing feature setCaption
+        // field.setCaption(caption);
         field.setItems(items);
-        return (HasValue) field;
+        return field;
     }
 
 }
