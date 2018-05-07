@@ -8,6 +8,7 @@ import java.util.Date;
 import org.vaadin.crudui.form.FieldProvider;
 
 import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -29,7 +30,7 @@ public class DefaultFieldProvider<T> implements FieldProvider {
     }
 
     @Override
-    public HasValue buildField() {
+    public HasValueAndElement buildField() {
         if (Boolean.class.isAssignableFrom(type) || boolean.class == type) {
             return new Checkbox();
         }

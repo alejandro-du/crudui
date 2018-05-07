@@ -1,13 +1,13 @@
 package org.vaadin.crudui.form;
 
-import org.vaadin.crudui.crud.CrudOperation;
-
-import com.vaadin.flow.component.HasValue;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import org.vaadin.crudui.crud.CrudOperation;
+
+import com.vaadin.flow.component.HasValueAndElement;
 
 /**
  * @author Alejandro Duarte
@@ -49,12 +49,12 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     }
 
     @Override
-    public void setFieldType(CrudOperation operation, String property, Class<? extends HasValue<?, ?>> type) {
+    public void setFieldType(CrudOperation operation, String property, Class<? extends HasValueAndElement<?, ?>> type) {
         getConfiguration(operation).getFieldTypes().put(property, type);
     }
 
     @Override
-    public void setFieldType(String property, Class<? extends HasValue<?, ?>> type) {
+    public void setFieldType(String property, Class<? extends HasValueAndElement<?, ?>> type) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldType(operation, property, type));
     }
 

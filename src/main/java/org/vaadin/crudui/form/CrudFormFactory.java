@@ -1,15 +1,15 @@
 package org.vaadin.crudui.form;
 
+import java.io.Serializable;
+import java.util.function.Consumer;
+
 import org.vaadin.crudui.crud.CrudOperation;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
-
-import java.io.Serializable;
-import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
@@ -30,9 +30,9 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void setFieldCaptions(String... captions);
 
-    void setFieldType(CrudOperation operation, String property, Class<? extends HasValue<?, ?>> type);
+    void setFieldType(CrudOperation operation, String property, Class<? extends HasValueAndElement<?, ?>> type);
 
-    void setFieldType(String property, Class<? extends HasValue<?, ?>> type);
+    void setFieldType(String property, Class<? extends HasValueAndElement<?, ?>> type);
 
     void setFieldCreationListener(CrudOperation operation, String property, FieldCreationListener listener);
 

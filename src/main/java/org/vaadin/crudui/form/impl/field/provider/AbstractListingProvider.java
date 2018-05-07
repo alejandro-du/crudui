@@ -6,14 +6,14 @@ import org.vaadin.crudui.form.FieldProvider;
 
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.data.binder.HasDataProvider;
 
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractListingProvider<C extends Component & HasDataProvider<T> & HasValue<ComponentValueChangeEvent<C, T>, T>, T>
+public abstract class AbstractListingProvider<C extends Component & HasDataProvider<T> & HasValueAndElement<ComponentValueChangeEvent<C, T>, T>, T>
         implements FieldProvider<C, T> {
 
     protected String caption;
@@ -37,7 +37,7 @@ public abstract class AbstractListingProvider<C extends Component & HasDataProvi
     }
 
     @Override
-    public HasValue<ComponentValueChangeEvent<C, T>, T> buildField() {
+    public HasValueAndElement<ComponentValueChangeEvent<C, T>, T> buildField() {
         C field = buildAbstractListing();
         // FIXME missing feature setCaption
         // field.setCaption(caption);

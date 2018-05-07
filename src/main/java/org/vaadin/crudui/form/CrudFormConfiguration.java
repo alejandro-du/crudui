@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.HasValueAndElement;
 
 /**
  * @author Alejandro Duarte.
@@ -16,7 +17,7 @@ public class CrudFormConfiguration implements Serializable {
     protected List<String> visibleProperties = new ArrayList<>();
     protected List<String> disabledProperties = new ArrayList<>();
     protected List<String> fieldCaptions = new ArrayList<>();
-    protected Map<Object, Class<? extends HasValue<?, ?>>> fieldTypes = new HashMap<>();
+    protected Map<Object, Class<? extends HasValueAndElement<?, ?>>> fieldTypes = new HashMap<>();
     protected Map<Object, FieldCreationListener> fieldCreationListeners = new HashMap<>();
     protected Map<Object, FieldProvider<?, ?>> fieldProviders = new HashMap<>();
     protected boolean useBeanValidation;
@@ -45,11 +46,11 @@ public class CrudFormConfiguration implements Serializable {
         this.fieldCaptions = fieldCaptions;
     }
 
-    public Map<Object, Class<? extends HasValue<?, ?>>> getFieldTypes() {
+    public Map<Object, Class<? extends HasValueAndElement<?, ?>>> getFieldTypes() {
         return fieldTypes;
     }
 
-    public void setFieldTypes(Map<Object, Class<? extends HasValue<?, ?>>> fieldTypes) {
+    public void setFieldTypes(Map<Object, Class<? extends HasValueAndElement<?, ?>>> fieldTypes) {
         this.fieldTypes = fieldTypes;
     }
 

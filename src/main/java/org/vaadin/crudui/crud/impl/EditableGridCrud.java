@@ -13,7 +13,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -47,7 +47,7 @@ public class EditableGridCrud<T> extends GridCrud<T> {
         }
 
         @Override
-        public List<HasValue> buildFields(CrudOperation operation, T domainObject, boolean readOnly) {
+        public List<HasValueAndElement> buildFields(CrudOperation operation, T domainObject, boolean readOnly) {
             return super.buildFields(operation, domainObject, readOnly);
         }
 
