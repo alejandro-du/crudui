@@ -12,7 +12,10 @@ public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
     @Override
     protected Component getMainLayout() {
         VerticalLayout mainLayout = new VerticalLayout(firstComponent, secondComponent);
+        mainLayout.setSizeFull();
         mainLayout.setMargin(false);
+        firstComponent.setSizeFull();
+        secondComponent.setSizeFull();
         return mainLayout;
     }
 

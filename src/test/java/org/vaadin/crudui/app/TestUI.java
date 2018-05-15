@@ -1,7 +1,6 @@
 package org.vaadin.crudui.app;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -12,11 +11,8 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinRequest;
-import org.apache.bval.util.StringUtils;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
-import org.vaadin.crudui.crud.impl.EditableGridCrud;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.form.factory.GridLayoutCrudFormFactory;
@@ -26,7 +22,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 /**
  * @author Alejandro Duarte
@@ -48,7 +43,6 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         addCrud(getDefaultCrud(), "Default");
         addCrud(getDefaultCrudWithFixes(), "Default (with fixes)");
         addCrud(getConfiguredCrud(), "Configured");
-        addCrud(getEditableGridCrud(), "Editable Grid");
     }
 
     private void addCrud(Component crud, String caption) {
@@ -58,9 +52,9 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         Tab tab = new Tab(caption);
         tabSheet.add(tab);
         container.add(crud);
-        crud.setVisible(false);
+        crud.setVisible(tabSheet.getChildren().count() == 1);
         tabSheet.addSelectedChangeListener(e -> {
-                crud.setVisible(tabSheet.getSelectedTab() == tab);
+            crud.setVisible(tabSheet.getSelectedTab() == tab);
         });
     }
 
@@ -122,35 +116,6 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
 
         crud.setClickRowToUpdate(true);
         crud.setUpdateOperationVisible(false);
-
-        return crud;
-    }
-
-    private Component getEditableGridCrud() {
-        EditableGridCrud<User> crud = new EditableGridCrud<>(User.class, this);
-
-        // FIXME no setColumns in Grid
-        // crud.getGrid().setColumns("name", "birthDate", "email",
-        // "phoneNumber",
-        // "password", "groups", "mainGroup",
-        // "active");
-        crud.getCrudFormFactory().setVisibleProperties("name", "birthDate", "email", "phoneNumber", "password",
-                "groups", "mainGroup", "active");
-
-        crud.getGrid().removeColumnByKey("password");
-        crud.getGrid().removeColumnByKey("mainGroup");
-        crud.getGrid().removeColumnByKey("groups");
-
-        crud.getGrid().addColumn(new TextRenderer<User>(user -> "********")).setHeader("Password");
-        crud.getGrid().addColumn(new TextRenderer<User>(user -> user == null ? "" : user.getMainGroup().getName()));
-        crud.getGrid().addColumn(new TextRenderer<User>(user -> StringUtils
-                .join((user.getGroups()).stream().map(g -> g.getName()).collect(Collectors.toList()), ", ")));
-
-        crud.getCrudFormFactory().setFieldType("password", PasswordField.class);
-        crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>(null, GroupRepository.findAll(), group -> group.getName()));
-
-        crud.getCrudFormFactory().setUseBeanValidation(true);
 
         return crud;
     }

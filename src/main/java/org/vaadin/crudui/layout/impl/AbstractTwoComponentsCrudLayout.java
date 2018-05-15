@@ -1,11 +1,5 @@
 package org.vaadin.crudui.layout.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.vaadin.crudui.crud.CrudOperation;
-import org.vaadin.crudui.layout.CrudLayout;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
@@ -15,6 +9,11 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.layout.CrudLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Alejandro Duarte.
@@ -128,6 +127,8 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
             formCaptionLayout.removeAll();
             formCaptionLayout.add(label);
             secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1, formCaptionLayout.getElement());
+        } else if (formCaptionLayout.getElement().getParent() != null) {
+            secondComponent.getElement().removeChild(formCaptionLayout.getElement());
         }
 
         formComponentLayout.removeAll();
@@ -137,7 +138,9 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
     @Override
     public void hideForm() {
         formComponentLayout.removeAll();
-        secondComponent.remove(formCaptionLayout);
+        if (formCaptionLayout.getElement().getParent() != null) {
+            secondComponent.getElement().removeChild(formCaptionLayout.getElement());
+        }
     }
 
     public void setFormCaption(CrudOperation operation, String caption) {

@@ -141,16 +141,15 @@ public class GridCrud<T> extends AbstractCrud<T> {
         T domainObject = grid.asSingleSelect().getValue();
 
         if (domainObject != null) {
-            Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, null, event -> {
-                grid.asSingleSelect().clear();
-            });
-
-            crudLayout.showForm(CrudOperation.READ, form);
-
             if (clickRowToUpdate) {
                 updateButtonClicked();
-            }
+            } else {
+                Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, null, event -> {
+                    grid.asSingleSelect().clear();
+                });
 
+                crudLayout.showForm(CrudOperation.READ, form);
+            }
         } else {
             crudLayout.hideForm();
         }
