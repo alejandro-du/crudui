@@ -1,10 +1,18 @@
 package org.vaadin.crudui.app;
 
-import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.data.renderer.LocalDateRenderer;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinRequest;
 import org.apache.bval.util.StringUtils;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -13,37 +21,29 @@ import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.form.factory.GridLayoutCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
-import org.vaadin.jetty.VaadinJettyServer;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.data.renderer.LocalDateRenderer;
-import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.server.VaadinRequest;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * @author Alejandro Duarte
  */
-public class TestUI extends UI implements CrudListener<User> {
-
-    public static void main(String[] args) throws Exception {
-        JPAService.init();
-        VaadinJettyServer server = new VaadinJettyServer(9090);
-        server.start();
-    }
+@Route("")
+public class TestUI extends VerticalLayout implements CrudListener<User> {
 
     private Tabs tabSheet = new Tabs();
+    private Div container = new Div();
 
-    @Override
-    protected void init(VaadinRequest request) {
-        tabSheet.setSizeFull();
-        add(tabSheet);
+    public TestUI() {
+        JPAService.init();
+
+        container.setSizeFull();
+
+        add(tabSheet, container);
+        setSizeFull();
 
         addCrud(getDefaultCrud(), "Default");
         addCrud(getDefaultCrudWithFixes(), "Default (with fixes)");
@@ -55,9 +55,13 @@ public class TestUI extends UI implements CrudListener<User> {
         VerticalLayout layout = new VerticalLayout(crud);
         layout.setSizeFull();
         layout.setMargin(true);
-        Tab tab = new Tab(layout);
-        tab.setLabel(caption);
+        Tab tab = new Tab(caption);
         tabSheet.add(tab);
+        container.add(crud);
+        crud.setVisible(false);
+        tabSheet.addSelectedChangeListener(e -> {
+                crud.setVisible(tabSheet.getSelectedTab() == tab);
+        });
     }
 
     private Component getDefaultCrud() {
@@ -104,7 +108,7 @@ public class TestUI extends UI implements CrudListener<User> {
         crud.getGrid()
                 .addColumn(new LocalDateRenderer<User>(
                         user -> user.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                        "%1$tY-%1$tm-%1$te"))
+                        DateTimeFormatter.ISO_LOCAL_DATE))
                 .setHeader("Birthdate");
 
         formFactory.setFieldType("password", PasswordField.class);

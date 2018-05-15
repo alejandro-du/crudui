@@ -128,8 +128,6 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
             formCaptionLayout.removeAll();
             formCaptionLayout.add(label);
             secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1, formCaptionLayout.getElement());
-        } else {
-            secondComponent.remove(formCaptionLayout);
         }
 
         formComponentLayout.removeAll();

@@ -5,7 +5,7 @@
     <groupId>org.vaadin.crudui</groupId>
     <artifactId>crudui</artifactId>
     <packaging>jar</packaging>
-    <version>2.4-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <name>Crud UI Add-on</name>
 
     <prerequisites>
@@ -13,24 +13,12 @@
     </prerequisites>
 
     <properties>
+        <vaadin.version>10.0.0.beta10</vaadin.version>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-        <!-- Dependencies -->
-        <vaadin.version>10.0.0.beta9</vaadin.version>
-        <flow.maven.plugin.version>1.0.0.beta9</flow.maven.plugin.version>
-        <jetty.version>9.3.7.v20160115</jetty.version>
-        <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-
-        <!-- ZIP Manifest fields -->
-        <Implementation-Version>${project.version}</Implementation-Version>
-        <!-- Must not change this because of the Directory -->
-        <Implementation-Title>${project.name}</Implementation-Title>
-        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-        <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
-        <Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
     </properties>
 
     <organization>
@@ -60,8 +48,18 @@
 
     <repositories>
         <repository>
-            <id>vaadin-addons</id>
+            <id>Vaadin Directory</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+        <repository>
+            <id>Vaadin prereleases</id>
+            <url>http://maven.vaadin.com/vaadin-prereleases</url>
+        </repository>
+        <!-- The bintray repository contain webjars immediately after generation. If the webjar is available
+             in Maven central, you do not need this repository -->
+        <repository>
+            <id>webjars</id>
+            <url>https://dl.bintray.com/webjars/maven</url>
         </repository>
     </repositories>
 
@@ -86,9 +84,9 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-core</artifactId>
-            <scope>provided</scope>
+            <artifactId>vaadin</artifactId>
         </dependency>
+
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -122,12 +120,6 @@
             <groupId>org.apache.bval</groupId>
             <artifactId>org.apache.bval.bundle</artifactId>
             <version>1.1.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.vaadin.jetty</groupId>
-            <artifactId>jetty-vaadin</artifactId>
-            <version>2.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -167,134 +159,90 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.0.2</version>
                 <configuration>
                     <archive>
                         <index>true</index>
                         <manifest>
-                            <addClasspath>true</addClasspath>
+                            <addClasspath>false</addClasspath>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <!-- Package format version - do not change -->
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
-                            <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadoc</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.7.v20160115</version>
                 <configuration>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>assembly/assembly.xml</descriptor>
-                    </descriptors>
+                    <useTestScope>true</useTestScope>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>install</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Testing -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
             </plugin>
         </plugins>
-
-        <!-- This is needed for the sources required by the client-side compiler to be
-            included in the produced JARs -->
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <excludes>
-                    <exclude>rebel.xml</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-
     </build>
 
     <profiles>
         <profile>
-            <!-- Vaadin pre-release repositories -->
-            <id>vaadin-prerelease</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <repositories>
-                <repository>
-                    <id>vaadin-prereleases</id>
-                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
-                </repository>
-                <repository>
-                    <id>vaadin-snapshots</id>
-                    <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>vaadin-prereleases</id>
-                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
-                </pluginRepository>
-                <pluginRepository>
-                    <id>vaadin-snapshots</id>
-                    <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
+            <id>directory</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.6</version>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>assembly/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>install</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
