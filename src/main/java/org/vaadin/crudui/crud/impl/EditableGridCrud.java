@@ -56,19 +56,11 @@ public class EditableGridCrud<T> extends GridCrud<T> {
     }
 
     public EditableGridCrud(Class<T> domainType) {
-        this(domainType, new WindowBasedCrudLayout(), null);
+        this(domainType, new WindowBasedCrudLayout());
     }
 
     public EditableGridCrud(Class<T> domainType, CrudLayout crudLayout) {
-        this(domainType, crudLayout, null);
-    }
-
-    public EditableGridCrud(Class<T> domainType, CrudListener<T> crudListener) {
-        this(domainType, new WindowBasedCrudLayout(), crudListener);
-    }
-
-    public EditableGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudListener<T> crudListener) {
-        super(domainType, crudLayout, null, crudListener);
+        super(domainType, crudLayout, null);
         crudFormFactory = new GridOnlyCrudFormFactory<>(domainType);
         setAddOperationVisible(false);
         setUpdateOperationVisible(false);

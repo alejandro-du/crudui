@@ -1,5 +1,6 @@
 package org.vaadin.crudui.app;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
@@ -10,7 +11,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
-import org.apache.bval.util.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 import org.vaadin.crudui.crud.Crud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -59,7 +61,9 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     private Crud getDefaultCrud() {
-        return new GridCrud<>(User.class, this);
+    	GridCrud<User> gridCrud = new GridCrud<>(User.class);
+    	gridCrud.setCrudListener(this);
+        return gridCrud;
     }
 
     private Crud getDefaultCrudWithFixes() {
@@ -79,6 +83,7 @@ public class TestUI extends UI implements CrudListener<User> {
         crud.setCrudFormFactory(formFactory);
 
         formFactory.setUseBeanValidation(true);
+        formFactory.setJpaTypeForJpaValidation(JPAService.getFactory().getMetamodel().managedType(User.class));
 
         formFactory.setErrorListener(e -> Notification.show("Custom error message (simulated error)", Notification.Type.ERROR_MESSAGE));
 
@@ -109,7 +114,8 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     private Crud getEditableGridCrud() {
-        EditableGridCrud<User> crud = new EditableGridCrud<>(User.class, this);
+        EditableGridCrud<User> crud = new EditableGridCrud<>(User.class);
+        crud.setCrudListener(this);
 
         crud.getGrid().setColumns("name", "birthDate", "email", "phoneNumber", "password", "groups", "mainGroup", "active");
         crud.getCrudFormFactory().setVisibleProperties("name", "birthDate", "email", "phoneNumber", "password", "groups", "mainGroup", "active");
@@ -147,8 +153,11 @@ public class TestUI extends UI implements CrudListener<User> {
     }
 
     @Override
-    public Collection<User> findAll() {
-        return UserRepository.findAll();
+    public DataProvider<User, ?> getDataProvider() {
+    	return DataProvider.fromCallbacks(
+    			q -> UserRepository.findAll().subList(q.getOffset(), q.getOffset()+q.getLimit()).stream()
+    			, q -> UserRepository.findAll().size()
+    			);
     }
 
 }

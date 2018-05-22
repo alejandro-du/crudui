@@ -1,12 +1,15 @@
 package org.vaadin.crudui.form;
 
+import java.io.Serializable;
+import java.util.function.Consumer;
+
+import javax.persistence.metamodel.ManagedType;
+
+import org.vaadin.crudui.crud.CrudOperation;
+
 import com.vaadin.data.HasValue;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import org.vaadin.crudui.crud.CrudOperation;
-
-import java.io.Serializable;
-import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
@@ -46,5 +49,9 @@ public interface CrudFormFactory<T> extends Serializable {
     void setErrorListener(Consumer<Exception> errorListener);
 
     void showError(CrudOperation operation, Exception e);
+
+	void setJpaTypeForJpaValidation(CrudOperation operation, ManagedType<?> managedType);
+
+	void setJpaTypeForJpaValidation(ManagedType<?> managedType);
 
 }
