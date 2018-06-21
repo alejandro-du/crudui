@@ -1,7 +1,6 @@
 package org.vaadin.crudui.layout.impl;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 /**
@@ -21,7 +20,7 @@ public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
     }
 
     @Override
-    protected void addToolbarLayout(Div toolbarLayout) {
+    protected void addToolbarLayout(Component toolbarLayout) {
         firstComponentHeaderLayout.add(toolbarLayout);
     }
 

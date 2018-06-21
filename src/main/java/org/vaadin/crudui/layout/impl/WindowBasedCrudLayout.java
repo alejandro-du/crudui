@@ -4,8 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -22,9 +21,9 @@ import java.util.Map;
 public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements CrudLayout, HasSize {
 
     protected VerticalLayout mainLayout = new VerticalLayout();
-    protected Span captionLabel = new Span();
+    protected H3 captionLabel = new H3();
     protected HorizontalLayout headerLayout = new HorizontalLayout();
-    protected Div toolbarLayout = new Div();
+    protected HorizontalLayout toolbarLayout = new HorizontalLayout();
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
     protected Dialog formWindow;
@@ -119,7 +118,7 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         windowLayout.setMargin(false);
         windowLayout.setPadding(false);
 
-        formWindow = new Dialog(new Span(caption), windowLayout);
+        formWindow = new Dialog(new H3(caption), windowLayout);
         formWindow.setWidth(formWindowWidth);
         formWindow.open();
     }

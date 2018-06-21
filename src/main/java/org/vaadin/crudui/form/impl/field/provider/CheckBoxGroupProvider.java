@@ -18,7 +18,7 @@ public class CheckBoxGroupProvider<T> implements FieldProvider {
     public CheckBoxGroupProvider(String label, Collection<T> items, ValueProvider<T, String> itemCaptionGenerator) {
         grid.setItems(items);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.addColumn(itemCaptionGenerator::apply);
+        grid.addColumn(itemCaptionGenerator::apply).setHeader(label);
         grid.setHeightByRows(true);
         grid.getHeaderRows().clear();
     }

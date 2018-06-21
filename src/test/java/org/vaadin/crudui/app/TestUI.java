@@ -109,7 +109,6 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
 
         formFactory.setDisabledProperties("id");
 
-        // FIXME no way to set only Grid column order??
         crud.getGrid().setColumns("name", "birthDate", "email", "phoneNumber", "mainGroup", "active");
         crud.getGrid().removeColumnByKey("mainGroup");
         crud.getGrid().removeColumnByKey("birthDate");

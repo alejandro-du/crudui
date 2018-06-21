@@ -1,7 +1,6 @@
 package org.vaadin.crudui.layout.impl;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
 
@@ -23,7 +22,7 @@ public class VerticalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
     }
 
     @Override
-    protected void addToolbarLayout(Div toolbarLayout) {
+    protected void addToolbarLayout(Component toolbarLayout) {
         firstComponentHeaderLayout.add(toolbarLayout);
     }
 

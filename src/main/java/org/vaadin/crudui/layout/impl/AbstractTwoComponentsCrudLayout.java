@@ -25,7 +25,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
     protected Div captionLabel = new Div();
     protected HorizontalLayout firstComponentHeaderLayout = new HorizontalLayout();
     protected HorizontalLayout secondComponentHeaderLayout = new HorizontalLayout();
-    protected Div toolbarLayout = new Div();
+    protected HorizontalLayout toolbarLayout = new HorizontalLayout();
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
     protected VerticalLayout formComponentLayout = new VerticalLayout();
@@ -93,7 +93,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 
     protected abstract Component getMainLayout();
 
-    protected abstract void addToolbarLayout(Div toolbarLayout);
+    protected abstract void addToolbarLayout(Component toolbarLayout);
 
     @Override
     public void setCaption(String caption) {

@@ -41,6 +41,7 @@ public abstract class AbstractListingProvider<C extends Component & HasDataProvi
         C field = buildAbstractListing();
         // FIXME missing feature setCaption
         // field.setCaption(caption);
+
         field.setItems(items);
         return field;
     }
