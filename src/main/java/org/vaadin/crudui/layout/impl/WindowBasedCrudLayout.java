@@ -6,6 +6,7 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -60,7 +61,8 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         filterLayout.setSpacing(true);
         headerLayout.add(filterLayout);
 
-        filterLayout.add(VaadinIcon.SEARCH.create());
+        Icon icon = VaadinIcon.SEARCH.create();
+        filterLayout.add(icon);
 
         mainComponentLayout.setSizeFull();
         mainComponentLayout.setMargin(false);

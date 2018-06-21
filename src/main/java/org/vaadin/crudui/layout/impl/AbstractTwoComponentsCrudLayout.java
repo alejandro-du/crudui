@@ -6,6 +6,7 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -67,15 +68,17 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 
         filterLayout.setVisible(false);
         filterLayout.setSpacing(true);
+        filterLayout.setMargin(true);
         firstComponentHeaderLayout.add(filterLayout);
 
+        filterLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         filterLayout.add(VaadinIcon.SEARCH.create());
 
         mainComponentLayout.setSizeFull();
         mainComponentLayout.setMargin(false);
         mainComponentLayout.setPadding(false);
         firstComponent.add(mainComponentLayout);
-        firstComponent.setFlexGrow(1, mainComponentLayout);
+        firstComponent.expand(mainComponentLayout);
 
         formCaptionLayout.setMargin(true);
 

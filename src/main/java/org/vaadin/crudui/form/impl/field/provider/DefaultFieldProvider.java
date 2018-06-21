@@ -1,13 +1,5 @@
 package org.vaadin.crudui.form.impl.field.provider;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-
-import org.vaadin.crudui.form.FieldProvider;
-
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -15,13 +7,17 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.data.selection.MultiSelect;
+import org.vaadin.crudui.form.FieldProvider;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author Alejandro Duarte.
  */
-public class DefaultFieldProvider<T> implements FieldProvider {
+public class DefaultFieldProvider implements FieldProvider {
 
     private Class<?> type;
 
@@ -50,7 +46,7 @@ public class DefaultFieldProvider<T> implements FieldProvider {
         if (Collection.class.isAssignableFrom(type)) {
             Grid<?> grid = new Grid<>();
             grid.setSelectionMode(SelectionMode.MULTI);
-            grid.addColumn(new TextRenderer<>(item -> item.toString()));
+            grid.addColumn(item -> item.toString());
             return grid.asMultiSelect();
         }
 

@@ -14,6 +14,7 @@ import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.impl.GridCrud;
+import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.form.factory.GridLayoutCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
@@ -55,7 +56,9 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         container.setSizeFull();
 
         add(tabSheet, container);
+        expand(container);
         setSizeFull();
+        setPadding(false);
 
         addCrud(getDefaultCrud(), "Default");
         addCrud(getDefaultCrudWithFixes(), "Default (with fixes)");
@@ -121,6 +124,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         formFactory.setFieldType("password", PasswordField.class);
         formFactory.setFieldCreationListener("birthDate", field -> ((DatePicker) field).setLocale(Locale.US));
 
+        formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), Group::getName));
         formFactory.setFieldProvider("mainGroup",
                 new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), Group::getName));
 
