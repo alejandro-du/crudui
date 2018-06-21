@@ -1,11 +1,11 @@
 package org.vaadin.data.converter;
 
-import java.text.*;
-import java.util.*;
-
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.AbstractStringToNumberConverter;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class StringToByteConverter extends AbstractStringToNumberConverter<Byte> {
 
@@ -13,8 +13,7 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
      * Creates a new converter instance with the given error message. Empty
      * strings are converted to <code>null</code>.
      *
-     * @param errorMessage
-     *            the error message to use if conversion fails
+     * @param errorMessage the error message to use if conversion fails
      */
     public StringToByteConverter(String errorMessage) {
         this(null, errorMessage);
@@ -24,11 +23,9 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
      * Creates a new converter instance with the given empty string value and
      * error message.
      *
-     * @param emptyValue
-     *            the presentation value to return when converting an empty
-     *            string, may be <code>null</code>
-     * @param errorMessage
-     *            the error message to use if conversion fails
+     * @param emptyValue   the presentation value to return when converting an empty
+     *                     string, may be <code>null</code>
+     * @param errorMessage the error message to use if conversion fails
      */
     public StringToByteConverter(Byte emptyValue, String errorMessage) {
         super(emptyValue, errorMessage);
@@ -39,8 +36,7 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
      * {@link #convertToPresentation(Object, ValueContext)} and
      * {@link #convertToModel(String, ValueContext)}.
      *
-     * @param locale
-     *            The locale to use
+     * @param locale The locale to use
      * @return A NumberFormat instance
      */
     @Override
@@ -53,7 +49,7 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
 
     @Override
     public Result<Byte> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value, context.getLocale().orElse(null));
+        Result<Number> n = convertToNumber(value, context);
         return n.flatMap(number -> {
             if (number == null) {
                 return Result.ok(null);
@@ -66,7 +62,7 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
                     // long and thus does not need to consider wrap-around.
                     return Result.ok(intValue);
                 } else {
-                    return Result.error(getErrorMessage());
+                    return Result.error(getErrorMessage(context));
                 }
             }
         });

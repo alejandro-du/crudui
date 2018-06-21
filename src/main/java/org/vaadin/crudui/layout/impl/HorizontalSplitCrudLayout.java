@@ -11,7 +11,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
 public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
 
     public HorizontalSplitCrudLayout() {
-        secondComponentHeaderLayout.setMargin(true);
+        secondComponentHeaderLayout.setMargin(false);
     }
 
     @Override

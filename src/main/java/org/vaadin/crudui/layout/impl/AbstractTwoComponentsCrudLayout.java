@@ -5,8 +5,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -40,10 +39,12 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 
         firstComponent.setSizeFull();
         firstComponent.setMargin(false);
+        firstComponent.setPadding(false);
         firstComponent.setSpacing(true);
 
         secondComponent.setWidth("100%");
-        secondComponent.setMargin(false);
+        secondComponent.setMargin(true);
+        secondComponent.setPadding(false);
         secondComponent.setSpacing(true);
 
         // FIXME figure out replacement
@@ -68,11 +69,11 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
         filterLayout.setSpacing(true);
         firstComponentHeaderLayout.add(filterLayout);
 
-        Icon filterIcon = new Icon(VaadinIcons.SEARCH);
-        filterLayout.add(filterIcon);
+        filterLayout.add(VaadinIcon.SEARCH.create());
 
         mainComponentLayout.setSizeFull();
         mainComponentLayout.setMargin(false);
+        mainComponentLayout.setPadding(false);
         firstComponent.add(mainComponentLayout);
         firstComponent.setFlexGrow(1, mainComponentLayout);
 
@@ -80,8 +81,9 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 
         formComponentLayout.setSizeFull();
         formComponentLayout.setMargin(false);
+        formComponentLayout.setPadding(false);
         secondComponent.add(formComponentLayout);
-        secondComponent.setFlexGrow(1, formComponentLayout);
+        secondComponent.expand(formComponentLayout);
 
         setFormCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
     }

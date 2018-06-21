@@ -1,7 +1,14 @@
 package org.vaadin.crudui.crud.impl;
 
-import java.util.Collection;
-
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.data.provider.Query;
 import org.vaadin.crudui.crud.AbstractCrud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -11,16 +18,7 @@ import org.vaadin.crudui.form.impl.form.factory.VerticalCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.data.provider.Query;
+import java.util.Collection;
 
 /**
  * @author Alejandro Duarte
@@ -66,23 +64,23 @@ public class GridCrud<T> extends AbstractCrud<T> {
     }
 
     protected void initLayout() {
-        findAllButton = new Button(new Icon(VaadinIcons.REFRESH), e -> findAllButtonClicked());
+        findAllButton = new Button(VaadinIcon.REFRESH.create(), e -> findAllButtonClicked());
         // FIXME set with css
         // findAllButton.setDescription("Refresh list");
 
         crudLayout.addToolbarComponent(findAllButton);
 
-        addButton = new Button(new Icon(VaadinIcons.PLUS), e -> addButtonClicked());
+        addButton = new Button(VaadinIcon.PLUS.create(), e -> addButtonClicked());
         // FIXME do with css
         // addButton.setDescription("Add");
         crudLayout.addToolbarComponent(addButton);
 
-        updateButton = new Button(new Icon(VaadinIcons.PENCIL), e -> updateButtonClicked());
+        updateButton = new Button(VaadinIcon.PENCIL.create(), e -> updateButtonClicked());
         // FIXME do with css
         // updateButton.setDescription("Update");
         crudLayout.addToolbarComponent(updateButton);
 
-        deleteButton = new Button(new Icon(VaadinIcons.TRASH), e -> deleteButtonClicked());
+        deleteButton = new Button(VaadinIcon.TRASH.create(), e -> deleteButtonClicked());
         // FIXME do with css
         // deleteButton.setDescription("Delete");
         crudLayout.addToolbarComponent(deleteButton);

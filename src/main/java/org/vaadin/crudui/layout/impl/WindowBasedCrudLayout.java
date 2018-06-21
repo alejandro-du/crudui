@@ -1,27 +1,24 @@
 package org.vaadin.crudui.layout.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.vaadin.crudui.crud.CrudOperation;
-import org.vaadin.crudui.layout.CrudLayout;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.layout.CrudLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Alejandro Duarte
  */
-public class WindowBasedCrudLayout extends Composite<Div> implements CrudLayout, HasSize {
+public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements CrudLayout, HasSize {
 
     protected VerticalLayout mainLayout = new VerticalLayout();
     protected Span captionLabel = new Span();
@@ -35,9 +32,13 @@ public class WindowBasedCrudLayout extends Composite<Div> implements CrudLayout,
     protected Map<CrudOperation, String> windowCaptions = new HashMap<>();
 
     public WindowBasedCrudLayout() {
+        getContent().setPadding(false);
+        getContent().setMargin(false);
         getContent().add(mainLayout);
+
         mainLayout.setSizeFull();
         mainLayout.setMargin(false);
+        mainLayout.setPadding(false);
         mainLayout.setSpacing(true);
         setSizeFull();
         // FIXME find out Lumo styles
@@ -59,13 +60,13 @@ public class WindowBasedCrudLayout extends Composite<Div> implements CrudLayout,
         filterLayout.setSpacing(true);
         headerLayout.add(filterLayout);
 
-        Icon filterIcon = new Icon(VaadinIcons.SEARCH);
-        filterLayout.add(filterIcon);
+        filterLayout.add(VaadinIcon.SEARCH.create());
 
         mainComponentLayout.setSizeFull();
         mainComponentLayout.setMargin(false);
+        mainComponentLayout.setPadding(false);
         mainLayout.add(mainComponentLayout);
-        mainLayout.setFlexGrow(1, mainComponentLayout);
+        mainLayout.expand(mainComponentLayout);
 
         setWindowCaption(CrudOperation.ADD, "Add");
         setWindowCaption(CrudOperation.UPDATE, "Update");
@@ -114,8 +115,9 @@ public class WindowBasedCrudLayout extends Composite<Div> implements CrudLayout,
         VerticalLayout windowLayout = new VerticalLayout(form);
         windowLayout.setWidth("100%");
         windowLayout.setMargin(false);
+        windowLayout.setPadding(false);
 
-        formWindow = new Dialog(new Label(caption), windowLayout);
+        formWindow = new Dialog(new Span(caption), windowLayout);
         formWindow.setWidth(formWindowWidth);
         formWindow.open();
     }

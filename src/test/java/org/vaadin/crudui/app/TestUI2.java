@@ -1,13 +1,10 @@
 package org.vaadin.crudui.app;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
@@ -18,74 +15,21 @@ import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.form.factory.GridLayoutCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Locale;
 
 /**
- * @author Alejandro Duarte
+ * @author Alejandro Duarte.
  */
-@Route("")
-public class TestUI extends VerticalLayout implements CrudListener<User> {
+@Route("crud")
+public class TestUI2 extends VerticalLayout implements CrudListener<User> {
 
-    @WebListener
-    public static class ContextListener implements ServletContextListener {
+    public TestUI2() {
+        TextField textField = new TextField();
+        textField.setPlaceholder("filter by name");
 
-        @Override
-        public void contextInitialized(ServletContextEvent sce) {
-            JPAService.init();
-        }
-
-        @Override
-        public void contextDestroyed(ServletContextEvent sce) {
-            JPAService.close();
-        }
-    }
-
-    private Tabs tabSheet = new Tabs();
-    private Div container = new Div();
-
-    public TestUI() {
-        JPAService.init();
-
-        container.setSizeFull();
-
-        add(tabSheet, container);
-        setSizeFull();
-
-        addCrud(getDefaultCrud(), "Default");
-        addCrud(getDefaultCrudWithFixes(), "Default (with fixes)");
-        addCrud(getConfiguredCrud(), "Configured");
-    }
-
-    private void addCrud(Component crud, String caption) {
-        VerticalLayout layout = new VerticalLayout(crud);
-        layout.setSizeFull();
-        layout.setMargin(true);
-        Tab tab = new Tab(caption);
-        tabSheet.add(tab);
-        container.add(crud);
-        crud.setVisible(tabSheet.getChildren().count() == 1);
-        tabSheet.addSelectedChangeListener(e -> crud.setVisible(tabSheet.getSelectedTab() == tab));
-    }
-
-    private Component getDefaultCrud() {
-        return new GridCrud<>(User.class, this);
-    }
-
-    private Component getDefaultCrudWithFixes() {
-        GridCrud<User> crud = new GridCrud<>(User.class);
-        crud.setCrudListener(this);
-        crud.getCrudFormFactory().setFieldProvider("mainGroup", new ComboBoxProvider<>(GroupRepository.findAll()));
-
-        return crud;
-    }
-
-    private Component getConfiguredCrud() {
         GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
         crud.setCrudListener(this);
 
@@ -129,8 +73,10 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
 
         crud.setClickRowToUpdate(true);
         crud.setUpdateOperationVisible(false);
+        crud.getCrudLayout().addFilterComponent(textField);
 
-        return crud;
+        add(crud);
+        setSizeFull();
     }
 
     @Override
