@@ -9,7 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
 
     @Override
-    protected Component getMainLayout() {
+    protected Component buildMainLayout() {
         VerticalLayout mainLayout = new VerticalLayout(firstComponent, secondComponent);
         mainLayout.setSizeFull();
         mainLayout.setMargin(false);

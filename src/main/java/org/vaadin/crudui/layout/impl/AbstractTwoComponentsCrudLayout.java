@@ -34,16 +34,14 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
     protected Map<CrudOperation, String> formCaptions = new HashMap<>();
 
     public AbstractTwoComponentsCrudLayout() {
-        Component mainLayout = getMainLayout();
+        Component mainLayout = buildMainLayout();
         getContent().add(mainLayout);
         setSizeFull();
 
-        firstComponent.setSizeFull();
         firstComponent.setMargin(false);
         firstComponent.setPadding(false);
         firstComponent.setSpacing(false);
 
-        secondComponent.setWidth("100%");
         secondComponent.setMargin(true);
         secondComponent.setPadding(false);
         secondComponent.setSpacing(true);
@@ -88,7 +86,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
         setFormCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
     }
 
-    protected abstract Component getMainLayout();
+    protected abstract Component buildMainLayout();
 
     protected abstract void addToolbarLayout(Component toolbarLayout);
 
