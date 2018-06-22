@@ -14,7 +14,7 @@ import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.CrudOperationException;
 import org.vaadin.crudui.form.CrudFormFactory;
-import org.vaadin.crudui.form.impl.form.factory.VerticalCrudFormFactory;
+import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
@@ -39,11 +39,11 @@ public class GridCrud<T> extends AbstractCrud<T> {
     private boolean clickRowToUpdate;
 
     public GridCrud(Class<T> domainType) {
-        this(domainType, new WindowBasedCrudLayout(), new VerticalCrudFormFactory<>(domainType), null);
+        this(domainType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(domainType), null);
     }
 
     public GridCrud(Class<T> domainType, CrudLayout crudLayout) {
-        this(domainType, crudLayout, new VerticalCrudFormFactory<>(domainType), null);
+        this(domainType, crudLayout, new DefaultCrudFormFactory<>(domainType), null);
     }
 
     public GridCrud(Class<T> domainType, CrudFormFactory<T> crudFormFactory) {
@@ -51,7 +51,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
     }
 
     public GridCrud(Class<T> domainType, CrudListener<T> crudListener) {
-        this(domainType, new WindowBasedCrudLayout(), new VerticalCrudFormFactory<>(domainType), crudListener);
+        this(domainType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(domainType), crudListener);
     }
 
     public GridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory) {

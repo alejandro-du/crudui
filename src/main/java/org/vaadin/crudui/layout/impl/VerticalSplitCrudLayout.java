@@ -14,7 +14,7 @@ public class VerticalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
     }
 
     @Override
-    protected SplitLayout getMainLayout() {
+    protected SplitLayout buildMainLayout() {
         SplitLayout mainLayout = new SplitLayout(firstComponent, secondComponent);
         mainLayout.setOrientation(Orientation.VERTICAL);
         mainLayout.setSizeFull();

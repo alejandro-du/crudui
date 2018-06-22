@@ -16,7 +16,7 @@ import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
-import org.vaadin.crudui.form.impl.form.factory.GridLayoutCrudFormFactory;
+import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 
 import javax.servlet.ServletContextEvent;
@@ -95,7 +95,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
         crud.setCrudListener(this);
 
-        GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
+        DefaultCrudFormFactory<User> formFactory = new DefaultCrudFormFactory<>(User.class);
         crud.setCrudFormFactory(formFactory);
 
         formFactory.setUseBeanValidation(true);
