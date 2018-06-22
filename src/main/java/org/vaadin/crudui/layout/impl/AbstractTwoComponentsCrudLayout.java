@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -22,7 +23,6 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 
     protected VerticalLayout firstComponent = new VerticalLayout();
     protected VerticalLayout secondComponent = new VerticalLayout();
-    protected Div captionLabel = new Div();
     protected HorizontalLayout firstComponentHeaderLayout = new HorizontalLayout();
     protected HorizontalLayout secondComponentHeaderLayout = new HorizontalLayout();
     protected HorizontalLayout toolbarLayout = new HorizontalLayout();
@@ -41,22 +41,16 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
         firstComponent.setSizeFull();
         firstComponent.setMargin(false);
         firstComponent.setPadding(false);
-        firstComponent.setSpacing(true);
+        firstComponent.setSpacing(false);
 
         secondComponent.setWidth("100%");
         secondComponent.setMargin(true);
         secondComponent.setPadding(false);
         secondComponent.setSpacing(true);
 
-        // FIXME figure out replacement
-        // captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
-        // captionLabel.addStyleName(ValoTheme.LABEL_BOLD);
-        // captionLabel.addStyleName(ValoTheme.LABEL_H3);
-        // captionLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
-        captionLabel.setVisible(false);
-
         firstComponentHeaderLayout.setVisible(false);
         firstComponentHeaderLayout.setSpacing(true);
+        firstComponentHeaderLayout.setMargin(false);
 
         secondComponentHeaderLayout.setVisible(false);
         secondComponentHeaderLayout.setSpacing(true);
@@ -72,7 +66,10 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
         firstComponentHeaderLayout.add(filterLayout);
 
         filterLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        filterLayout.add(VaadinIcon.SEARCH.create());
+        Icon icon = VaadinIcon.SEARCH.create();
+        icon.getStyle().set("padding-left", "1em");
+        icon.setSize(".9em");
+        filterLayout.add(icon);
 
         mainComponentLayout.setSizeFull();
         mainComponentLayout.setMargin(false);
@@ -96,16 +93,6 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
     protected abstract void addToolbarLayout(Component toolbarLayout);
 
     @Override
-    public void setCaption(String caption) {
-        if (!captionLabel.isVisible()) {
-            captionLabel.setVisible(true);
-            firstComponent.getElement().insertChild(0, captionLabel.getElement());
-        }
-
-        captionLabel.setText(caption);
-    }
-
-    @Override
     public void setMainComponent(Component component) {
         mainComponentLayout.removeAll();
         mainComponentLayout.add(component);
@@ -127,8 +114,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
         String caption = formCaptions.get(operation);
         if (caption != null) {
             Div label = new Div(new Text(caption));
-            // FIXME figure out replacement
-            // label.addStyleName(ValoTheme.LABEL_COLORED);
+            label.getStyle().set("color", "var(--lumo-primary-text-color)");
             formCaptionLayout.removeAll();
             formCaptionLayout.add(label);
             secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1, formCaptionLayout.getElement());

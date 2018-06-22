@@ -2,12 +2,12 @@ package org.vaadin.crudui.app;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
@@ -48,17 +48,19 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
     }
 
     private Tabs tabSheet = new Tabs();
-    private Div container = new Div();
+    private VerticalLayout container = new VerticalLayout();
 
     public TestUI() {
-        JPAService.init();
+        tabSheet.setWidth("100%");
 
         container.setSizeFull();
+        container.setMargin(false);
+        container.setPadding(false);
 
         add(tabSheet, container);
-        expand(container);
         setSizeFull();
         setPadding(false);
+        setSpacing(false);
 
         addCrud(getDefaultCrud(), "Default");
         addCrud(getMinimal(), "Minimal");
@@ -86,7 +88,6 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         crud.getCrudFormFactory().setFieldProvider("mainGroup", new ComboBoxProvider<>(GroupRepository.findAll()));
         crud.getCrudFormFactory().setFieldProvider("groups", new CheckBoxGroupProvider<>(GroupRepository.findAll()));
         crud.getGrid().setColumns("name", "birthDate", "gender", "email", "phoneNumber", "active");
-
         return crud;
     }
 
@@ -111,16 +112,16 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
 
         formFactory.setDisabledProperties("id");
 
-        crud.getGrid().setColumns("name", "birthDate", "email", "phoneNumber", "mainGroup", "active");
-        crud.getGrid().removeColumnByKey("mainGroup");
-        crud.getGrid().removeColumnByKey("birthDate");
+        crud.getGrid().setColumns("name", "email", "phoneNumber", "active");
+        crud.getGrid().addColumn(new LocalDateRenderer<>(
+                user -> user.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                DateTimeFormatter.ISO_LOCAL_DATE))
+                .setHeader("Birthdate");
+
         crud.getGrid().addColumn(new TextRenderer<>(user -> user == null ? "" : user.getMainGroup().getName()))
                 .setHeader("Main group");
-        crud.getGrid()
-                .addColumn(new LocalDateRenderer<>(
-                        user -> user.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                        DateTimeFormatter.ISO_LOCAL_DATE))
-                .setHeader("Birthdate");
+
+        crud.getGrid().setColumnReorderingAllowed(true);
 
         formFactory.setFieldType("password", PasswordField.class);
         formFactory.setFieldCreationListener("birthDate", field -> ((DatePicker) field).setLocale(Locale.US));
@@ -134,6 +135,12 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
 
         crud.setClickRowToUpdate(true);
         crud.setUpdateOperationVisible(false);
+
+        TextField filter = new TextField();
+        filter.setPlaceholder("filter by name...");
+        crud.getCrudLayout().addFilterComponent(filter);
+        filter.addValueChangeListener(e -> crud.refreshGrid());
+        crud.setFindAllOperation(() -> UserRepository.findByNameLike(filter.getValue()));
 
         return crud;
     }

@@ -1,19 +1,18 @@
 package org.vaadin.crudui.crud;
 
-import org.vaadin.crudui.form.CrudFormFactory;
-import org.vaadin.crudui.layout.CrudLayout;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.vaadin.crudui.form.CrudFormFactory;
+import org.vaadin.crudui.layout.CrudLayout;
 
 import java.util.Collections;
 
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractCrud<T> extends Composite<Div> implements Crud<T>, HasSize {
+public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implements Crud<T>, HasSize {
 
     protected Class<T> domainType;
 
@@ -35,12 +34,9 @@ public abstract class AbstractCrud<T> extends Composite<Div> implements Crud<T>,
         }
         getContent().add((Component) crudLayout);
 
+        getContent().setPadding(false);
+        getContent().setMargin(false);
         setSizeFull();
-    }
-
-    @Deprecated
-    public void setCaption(String caption) {
-        crudLayout.setCaption(caption);
     }
 
     public CrudLayout getCrudLayout() {

@@ -7,6 +7,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -21,12 +22,11 @@ import java.util.Map;
 public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements CrudLayout, HasSize {
 
     protected VerticalLayout mainLayout = new VerticalLayout();
-    protected H3 captionLabel = new H3();
     protected HorizontalLayout headerLayout = new HorizontalLayout();
     protected HorizontalLayout toolbarLayout = new HorizontalLayout();
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
-    protected Dialog formWindow;
+    protected Dialog dialog;
     protected String formWindowWidth = "500px";
 
     protected Map<CrudOperation, String> windowCaptions = new HashMap<>();
@@ -39,28 +39,25 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         mainLayout.setSizeFull();
         mainLayout.setMargin(false);
         mainLayout.setPadding(false);
-        mainLayout.setSpacing(true);
+        mainLayout.setSpacing(false);
         setSizeFull();
-        // FIXME find out Lumo styles
-        // captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
-        // captionLabel.addStyleName(ValoTheme.LABEL_BOLD);
-        // captionLabel.addStyleName(ValoTheme.LABEL_H3);
-        // captionLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
-        captionLabel.setVisible(false);
 
         headerLayout.setVisible(false);
         headerLayout.setSpacing(true);
+        headerLayout.setMargin(true);
 
         toolbarLayout.setVisible(false);
         // FIXME find out Lumo style equivalent
         // toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         headerLayout.add(toolbarLayout);
 
+        filterLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         filterLayout.setVisible(false);
         filterLayout.setSpacing(true);
         headerLayout.add(filterLayout);
 
         Icon icon = VaadinIcon.SEARCH.create();
+        icon.setSize(".9em");
         filterLayout.add(icon);
 
         mainComponentLayout.setSizeFull();
@@ -72,16 +69,6 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         setWindowCaption(CrudOperation.ADD, "Add");
         setWindowCaption(CrudOperation.UPDATE, "Update");
         setWindowCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
-    }
-
-    @Override
-    public void setCaption(String caption) {
-        if (!captionLabel.isVisible()) {
-            captionLabel.setVisible(true);
-            mainLayout.getElement().insertChild(0, captionLabel.getElement());
-        }
-
-        captionLabel.setText(caption);
     }
 
     @Override
@@ -112,28 +99,28 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         toolbarLayout.add(component);
     }
 
-    private void showWindow(String caption, Component form) {
-        VerticalLayout windowLayout = new VerticalLayout(form);
-        windowLayout.setWidth("100%");
-        windowLayout.setMargin(false);
-        windowLayout.setPadding(false);
+    private void showDialog(String caption, Component form) {
+        VerticalLayout dialogLayout = new VerticalLayout(form);
+        dialogLayout.setWidth("100%");
+        dialogLayout.setMargin(false);
+        dialogLayout.setPadding(false);
 
-        formWindow = new Dialog(new H3(caption), windowLayout);
-        formWindow.setWidth(formWindowWidth);
-        formWindow.open();
+        dialog = new Dialog(new H3(caption), dialogLayout);
+        dialog.setWidth(formWindowWidth);
+        dialog.open();
     }
 
     @Override
     public void showForm(CrudOperation operation, Component form) {
         if (!operation.equals(CrudOperation.READ)) {
-            showWindow(windowCaptions.get(operation), form);
+            showDialog(windowCaptions.get(operation), form);
         }
     }
 
     @Override
     public void hideForm() {
-        if (formWindow != null) {
-            formWindow.close();
+        if (dialog != null) {
+            dialog.close();
         }
     }
 
