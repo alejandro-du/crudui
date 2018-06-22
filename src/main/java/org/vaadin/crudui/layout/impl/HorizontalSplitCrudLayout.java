@@ -17,7 +17,7 @@ public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
     protected SplitLayout buildMainLayout() {
         SplitLayout mainLayout = new SplitLayout(firstComponent, secondComponent);
         mainLayout.setSizeFull();
-        mainLayout.setSplitterPosition(60);
+        mainLayout.setSplitterPosition(65);
         return mainLayout;
     }
 

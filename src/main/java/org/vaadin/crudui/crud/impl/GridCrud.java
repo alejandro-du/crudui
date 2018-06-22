@@ -65,24 +65,20 @@ public class GridCrud<T> extends AbstractCrud<T> {
 
     protected void initLayout() {
         findAllButton = new Button(VaadinIcon.REFRESH.create(), e -> findAllButtonClicked());
-        // FIXME set with css
-        // findAllButton.setDescription("Refresh list");
+        findAllButton.getElement().setAttribute("title", "Refresh list");
 
         crudLayout.addToolbarComponent(findAllButton);
 
         addButton = new Button(VaadinIcon.PLUS.create(), e -> addButtonClicked());
-        // FIXME do with css
-        // addButton.setDescription("Add");
+        addButton.getElement().setAttribute("title", "Add");
         crudLayout.addToolbarComponent(addButton);
 
         updateButton = new Button(VaadinIcon.PENCIL.create(), e -> updateButtonClicked());
-        // FIXME do with css
-        // updateButton.setDescription("Update");
+        updateButton.getElement().setAttribute("title", "Update");
         crudLayout.addToolbarComponent(updateButton);
 
         deleteButton = new Button(VaadinIcon.TRASH.create(), e -> deleteButtonClicked());
-        // FIXME do with css
-        // deleteButton.setDescription("Delete");
+        deleteButton.getElement().setAttribute("title", "Delete");
         crudLayout.addToolbarComponent(deleteButton);
 
         grid = new Grid<>(domainType);
