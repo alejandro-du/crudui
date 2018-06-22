@@ -4,14 +4,11 @@ import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.textfield.TextField;
 import org.vaadin.crudui.form.FieldProvider;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -42,21 +39,12 @@ public class DefaultFieldProvider implements FieldProvider {
             return comboBox;
         }
 
-        // FIXME missing CheckBoxGroup
-        if (Collection.class.isAssignableFrom(type)) {
-            Grid<?> grid = new Grid<>();
-            grid.setSelectionMode(SelectionMode.MULTI);
-            grid.addColumn(item -> item.toString());
-            return grid.asMultiSelect();
-        }
-
         if (String.class.isAssignableFrom(type) || Character.class.isAssignableFrom(type) || Byte.class.isAssignableFrom(type)
                 || Number.class.isAssignableFrom(type) || type.isPrimitive()) {
             return new TextField();
         }
 
-        ComboBox comboBox = new ComboBox();
-        return comboBox;
+        return null;
     }
 
 }

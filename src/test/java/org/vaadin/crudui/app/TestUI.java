@@ -61,7 +61,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         setPadding(false);
 
         addCrud(getDefaultCrud(), "Default");
-        addCrud(getDefaultCrudWithFixes(), "Default (with fixes)");
+        addCrud(getMinimal(), "Minimal");
         addCrud(getConfiguredCrud(), "Configured");
     }
 
@@ -80,10 +80,12 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         return new GridCrud<>(User.class, this);
     }
 
-    private Component getDefaultCrudWithFixes() {
+    private Component getMinimal() {
         GridCrud<User> crud = new GridCrud<>(User.class);
         crud.setCrudListener(this);
         crud.getCrudFormFactory().setFieldProvider("mainGroup", new ComboBoxProvider<>(GroupRepository.findAll()));
+        crud.getCrudFormFactory().setFieldProvider("groups", new CheckBoxGroupProvider<>(GroupRepository.findAll()));
+        crud.getGrid().setColumns("name", "birthDate", "gender", "email", "phoneNumber", "active");
 
         return crud;
     }
