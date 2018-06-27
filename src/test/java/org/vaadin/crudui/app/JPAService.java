@@ -25,6 +25,8 @@ public class JPAService {
     }
 
     private static void createTestData() {
+        System.out.println("Creating test data...");
+
         for (int i = 1; i < 5; i++) {
             Group group = new Group();
             group.setName("Group " + i);

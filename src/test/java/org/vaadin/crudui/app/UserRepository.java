@@ -24,6 +24,26 @@ public class UserRepository {
         );
     }
 
+    public static List<User> findByNameLike(String name, int offset, int limit) {
+        return JPAService.runInTransaction(em -> {
+                    Query query = em.createQuery("select u from User u where lower(name) like lower(:name)");
+                    query.setParameter("name", "%" + name + "%");
+                    query.setFirstResult(offset);
+                    query.setMaxResults(limit);
+                    return query.getResultList();
+                }
+        );
+    }
+
+    public static int countByNameLike(String name) {
+        return JPAService.runInTransaction(em -> {
+                    Query query = em.createQuery("select count(u.id) from User u where lower(name) like lower(:name)");
+                    query.setParameter("name", "%" + name + "%");
+                    return ((Long) query.getSingleResult()).intValue();
+                }
+        );
+    }
+
     public static User save(User user) {
         return JPAService.runInTransaction(em -> em.merge(user));
     }

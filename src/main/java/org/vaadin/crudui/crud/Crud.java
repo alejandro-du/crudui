@@ -1,5 +1,6 @@
 package org.vaadin.crudui.crud;
 
+import com.vaadin.flow.data.provider.DataProvider;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 
@@ -21,6 +22,8 @@ public interface Crud<T> {
     void setCrudFormFactory(CrudFormFactory<T> crudFormFactory);
 
     void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation);
+
+    void setFindAllOperation(DataProvider<T, Void> dataProvider);
 
     void setAddOperation(AddOperationListener<T> addOperation);
 

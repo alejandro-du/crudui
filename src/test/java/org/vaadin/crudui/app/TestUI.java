@@ -8,11 +8,13 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.crud.LazyCrudListener;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
@@ -31,7 +33,7 @@ import java.util.Locale;
  * @author Alejandro Duarte
  */
 @Route("")
-public class TestUI extends VerticalLayout implements CrudListener<User> {
+public class TestUI extends VerticalLayout implements LazyCrudListener<User> {
 
     @WebListener
     public static class ContextListener implements ServletContextListener {
@@ -49,6 +51,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
 
     private Tabs tabSheet = new Tabs();
     private VerticalLayout container = new VerticalLayout();
+    private TextField filter = new TextField();
 
     public TestUI() {
         tabSheet.setWidth("100%");
@@ -136,12 +139,15 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
         crud.setClickRowToUpdate(true);
         crud.setUpdateOperationVisible(false);
 
-        TextField filter = new TextField();
+
         filter.setPlaceholder("filter by name...");
         crud.getCrudLayout().addFilterComponent(filter);
         filter.addValueChangeListener(e -> crud.refreshGrid());
-        crud.setFindAllOperation(() -> UserRepository.findByNameLike(filter.getValue()));
-
+        /*crud.setFindAllOperation(
+                DataProvider.fromCallbacks(
+                        query -> UserRepository.findByNameLike(filter.getValue(), query.getOffset(), query.getLimit()).stream(),
+                        query -> UserRepository.countByNameLike(filter.getValue()))
+        );*/
         return crud;
     }
 
@@ -167,6 +173,13 @@ public class TestUI extends VerticalLayout implements CrudListener<User> {
     @Override
     public Collection<User> findAll() {
         return UserRepository.findAll();
+    }
+
+    @Override
+    public DataProvider<User, Void> getDataProvider() {
+        return DataProvider.fromCallbacks(
+                query -> UserRepository.findByNameLike(filter.getValue(), query.getOffset(), query.getLimit()).stream(),
+                query -> UserRepository.countByNameLike(filter.getValue()));
     }
 
 }

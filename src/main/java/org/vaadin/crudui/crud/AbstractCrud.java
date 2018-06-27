@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.DataProvider;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 
@@ -54,6 +55,11 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
     }
 
     @Override
+    public void setFindAllOperation(DataProvider<T, Void> dataProvider) {
+        this.findAllOperation = (LazyFindAllCrudOperationListener<T>) () -> dataProvider;
+    }
+
+    @Override
     public void setAddOperation(AddOperationListener<T> addOperation) {
         this.addOperation = addOperation;
     }
@@ -86,7 +92,12 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
         setAddOperation(crudListener::add);
         setUpdateOperation(crudListener::update);
         setDeleteOperation(crudListener::delete);
-        setFindAllOperation(crudListener::findAll);
+
+        if (LazyCrudListener.class.isAssignableFrom(crudListener.getClass())) {
+            setFindAllOperation((LazyFindAllCrudOperationListener<T>) () -> ((LazyCrudListener)crudListener).getDataProvider());
+        } else {
+            setFindAllOperation(crudListener::findAll);
+        }
     }
 
 }

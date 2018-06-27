@@ -8,11 +8,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.Query;
 import org.vaadin.crudui.crud.AbstractCrud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.CrudOperationException;
+import org.vaadin.crudui.crud.LazyFindAllCrudOperationListener;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
@@ -116,8 +118,15 @@ public class GridCrud<T> extends AbstractCrud<T> {
     }
 
     public void refreshGrid() {
-        items = findAllOperation.findAll();
-        grid.setItems(items);
+        if (LazyFindAllCrudOperationListener.class.isAssignableFrom(findAllOperation.getClass())) {
+            LazyFindAllCrudOperationListener findAll = (LazyFindAllCrudOperationListener) findAllOperation;
+
+            grid.setDataProvider(findAll.getDataProvider());
+
+        } else {
+            items = findAllOperation.findAll();
+            grid.setItems(items);
+        }
     }
 
     public void setClickRowToUpdate(boolean clickRowToUpdate) {
