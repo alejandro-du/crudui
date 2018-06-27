@@ -1,47 +1,44 @@
 package org.vaadin.crudui.form.impl.field.provider;
 
-import java.util.Collection;
-
-import org.vaadin.crudui.form.FieldProvider;
-
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValueAndElement;
-import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.data.binder.HasDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import org.vaadin.crudui.form.FieldProvider;
+
+import java.util.Collection;
 
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractListingProvider<C extends Component & HasDataProvider<T> & HasValueAndElement<ComponentValueChangeEvent<C, T>, T>, T>
+public abstract class AbstractListingProvider<C extends Component & HasDataProvider<T> & HasValueAndElement, T>
         implements FieldProvider<C, T> {
 
     protected String caption;
     protected Collection<T> items;
-    protected ItemLabelGenerator<T> itemCaptionGenerator;
+    protected ComponentRenderer<? extends Component, T> renderer;
 
     protected abstract C buildAbstractListing();
 
     public AbstractListingProvider(Collection<T> items) {
-        this(null, items, t -> t == null ? "" : t.toString());
+        this(null, items, new TextRenderer<>());
     }
 
     public AbstractListingProvider(String caption, Collection<T> items) {
-        this(caption, items, t -> t == null ? "" : t.toString());
+        this(caption, items, new TextRenderer<>());
     }
 
-    public AbstractListingProvider(String caption, Collection<T> items, ItemLabelGenerator<T> itemCaptionGenerator) {
+    public AbstractListingProvider(String caption, Collection<T> items, ComponentRenderer<? extends Component, T> renderer) {
         this.caption = caption;
         this.items = items;
-        this.itemCaptionGenerator = itemCaptionGenerator;
+        this.renderer = renderer;
     }
 
     @Override
     public HasValueAndElement<ComponentValueChangeEvent<C, T>, T> buildField() {
         C field = buildAbstractListing();
-        // FIXME missing feature setCaption
-        // field.setCaption(caption);
-
         field.setItems(items);
         return field;
     }

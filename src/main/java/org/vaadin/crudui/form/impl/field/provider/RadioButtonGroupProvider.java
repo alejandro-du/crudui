@@ -1,7 +1,8 @@
 package org.vaadin.crudui.form.impl.field.provider;
 
-import com.vaadin.flow.component.ItemLabelGenerator;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.Collection;
 
@@ -18,15 +19,17 @@ public class RadioButtonGroupProvider<T> extends AbstractListingProvider<RadioBu
         super(caption, items);
     }
 
-    public RadioButtonGroupProvider(String caption, Collection<T> items, ItemLabelGenerator<T> itemCaptionGenerator) {
-        super(caption, items, itemCaptionGenerator);
+    public RadioButtonGroupProvider(String caption, Collection<T> items, ComponentRenderer<? extends Component, T> renderer) {
+        super(caption, items, renderer);
     }
 
     @Override
     protected RadioButtonGroup<T> buildAbstractListing() {
         RadioButtonGroup<T> field = new RadioButtonGroup<>();
+        if(renderer != null) {
+            field.setRenderer(renderer);
+        }
         field.setItems(items);
-        // FIXME missing ItemLabelGenerator for RadioButtonGroup
         return field;
     }
 

@@ -5,7 +5,7 @@
     <groupId>org.vaadin.crudui</groupId>
     <artifactId>crudui</artifactId>
     <packaging>jar</packaging>
-    <version>3.3.1-SNAPSHOT</version>
+    <version>3.4.0-SNAPSHOT</version>
     <name>Crud UI Add-on</name>
 
     <prerequisites>
@@ -85,6 +85,11 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.pekka</groupId>
+            <artifactId>checkbox-group-java</artifactId>
+            <version>1.0.0.alpha1</version>
         </dependency>
 
         <dependency>

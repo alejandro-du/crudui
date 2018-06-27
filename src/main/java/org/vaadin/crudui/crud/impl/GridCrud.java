@@ -37,7 +37,6 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected Button deleteButton;
     protected Grid<T> grid;
 
-    protected Collection<T> items;
     private boolean clickRowToUpdate;
 
     public GridCrud(Class<T> domainType) {
@@ -124,7 +123,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
             grid.setDataProvider(findAll.getDataProvider());
 
         } else {
-            items = findAllOperation.findAll();
+            Collection<T> items = findAllOperation.findAll();
             grid.setItems(items);
         }
     }
@@ -171,10 +170,9 @@ public class GridCrud<T> extends AbstractCrud<T> {
                 try {
                     T addedObject = addOperation.perform(domainObject);
                     refreshGrid();
-                    if (items.contains(addedObject)) {
-                        grid.asSingleSelect().setValue(addedObject);
-                        // TODO: grid.scrollTo(addedObject);
-                    }
+                    grid.asSingleSelect().setValue(addedObject);
+                    // TODO: grid.scrollTo(addedObject);
+                } catch (IllegalArgumentException ignore) {
                 } catch (CrudOperationException e1) {
                     refreshGrid();
                 } catch (Exception e2) {
@@ -194,10 +192,9 @@ public class GridCrud<T> extends AbstractCrud<T> {
                 T updatedObject = updateOperation.perform(domainObject);
                 grid.asSingleSelect().clear();
                 refreshGrid();
-                if (items.contains(updatedObject)) {
-                    grid.asSingleSelect().setValue(updatedObject);
-                    // TODO: grid.scrollTo(updatedObject);
-                }
+                grid.asSingleSelect().setValue(updatedObject);
+                // TODO: grid.scrollTo(updatedObject);
+            } catch (IllegalArgumentException ignore) {
             } catch (CrudOperationException e1) {
                 refreshGrid();
             } catch (Exception e2) {

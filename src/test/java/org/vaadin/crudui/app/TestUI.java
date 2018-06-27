@@ -14,7 +14,6 @@ import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
-import org.vaadin.crudui.crud.LazyCrudListener;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
@@ -33,7 +32,7 @@ import java.util.Locale;
  * @author Alejandro Duarte
  */
 @Route("")
-public class TestUI extends VerticalLayout implements LazyCrudListener<User> {
+public class TestUI extends VerticalLayout implements CrudListener<User> { // or implements LazyCrudListener<User>
 
     @WebListener
     public static class ContextListener implements ServletContextListener {
@@ -103,7 +102,10 @@ public class TestUI extends VerticalLayout implements LazyCrudListener<User> {
 
         formFactory.setUseBeanValidation(true);
 
-        formFactory.setErrorListener(e -> Notification.show("Custom error message (simulated error)"));
+        formFactory.setErrorListener(e -> {
+            Notification.show("Custom error message");
+            e.printStackTrace();
+        });
 
         formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "phoneNumber",
                 "groups", "active", "mainGroup");
@@ -129,9 +131,9 @@ public class TestUI extends VerticalLayout implements LazyCrudListener<User> {
         formFactory.setFieldType("password", PasswordField.class);
         formFactory.setFieldCreationListener("birthDate", field -> ((DatePicker) field).setLocale(Locale.US));
 
-        formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), Group::getName));
+        formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), new TextRenderer<>(Group::getName)));
         formFactory.setFieldProvider("mainGroup",
-                new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), Group::getName));
+                new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));
 
         formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
         crud.setRowCountCaption("%d user(s) found");
@@ -143,11 +145,11 @@ public class TestUI extends VerticalLayout implements LazyCrudListener<User> {
         filter.setPlaceholder("filter by name...");
         crud.getCrudLayout().addFilterComponent(filter);
         filter.addValueChangeListener(e -> crud.refreshGrid());
-        /*crud.setFindAllOperation(
+        crud.setFindAllOperation(
                 DataProvider.fromCallbacks(
                         query -> UserRepository.findByNameLike(filter.getValue(), query.getOffset(), query.getLimit()).stream(),
                         query -> UserRepository.countByNameLike(filter.getValue()))
-        );*/
+        );
         return crud;
     }
 
@@ -175,11 +177,12 @@ public class TestUI extends VerticalLayout implements LazyCrudListener<User> {
         return UserRepository.findAll();
     }
 
+    /* if this implements LazyCrudListener<User>:
     @Override
     public DataProvider<User, Void> getDataProvider() {
         return DataProvider.fromCallbacks(
                 query -> UserRepository.findByNameLike(filter.getValue(), query.getOffset(), query.getLimit()).stream(),
                 query -> UserRepository.countByNameLike(filter.getValue()));
-    }
+    }*/
 
 }
