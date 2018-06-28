@@ -38,7 +38,7 @@ public class JPAService {
                 .filter(r -> r.getId() <= 2)
                 .collect(Collectors.toSet());
 
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 200; i++) {
             User user = new User();
             user.setName("User " + i);
             user.setBirthDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));

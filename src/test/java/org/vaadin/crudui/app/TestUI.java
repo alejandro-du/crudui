@@ -1,7 +1,10 @@
 package org.vaadin.crudui.app;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -50,7 +53,8 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
 
     private Tabs tabSheet = new Tabs();
     private VerticalLayout container = new VerticalLayout();
-    private TextField filter = new TextField();
+    private TextField nameFilter = new TextField();
+    private ComboBox<Group> groupFilter = new ComboBox<>();
 
     public TestUI() {
         tabSheet.setWidth("100%");
@@ -142,13 +146,27 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         crud.setUpdateOperationVisible(false);
 
 
-        filter.setPlaceholder("filter by name...");
-        crud.getCrudLayout().addFilterComponent(filter);
-        filter.addValueChangeListener(e -> crud.refreshGrid());
+        nameFilter.setPlaceholder("filter by name...");
+        nameFilter.addValueChangeListener(e -> crud.refreshGrid());
+        crud.getCrudLayout().addFilterComponent(nameFilter);
+
+        groupFilter.setPlaceholder("Group");
+        groupFilter.setItems(GroupRepository.findAll());
+        groupFilter.setItemLabelGenerator(Group::getName);
+        groupFilter.addValueChangeListener(e -> crud.refreshGrid());
+        crud.getCrudLayout().addFilterComponent(groupFilter);
+
+        Button clearFilters = new Button(null, VaadinIcon.ERASER.create());
+        clearFilters.addClickListener(event -> {
+            nameFilter.clear();
+            groupFilter.clear();
+        });
+        crud.getCrudLayout().addFilterComponent(clearFilters);
+
         crud.setFindAllOperation(
                 DataProvider.fromCallbacks(
-                        query -> UserRepository.findByNameLike(filter.getValue(), query.getOffset(), query.getLimit()).stream(),
-                        query -> UserRepository.countByNameLike(filter.getValue()))
+                        query -> UserRepository.findByNameLike(nameFilter.getValue(), groupFilter.getValue(), query.getOffset(), query.getLimit()).stream(),
+                        query -> UserRepository.countByNameLike(nameFilter.getValue(), groupFilter.getValue()))
         );
         return crud;
     }
@@ -181,8 +199,8 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
     @Override
     public DataProvider<User, Void> getDataProvider() {
         return DataProvider.fromCallbacks(
-                query -> UserRepository.findByNameLike(filter.getValue(), query.getOffset(), query.getLimit()).stream(),
-                query -> UserRepository.countByNameLike(filter.getValue()));
+                query -> UserRepository.findByNameLike(nameFilter.getValue(), groupFilter.getValue(), query.getOffset(), query.getLimit()).stream(),
+                query -> UserRepository.countByNameLike(nameFilter.getValue(), groupFilter.getValue()));
     }*/
 
 }

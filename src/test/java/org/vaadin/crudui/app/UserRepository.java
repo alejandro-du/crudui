@@ -15,19 +15,11 @@ public class UserRepository {
         );
     }
 
-    public static List<User> findByNameLike(String name) {
+    public static List<User> findByNameLike(String name, Group group, int offset, int limit) {
         return JPAService.runInTransaction(em -> {
-                    Query query = em.createQuery("select u from User u where lower(name) like lower(:name)");
+                    Query query = em.createQuery("select u from User u where lower(name) like lower(:name) and (:group is null or :group = u.mainGroup)");
                     query.setParameter("name", "%" + name + "%");
-                    return query.getResultList();
-                }
-        );
-    }
-
-    public static List<User> findByNameLike(String name, int offset, int limit) {
-        return JPAService.runInTransaction(em -> {
-                    Query query = em.createQuery("select u from User u where lower(name) like lower(:name)");
-                    query.setParameter("name", "%" + name + "%");
+                    query.setParameter("group", group);
                     query.setFirstResult(offset);
                     query.setMaxResults(limit);
                     return query.getResultList();
@@ -35,11 +27,13 @@ public class UserRepository {
         );
     }
 
-    public static int countByNameLike(String name) {
+    public static int countByNameLike(String name, Group group) {
         return JPAService.runInTransaction(em -> {
-                    Query query = em.createQuery("select count(u.id) from User u where lower(name) like lower(:name)");
+                    Query query = em.createQuery("select count(u.id) from User u where lower(name) like lower(:name) and (:group is null or :group = u.mainGroup)");
                     query.setParameter("name", "%" + name + "%");
-                    return ((Long) query.getSingleResult()).intValue();
+                    query.setParameter("group", group);
+                    int i = ((Long) query.getSingleResult()).intValue();
+                    return i;
                 }
         );
     }
