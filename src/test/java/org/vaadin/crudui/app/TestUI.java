@@ -26,6 +26,7 @@ import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -134,6 +135,12 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
 
         formFactory.setFieldType("password", PasswordField.class);
         formFactory.setFieldCreationListener("birthDate", field -> ((DatePicker) field).setLocale(Locale.US));
+        // or:
+        crud.getCrudFormFactory().setFieldProvider("birthDate", () -> {
+            DatePicker datePicker = new DatePicker();
+            datePicker.setMax(LocalDate.now());
+            return datePicker;
+        });
 
         formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), new TextRenderer<>(Group::getName)));
         formFactory.setFieldProvider("mainGroup",
