@@ -12,7 +12,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,10 +31,10 @@ public class User {
     private String name;
 
     @Past
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @NotNull
-    private int phoneNumber;
+    private int phoneNumber; // as an int for testing purposes
 
     @NotNull
     @Email
@@ -53,7 +53,22 @@ public class User {
     @Fetch(FetchMode.JOIN)
     private Set<Group> groups = new HashSet<>();
 
-    private Gender gender;
+    private MaritalStatus maritalStatus;
+
+    public User() {
+    }
+
+    public User(@NotNull String name, @Past LocalDate birthDate, @NotNull int phoneNumber, @NotNull @Email String email, @NotNull @Size(min = 6, max = 100) String password, Boolean active, Group mainGroup, Set<Group> groups, MaritalStatus maritalStatus) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.active = active;
+        this.mainGroup = mainGroup;
+        this.groups = groups;
+        this.maritalStatus = maritalStatus;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -86,11 +101,11 @@ public class User {
         this.name = name;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -142,11 +157,11 @@ public class User {
         this.groups = groups;
     }
 
-    public Gender getGender() {
-        return gender;
+    public MaritalStatus getMaritalStatus() {
+        return maritalStatus;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setMaritalStatus(MaritalStatus maritalStatus) {
+        this.maritalStatus = maritalStatus;
     }
 }

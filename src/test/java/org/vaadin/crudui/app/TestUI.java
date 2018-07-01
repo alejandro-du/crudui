@@ -20,6 +20,7 @@ import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
+import org.vaadin.crudui.form.impl.field.provider.RadioButtonGroupProvider;
 import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 
@@ -27,10 +28,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Locale;
 
 /**
  * @author Alejandro Duarte
@@ -94,7 +94,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         crud.setCrudListener(this);
         crud.getCrudFormFactory().setFieldProvider("mainGroup", new ComboBoxProvider<>(GroupRepository.findAll()));
         crud.getCrudFormFactory().setFieldProvider("groups", new CheckBoxGroupProvider<>(GroupRepository.findAll()));
-        crud.getGrid().setColumns("name", "birthDate", "gender", "email", "phoneNumber", "active");
+        crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
         return crud;
     }
 
@@ -112,19 +112,15 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
             e.printStackTrace();
         });
 
-        formFactory.setVisibleProperties(CrudOperation.READ, "id", "name", "birthDate", "email", "phoneNumber",
-                "groups", "active", "mainGroup");
-        formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "phoneNumber", "groups",
-                "password", "mainGroup", "active");
-        formFactory.setVisibleProperties(CrudOperation.UPDATE, "id", "name", "birthDate", "email", "phoneNumber",
-                "password", "groups", "active", "mainGroup");
-        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "phoneNumber");
+        formFactory.setVisibleProperties("name", "birthDate", "email", "phoneNumber",
+                "maritalStatus", "groups", "active", "mainGroup");
+        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "group");
 
         formFactory.setDisabledProperties("id");
 
         crud.getGrid().setColumns("name", "email", "phoneNumber", "active");
         crud.getGrid().addColumn(new LocalDateRenderer<>(
-                user -> user.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                user -> user.getBirthDate(),
                 DateTimeFormatter.ISO_LOCAL_DATE))
                 .setHeader("Birthdate");
 
@@ -134,14 +130,13 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         crud.getGrid().setColumnReorderingAllowed(true);
 
         formFactory.setFieldType("password", PasswordField.class);
-        formFactory.setFieldCreationListener("birthDate", field -> ((DatePicker) field).setLocale(Locale.US));
-        // or:
-        crud.getCrudFormFactory().setFieldProvider("birthDate", () -> {
+        formFactory.setFieldProvider("birthDate", () -> {
             DatePicker datePicker = new DatePicker();
             datePicker.setMax(LocalDate.now());
             return datePicker;
         });
 
+        formFactory.setFieldProvider("maritalStatus", new RadioButtonGroupProvider<>(Arrays.asList(MaritalStatus.values())));
         formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), new TextRenderer<>(Group::getName)));
         formFactory.setFieldProvider("mainGroup",
                 new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));

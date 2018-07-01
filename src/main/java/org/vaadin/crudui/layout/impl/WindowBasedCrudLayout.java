@@ -27,7 +27,7 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
     protected HorizontalLayout filterLayout = new HorizontalLayout();
     protected VerticalLayout mainComponentLayout = new VerticalLayout();
     protected Dialog dialog;
-    protected String formWindowWidth = "50em";
+    protected String formWindowWidth;
 
     protected Map<CrudOperation, String> windowCaptions = new HashMap<>();
 

@@ -18,7 +18,14 @@ public class Group {
 
     private String name;
 
-    private Boolean admin;
+    private Boolean admin = false;
+
+    public Group() {
+    }
+
+    public Group(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {
