@@ -13,7 +13,7 @@
     </prerequisites>
 
     <properties>
-        <vaadin.version>10.0.1</vaadin.version>
+        <vaadin.version>10.0.5</vaadin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>org.vaadin.pekka</groupId>
             <artifactId>checkbox-group-java</artifactId>
-            <version>1.0.0.alpha1</version>
+            <version>1.0.0.beta1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>

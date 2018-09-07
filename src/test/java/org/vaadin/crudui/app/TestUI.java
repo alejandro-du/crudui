@@ -114,7 +114,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
 
         formFactory.setVisibleProperties("name", "birthDate", "email", "phoneNumber",
                 "maritalStatus", "groups", "active", "mainGroup");
-        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "group");
+        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "mainGroup");
 
         formFactory.setDisabledProperties("id");
 
