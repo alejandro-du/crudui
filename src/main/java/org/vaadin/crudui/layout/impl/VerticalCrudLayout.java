@@ -8,6 +8,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
  */
 public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
 
+    public VerticalCrudLayout() {
+        filterLayout.setPadding(false);
+        filterLayout.setMargin(false);
+        firstComponentHeaderLayout.setMargin(true);
+    }
+
     @Override
     protected Component buildMainLayout() {
         VerticalLayout mainLayout = new VerticalLayout(firstComponent, secondComponent);
@@ -28,7 +34,8 @@ public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
     public void addToolbarComponent(Component component) {
         if (!firstComponentHeaderLayout.isVisible()) {
             firstComponentHeaderLayout.setVisible(true);
-            firstComponent.getElement().insertChild(firstComponent.getComponentCount() - 1, firstComponentHeaderLayout.getElement());
+            firstComponent.getElement()
+                    .insertChild(firstComponent.getComponentCount() - 1, firstComponentHeaderLayout.getElement());
         }
 
         toolbarLayout.setVisible(true);
