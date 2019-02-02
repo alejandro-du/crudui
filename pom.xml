@@ -5,7 +5,7 @@
     <groupId>org.vaadin.crudui</groupId>
     <artifactId>crudui</artifactId>
     <packaging>jar</packaging>
-    <version>3.7.0-SNAPSHOT</version>
+    <version>3.7.1</version>
     <name>Crud UI Add-on</name>
 
     <prerequisites>
@@ -13,7 +13,7 @@
     </prerequisites>
 
     <properties>
-        <vaadin.version>12.0.3</vaadin.version>
+        <vaadin.version>12.0.4</vaadin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -171,6 +171,9 @@
                     <supportedPackagings>
                         <supportedPackaging>jar</supportedPackaging>
                     </supportedPackagings>
+                    <httpConnector>
+                        <port>9090</port>
+                    </httpConnector>
                 </configuration>
             </plugin>
         </plugins>

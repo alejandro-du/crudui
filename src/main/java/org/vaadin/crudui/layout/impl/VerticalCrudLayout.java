@@ -12,6 +12,7 @@ public class VerticalCrudLayout extends AbstractTwoComponentsCrudLayout {
         filterLayout.setPadding(false);
         filterLayout.setMargin(false);
         firstComponentHeaderLayout.setMargin(true);
+        secondComponent.setMargin(false);
     }
 
     @Override

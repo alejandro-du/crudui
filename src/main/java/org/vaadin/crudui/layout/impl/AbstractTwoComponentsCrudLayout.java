@@ -115,9 +115,9 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
             label.getStyle().set("color", "var(--lumo-primary-text-color)");
             formCaptionLayout.removeAll();
             formCaptionLayout.add(label);
-            secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1, formCaptionLayout.getElement());
+            secondComponent.addComponentAtIndex(secondComponent.getComponentCount() - 1, formCaptionLayout);
         } else if (formCaptionLayout.getElement().getParent() != null) {
-            secondComponent.getElement().removeChild(formCaptionLayout.getElement());
+            formCaptionLayout.getElement().getParent().removeChild(formCaptionLayout.getElement());
         }
 
         formComponentLayout.removeAll();
@@ -128,7 +128,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
     public void hideForm() {
         formComponentLayout.removeAll();
         if (formCaptionLayout.getElement().getParent() != null) {
-            secondComponent.getElement().removeChild(formCaptionLayout.getElement());
+            formCaptionLayout.getElement().getParent().removeChild(formCaptionLayout.getElement());
         }
     }
 
