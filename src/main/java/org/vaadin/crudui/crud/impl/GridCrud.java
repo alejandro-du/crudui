@@ -1,14 +1,7 @@
 package org.vaadin.crudui.crud.impl;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.data.provider.Query;
+import java.util.Collection;
+
 import org.vaadin.crudui.crud.AbstractCrud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -19,7 +12,15 @@ import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-import java.util.Collection;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.data.provider.Query;
 
 /**
  * @author Alejandro Duarte
@@ -32,6 +33,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
 
     protected Button findAllButton;
     protected Button addButton;
+    protected Button copyButton;
     protected Button updateButton;
     protected Button deleteButton;
     protected Grid<T> grid;
@@ -73,6 +75,10 @@ public class GridCrud<T> extends AbstractCrud<T> {
         addButton.getElement().setAttribute("title", "Add");
         crudLayout.addToolbarComponent(addButton);
 
+        copyButton = new Button(VaadinIcon.COPY.create(), e -> copyButtonClicked());
+        copyButton.getElement().setAttribute("title", "Copy");
+        crudLayout.addToolbarComponent(copyButton);
+
         updateButton = new Button(VaadinIcon.PENCIL.create(), e -> updateButtonClicked());
         updateButton.getElement().setAttribute("title", "Update");
         crudLayout.addToolbarComponent(updateButton);
@@ -98,6 +104,11 @@ public class GridCrud<T> extends AbstractCrud<T> {
     @Override
     public void setAddOperationVisible(boolean visible) {
         addButton.setVisible(visible);
+    }
+
+    @Override
+    public void setCopyOperationVisible(boolean visible) {
+        copyButton.setVisible(visible);
     }
 
     @Override
@@ -133,6 +144,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
 
     protected void updateButtons() {
         boolean rowSelected = !grid.asSingleSelect().isEmpty();
+	    copyButton.setEnabled(rowSelected);
         updateButton.setEnabled(rowSelected);
         deleteButton.setEnabled(rowSelected);
     }
@@ -183,6 +195,24 @@ public class GridCrud<T> extends AbstractCrud<T> {
             e.printStackTrace();
         }
     }
+
+    protected void copyButtonClicked() {
+        final T domainObject = preCopyOperation.perform(grid.asSingleSelect().getValue(), domainType);
+	    showForm(CrudOperation.COPY, domainObject, false, savedMessage, event -> {
+	    try {
+		    final T addedObject = addOperation.perform(domainObject);
+		    refreshGrid();
+		    grid.asSingleSelect().setValue(addedObject);
+            // TODO: grid.scrollTo(addedObject);
+	    } catch (IllegalArgumentException ignore) {
+	    } catch (CrudOperationException e1) {
+		    refreshGrid();
+	    } catch (Exception e2) {
+		    refreshGrid();
+		    throw e2;
+	    }
+	});
+  }
 
     protected void updateButtonClicked() {
         T domainObject = grid.asSingleSelect().getValue();
@@ -248,6 +278,10 @@ public class GridCrud<T> extends AbstractCrud<T> {
 
     public Button getAddButton() {
         return addButton;
+    }
+
+    public Button getCopyButton() {
+        return copyButton;
     }
 
     public Button getUpdateButton() {

@@ -67,6 +67,7 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         mainLayout.expand(mainComponentLayout);
 
         setWindowCaption(CrudOperation.ADD, "Add");
+        setWindowCaption(CrudOperation.COPY, "Copy");
         setWindowCaption(CrudOperation.UPDATE, "Update");
         setWindowCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
     }

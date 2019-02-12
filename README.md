@@ -81,6 +81,14 @@ crud.setCrudListener(new CrudListener<User>() {
     public User update(User user) {
         return backend.update(user);
     }
+    
+    @Override
+    public Regex preCopy(User user, Class<User> clazz) {
+    	final User copy = CrudListener.super.preCopy(user, clazz);
+    	// copy should not have an id
+		copy.setId(null);
+    	return copy;
+    }
 
     @Override
     public void delete(User user) {

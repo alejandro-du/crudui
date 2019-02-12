@@ -5,6 +5,6 @@ package org.vaadin.crudui.crud;
  */
 public enum CrudOperation {
 
-    READ, ADD, UPDATE, DELETE;
+  READ, ADD, COPY, UPDATE, DELETE;
 
 }

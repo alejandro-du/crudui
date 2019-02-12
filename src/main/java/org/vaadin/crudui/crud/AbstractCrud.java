@@ -1,14 +1,15 @@
 package org.vaadin.crudui.crud;
 
+import java.util.Collections;
+
+import org.vaadin.crudui.form.CrudFormFactory;
+import org.vaadin.crudui.layout.CrudLayout;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
-import org.vaadin.crudui.form.CrudFormFactory;
-import org.vaadin.crudui.layout.CrudLayout;
-
-import java.util.Collections;
 
 /**
  * @author Alejandro Duarte
@@ -19,6 +20,7 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
 
     protected FindAllCrudOperationListener<T> findAllOperation = () -> Collections.emptyList();
     protected AddOperationListener<T> addOperation = t -> null;
+    protected PreCopyOperationListener<T> preCopyOperation = (t, c) -> null;
     protected UpdateOperationListener<T> updateOperation = t -> null;
     protected DeleteOperationListener<T> deleteOperation = t -> { };
 
@@ -40,6 +42,7 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
         setSizeFull();
     }
 
+    @Override
     public CrudLayout getCrudLayout() {
         return crudLayout;
     }
@@ -65,6 +68,11 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
     }
 
     @Override
+    public void setPreCopyOperation(PreCopyOperationListener<T> preCopyOperation) {
+		this.preCopyOperation = preCopyOperation;
+    }
+
+    @Override
     public void setUpdateOperation(UpdateOperationListener<T> updateOperation) {
         this.updateOperation = updateOperation;
     }
@@ -75,9 +83,12 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
     }
 
     @Override
-    public void setOperations(FindAllCrudOperationListener<T> findAllOperation, AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation, DeleteOperationListener<T> deleteOperation) {
+    public void setOperations(FindAllCrudOperationListener<T> findAllOperation, AddOperationListener<T> addOperation,
+	    PreCopyOperationListener<T> preCopyOperation, UpdateOperationListener<T> updateOperation,
+	    DeleteOperationListener<T> deleteOperation) {
         setFindAllOperation(findAllOperation);
         setAddOperation(addOperation);
+        setPreCopyOperation(preCopyOperation);
         setUpdateOperation(updateOperation);
         setDeleteOperation(deleteOperation);
     }
@@ -90,6 +101,7 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
     @Override
     public void setCrudListener(CrudListener<T> crudListener) {
         setAddOperation(crudListener::add);
+		setPreCopyOperation(crudListener::preCopy);
         setUpdateOperation(crudListener::update);
         setDeleteOperation(crudListener::delete);
 
