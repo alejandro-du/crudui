@@ -86,7 +86,7 @@ crud.setCrudListener(new CrudListener<User>() {
     public Regex preCopy(User user, Class<User> clazz) {
     	final User copy = CrudListener.super.preCopy(user, clazz);
     	// copy should not have an id
-		copy.setId(null);
+	copy.setId(null);
     	return copy;
     }
 
