@@ -29,6 +29,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected String rowCountCaption = "%d items(s) found";
     protected String savedMessage = "Item saved";
     protected String deletedMessage = "Item deleted";
+    protected boolean showNotifications = true;
 
     protected Button findAllButton;
     protected Button addButton;
@@ -159,7 +160,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
     protected void findAllButtonClicked() {
         grid.asSingleSelect().clear();
         refreshGrid();
-        Notification.show(String.format(rowCountCaption, grid.getDataProvider().size(new Query())));
+        showNotification(String.format(rowCountCaption, grid.getDataProvider().size(new Query())));
     }
 
     protected void addButtonClicked() {
@@ -232,7 +233,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
         }, operationPerformedClickEvent -> {
             crudLayout.hideForm();
             buttonClickListener.onComponentEvent(operationPerformedClickEvent);
-            Notification.show(successMessage);
+            showNotification(successMessage);
         });
 
         crudLayout.showForm(operation, form);
@@ -268,6 +269,16 @@ public class GridCrud<T> extends AbstractCrud<T> {
 
     public void setDeletedMessage(String deletedMessage) {
         this.deletedMessage = deletedMessage;
+    }
+
+    public void setShowNotifications(boolean showNotifications) {
+        this.showNotifications = showNotifications;
+    }
+
+    public void showNotification(String text) {
+        if (showNotifications) {
+            Notification.show(text);
+        }
     }
 
 }
