@@ -52,8 +52,7 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
 
     @Override
     public Result<Byte> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value,
-                context.getLocale().orElse(null));
+        Result<Number> n = convertToNumber(value, context);
         return n.flatMap(number -> {
             if (number == null) {
                 return Result.ok(null);
@@ -66,7 +65,7 @@ public class StringToByteConverter extends AbstractStringToNumberConverter<Byte>
                     // long and thus does not need to consider wrap-around.
                     return Result.ok(intValue);
                 } else {
-                    return Result.error(getErrorMessage());
+                    return Result.error(getErrorMessage(context));
                 }
             }
         });
