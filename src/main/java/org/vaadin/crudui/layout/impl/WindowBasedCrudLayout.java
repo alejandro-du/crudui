@@ -1,5 +1,11 @@
 package org.vaadin.crudui.layout.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.layout.CrudLayout;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
@@ -10,11 +16,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import org.vaadin.crudui.crud.CrudOperation;
-import org.vaadin.crudui.layout.CrudLayout;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Alejandro Duarte
@@ -60,9 +61,11 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         icon.setSize(".9em");
         filterLayout.add(icon);
 
-        mainComponentLayout.setSizeFull();
+        mainComponentLayout.setWidth("100%");
+        mainComponentLayout.setHeight(null);
         mainComponentLayout.setMargin(false);
         mainComponentLayout.setPadding(false);
+        mainComponentLayout.setId("mainComponentLayout");
         mainLayout.add(mainComponentLayout);
         mainLayout.expand(mainComponentLayout);
 
