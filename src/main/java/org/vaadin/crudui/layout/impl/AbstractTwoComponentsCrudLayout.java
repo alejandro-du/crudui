@@ -107,10 +107,21 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
         filterLayout.add(component);
     }
 
+//    @Override
+//    public void showForm(CrudOperation operation, Component form) {
+//        String caption = formCaptions.get(operation);
+//        showDialog(caption, form);
+//    }
+    
     @Override
-    public void showForm(CrudOperation operation, Component form) {
-        String caption = formCaptions.get(operation);
-        if (caption != null) {
+    public void showForm(CrudOperation operation, Component form, String formCaption) {
+        String caption = (formCaption != null ? formCaption : formCaptions.get(operation));
+        showDialog(caption, form);
+    }
+
+	@Override
+	public void showDialog(String caption, Component form) {
+		if (caption != null) {
             Div label = new Div(new Text(caption));
             label.getStyle().set("color", "var(--lumo-primary-text-color)");
             formCaptionLayout.removeAll();
@@ -122,9 +133,9 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 
         formComponentLayout.removeAll();
         formComponentLayout.add(form);
-    }
+	}
 
-    @Override
+	@Override
     public void hideForm() {
         formComponentLayout.removeAll();
         if (formCaptionLayout.getElement().getParent() != null) {

@@ -17,7 +17,9 @@ import com.vaadin.flow.component.button.Button;
 public interface CrudFormFactory<T> extends Serializable {
 
     Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, ComponentEventListener<ClickEvent<Button>> cancelButtonClickListener, ComponentEventListener<ClickEvent<Button>> operationButtonClickListener);
-
+	
+    String buildCaption(CrudOperation operation, T domainObject);
+	
     void setVisibleProperties(CrudOperation operation, String... properties);
 
     void setVisibleProperties(String... properties);

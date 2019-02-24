@@ -19,9 +19,11 @@ public interface CrudLayout {
     }
 
     void addToolbarComponent(Component component);
-
-    void showForm(CrudOperation operation, Component form);
-
+    
+	void showForm(CrudOperation operation, Component form, String caption);
+	
     void hideForm();
+
+	void showDialog(String caption, Component form);
 
 }
