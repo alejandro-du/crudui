@@ -5,20 +5,17 @@
     <groupId>org.vaadin.crudui</groupId>
     <artifactId>crudui</artifactId>
     <packaging>jar</packaging>
-    <version>3.7.3</version>
+    <version>3.8.0-SNAPSHOT</version>
     <name>Crud UI Add-on</name>
 
-    <prerequisites>
-        <maven>3</maven>
-    </prerequisites>
-
     <properties>
-        <vaadin.version>12.0.4</vaadin.version>
+        <vaadin.version>13.0.1</vaadin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <organization>
@@ -28,9 +25,9 @@
 
     <scm>
         <url>https://github.com/alejandro-du/crudui.git</url>
-        <connection>scm:git:https://github.com/alejandro-du/crudui.git</connection>
-        <developerConnection>scm:git:https://github.com/alejandro-du/crudui.git</developerConnection>
-        <tag>Crud UI add-on for Vaadin</tag>
+        <connection>scm:git:git://github.com/alejandro-du/crudui.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:/alejandro-du/crudui.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
@@ -55,12 +52,6 @@
             <id>Vaadin prereleases</id>
             <url>http://maven.vaadin.com/vaadin-prereleases</url>
         </repository>
-        <!-- The bintray repository contain webjars immediately after generation. If the webjar is available
-             in Maven central, you do not need this repository -->
-        <repository>
-            <id>webjars</id>
-            <url>https://dl.bintray.com/webjars/maven</url>
-        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -84,12 +75,7 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.vaadin.pekka</groupId>
-            <artifactId>checkbox-group-java</artifactId>
-            <version>1.0.0.beta1</version>
+            <artifactId>vaadin-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -160,6 +146,12 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
             </plugin>
 
             <plugin>

@@ -137,7 +137,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         });
 
         formFactory.setFieldProvider("maritalStatus", new RadioButtonGroupProvider<>(Arrays.asList(MaritalStatus.values())));
-        formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), new TextRenderer<>(Group::getName)));
+        formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), Group::getName));
         formFactory.setFieldProvider("mainGroup",
                 new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));
 
@@ -146,7 +146,6 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
 
         crud.setClickRowToUpdate(true);
         crud.setUpdateOperationVisible(false);
-
 
         nameFilter.setPlaceholder("filter by name...");
         nameFilter.addValueChangeListener(e -> crud.refreshGrid());
