@@ -36,7 +36,7 @@ import java.util.Collection;
  * @author Alejandro Duarte
  */
 @Route("")
-public class TestUI extends VerticalLayout implements CrudListener<User> { // or implements LazyCrudListener<User>
+public class TestUI extends VerticalLayout implements CrudListener<User> { // or implement LazyCrudListener<User>
 
     @WebListener
     public static class ContextListener implements ServletContextListener {
@@ -140,6 +140,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), Group::getName));
         formFactory.setFieldProvider("mainGroup",
                 new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));
+        formFactory.setFieldCreationListener(CrudOperation.ADD, "name", f -> f.setValue("default name"));
 
         formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
         crud.setRowCountCaption("%d user(s) found");
@@ -196,7 +197,7 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         return UserRepository.findAll();
     }
 
-    /* if this implements LazyCrudListener<User>:
+    /* if this class implements LazyCrudListener<User>:
     @Override
     public DataProvider<User, Void> getDataProvider() {
         return DataProvider.fromCallbacks(
