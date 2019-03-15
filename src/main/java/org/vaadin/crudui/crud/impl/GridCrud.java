@@ -1,14 +1,7 @@
 package org.vaadin.crudui.crud.impl;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.data.provider.Query;
+import java.util.Collection;
+
 import org.vaadin.crudui.crud.AbstractCrud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -19,7 +12,15 @@ import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-import java.util.Collection;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.data.provider.Query;
 
 /**
  * @author Alejandro Duarte
@@ -149,8 +150,8 @@ public class GridCrud<T> extends AbstractCrud<T> {
                 Component form = crudFormFactory.buildNewForm(CrudOperation.READ, domainObject, true, null, event -> {
                     grid.asSingleSelect().clear();
                 });
-
-                crudLayout.showForm(CrudOperation.READ, form);
+                String caption = crudFormFactory.buildCaption(CrudOperation.READ, domainObject);
+				crudLayout.showForm(CrudOperation.READ, form, caption);
             }
         } else {
             crudLayout.hideForm();
@@ -235,8 +236,8 @@ public class GridCrud<T> extends AbstractCrud<T> {
             buttonClickListener.onComponentEvent(operationPerformedClickEvent);
             showNotification(successMessage);
         });
-
-        crudLayout.showForm(operation, form);
+        String caption = crudFormFactory.buildCaption(operation, domainObject);
+        crudLayout.showForm(operation, form, caption);
     }
 
     public Grid<T> getGrid() {

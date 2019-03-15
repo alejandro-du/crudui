@@ -102,7 +102,8 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         toolbarLayout.add(component);
     }
 
-    private void showDialog(String caption, Component form) {
+    @Override
+    public void showDialog(String caption, Component form) {
         VerticalLayout dialogLayout = new VerticalLayout(form);
         dialogLayout.setWidth("100%");
         dialogLayout.setMargin(false);
@@ -113,13 +114,14 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
         dialog.open();
     }
 
-    @Override
-    public void showForm(CrudOperation operation, Component form) {
+	@Override
+	public void showForm(CrudOperation operation, Component form, String formCaption) {
         if (!operation.equals(CrudOperation.READ)) {
-            showDialog(windowCaptions.get(operation), form);
+        	String caption = (formCaption != null ? formCaption : windowCaptions.get(operation));
+			showDialog(caption, form);
         }
-    }
-
+	}
+	
     @Override
     public void hideForm() {
         if (dialog != null) {
@@ -134,5 +136,6 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
     public void setFormWindowWidth(String formWindowWidth) {
         this.formWindowWidth = formWindowWidth;
     }
+
 
 }
