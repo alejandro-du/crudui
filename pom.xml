@@ -4,7 +4,7 @@
     <groupId>org.vaadin.crudui</groupId>
     <artifactId>crudui</artifactId>
     <packaging>jar</packaging>
-    <version>3.8.0</version>
+    <version>3.8.1-SNAPSHOT</version>
     <name>Crud UI Add-on</name>
 
     <properties>
@@ -26,7 +26,7 @@
         <url>https://github.com/alejandro-du/crudui.git</url>
         <connection>scm:git:git://github.com/alejandro-du/crudui.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:/alejandro-du/crudui.git</developerConnection>
-        <tag>crudui-3.8.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
