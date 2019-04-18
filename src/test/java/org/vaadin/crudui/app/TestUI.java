@@ -172,7 +172,14 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         );
         return crud;
     }
-
+    
+    /* if add operation should fail */
+    // @Override
+    // public User add(User user) {
+    //     throw new UnsupportedOperationException("test");
+    // }
+    
+    
     @Override
     public User add(User user) {
         UserRepository.save(user);
