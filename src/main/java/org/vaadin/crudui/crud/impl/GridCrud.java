@@ -233,7 +233,9 @@ public class GridCrud<T> extends AbstractCrud<T> {
             }
         }, operationPerformedClickEvent -> {
             buttonClickListener.onComponentEvent(operationPerformedClickEvent);
-            crudLayout.hideForm();
+            if (!clickRowToUpdate) {
+                crudLayout.hideForm();
+            }
             showNotification(successMessage);
         });
         String caption = crudFormFactory.buildCaption(operation, domainObject);
