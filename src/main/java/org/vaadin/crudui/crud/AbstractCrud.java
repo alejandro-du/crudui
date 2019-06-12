@@ -17,7 +17,7 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
 
     protected Class<T> domainType;
 
-    protected FindAllCrudOperationListener<T> findAllOperation = () -> Collections.emptyList();
+    protected FindAllCrudOperationListener<T> findAllOperation = Collections::emptyList;
     protected AddOperationListener<T> addOperation = t -> null;
     protected UpdateOperationListener<T> updateOperation = t -> null;
     protected DeleteOperationListener<T> deleteOperation = t -> { };
@@ -55,7 +55,7 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
     }
 
     @Override
-    public void setFindAllOperation(DataProvider<T, Void> dataProvider) {
+    public void setFindAllOperation(DataProvider<T, ?> dataProvider) {
         this.findAllOperation = (LazyFindAllCrudOperationListener<T>) () -> dataProvider;
     }
 
@@ -94,7 +94,7 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
         setDeleteOperation(crudListener::delete);
 
         if (LazyCrudListener.class.isAssignableFrom(crudListener.getClass())) {
-            setFindAllOperation((LazyFindAllCrudOperationListener<T>) () -> ((LazyCrudListener)crudListener).getDataProvider());
+            setFindAllOperation((LazyFindAllCrudOperationListener<T>) ((LazyCrudListener) crudListener)::getDataProvider);
         } else {
             setFindAllOperation(crudListener::findAll);
         }
