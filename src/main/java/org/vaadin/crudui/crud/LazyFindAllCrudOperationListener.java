@@ -13,5 +13,5 @@ public interface LazyFindAllCrudOperationListener<T> extends FindAllCrudOperatio
         throw new UnsupportedOperationException("Use fetch and count methods instead.");
     }
 
-    DataProvider<T, Void> getDataProvider();
+    DataProvider<T, ?> getDataProvider();
 }
