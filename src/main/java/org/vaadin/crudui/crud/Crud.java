@@ -23,7 +23,7 @@ public interface Crud<T> {
 
     void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation);
 
-    void setFindAllOperation(DataProvider<T, Void> dataProvider);
+    void setFindAllOperation(DataProvider<T, ?> dataProvider);
 
     void setAddOperation(AddOperationListener<T> addOperation);
 
