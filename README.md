@@ -156,6 +156,22 @@ formFactory.setFieldProvider("groups",
 ```
 &nbsp;
 
+Set a `Converter`:
+
+````
+formFactory.setConverter("salary", new Converter<String, BigDecimal>() {
+    @Override
+    public Result<BigDecimal> convertToModel(String value, ValueContext valueContext) {
+        return Result.ok(new BigDecimal(value)); // error handling omitted
+    }
+
+    @Override
+    public String convertToPresentation(BigDecimal value, ValueContext valueContext) {
+        return value.toPlainString();
+    }
+});
+````
+
 Customize captions:
 ```
 formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
