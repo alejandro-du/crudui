@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.vaadin.flow.data.converter.Converter;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import com.vaadin.flow.component.HasValueAndElement;
@@ -76,6 +77,16 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     @Override
     public void setFieldProvider(String property, FieldProvider<?, ?> provider) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldProvider(operation, property, provider));
+    }
+
+    @Override
+    public void setConverter(CrudOperation operation, String property, Converter<?, ?> converter) {
+        getConfiguration(operation).getConverters().put(property, converter);
+    }
+
+    @Override
+    public void setConverter(String property, Converter<?, ?> converter) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> setConverter(operation, property, converter));
     }
 
     @Override

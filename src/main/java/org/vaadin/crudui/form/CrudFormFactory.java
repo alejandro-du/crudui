@@ -1,15 +1,15 @@
 package org.vaadin.crudui.form;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
-
-import org.vaadin.crudui.crud.CrudOperation;
-
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.data.converter.Converter;
+import org.vaadin.crudui.crud.CrudOperation;
+
+import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
@@ -17,9 +17,9 @@ import com.vaadin.flow.component.button.Button;
 public interface CrudFormFactory<T> extends Serializable {
 
     Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, ComponentEventListener<ClickEvent<Button>> cancelButtonClickListener, ComponentEventListener<ClickEvent<Button>> operationButtonClickListener);
-	
+
     String buildCaption(CrudOperation operation, T domainObject);
-	
+
     void setVisibleProperties(CrudOperation operation, String... properties);
 
     void setVisibleProperties(String... properties);
@@ -43,6 +43,10 @@ public interface CrudFormFactory<T> extends Serializable {
     void setFieldProvider(CrudOperation operation, String property, FieldProvider<?, ?> provider);
 
     void setFieldProvider(String property, FieldProvider<?, ?> provider);
+
+    void setConverter(CrudOperation operation, String property, Converter<?, ?> converter);
+
+    void setConverter(String property, Converter<?, ?> converter);
 
     void setUseBeanValidation(CrudOperation operation, boolean useBeanValidation);
 

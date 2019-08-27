@@ -11,6 +11,9 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
@@ -27,6 +30,7 @@ import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -112,9 +116,9 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
             e.printStackTrace();
         });
 
-        formFactory.setVisibleProperties("name", "birthDate", "email", "phoneNumber",
+        formFactory.setVisibleProperties("name", "birthDate", "email", "salary", "phoneNumber",
                 "maritalStatus", "groups", "active", "mainGroup");
-        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "mainGroup");
+        formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email", "salary", "mainGroup");
 
         formFactory.setDisabledProperties("id");
 
@@ -141,6 +145,18 @@ public class TestUI extends VerticalLayout implements CrudListener<User> { // or
         formFactory.setFieldProvider("mainGroup",
                 new ComboBoxProvider<>("Main Group", GroupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));
         formFactory.setFieldCreationListener(CrudOperation.ADD, "name", f -> f.setValue("default name"));
+
+        formFactory.setConverter("salary", new Converter<String, BigDecimal>() {
+            @Override
+            public Result<BigDecimal> convertToModel(String value, ValueContext valueContext) {
+                return Result.ok(new BigDecimal(value));
+            }
+
+            @Override
+            public String convertToPresentation(BigDecimal value, ValueContext valueContext) {
+                return value.toPlainString();
+            }
+        });
 
         formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
         crud.setRowCountCaption("%d user(s) found");

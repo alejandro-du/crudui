@@ -3,6 +3,7 @@ package org.vaadin.crudui.app;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,6 +56,7 @@ public class JPAService {
                             LocalDate.now().minusDays(365 * 10),
                             rand.nextInt(9000000) + 1000000,
                             name.replace(" ", "").toLowerCase() + i + "@test.com",
+                            BigDecimal.valueOf(5000),
                             UUID.randomUUID().toString(),
                             rand.nextInt(10) > 0,
                             groups.get(rand.nextInt(groups.size())),
