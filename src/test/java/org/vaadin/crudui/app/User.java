@@ -3,15 +3,12 @@ package org.vaadin.crudui.app;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,6 +38,9 @@ public class User {
     private String email;
 
     @NotNull
+    private BigDecimal salary;
+
+    @NotNull
     @Size(min = 6, max = 100)
     private String password;
 
@@ -58,11 +58,13 @@ public class User {
     public User() {
     }
 
-    public User(@NotNull String name, @Past LocalDate birthDate, @NotNull int phoneNumber, @NotNull @Email String email, @NotNull @Size(min = 6, max = 100) String password, Boolean active, Group mainGroup, Set<Group> groups, MaritalStatus maritalStatus) {
+    public User(@NotNull String name, @Past LocalDate birthDate, @NotNull int phoneNumber, @NotNull @Email String email,@NotNull BigDecimal salary,
+                @NotNull @Size(min = 6, max = 100) String password, Boolean active, Group mainGroup, Set<Group> groups, MaritalStatus maritalStatus) {
         this.name = name;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.salary = salary;
         this.password = password;
         this.active = active;
         this.mainGroup = mainGroup;
@@ -115,6 +117,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
     }
 
     public int getPhoneNumber() {
