@@ -4,11 +4,11 @@
     <groupId>org.vaadin.crudui</groupId>
     <artifactId>crudui</artifactId>
     <packaging>jar</packaging>
-    <version>3.9.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <name>Crud UI Add-on</name>
 
     <properties>
-        <vaadin.version>13.0.7</vaadin.version>
+        <vaadin.version>14.0.2</vaadin.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -145,6 +145,19 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <version>${vaadin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-frontend</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
