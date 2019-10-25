@@ -23,10 +23,15 @@ public class MainView extends VerticalLayout {
                         " You can find a link to the source code of each specific demo view at the bottom of each view." +
                         "</span>"),
                 new H2("Demo views"),
-                new RouterLink("Basic CRUD ", BasicCrud.class),
-                new RouterLink("Basic CRUD with filter", BasicCrudWithFilter.class),
-                new RouterLink("CRUD with lazy loading", CrudWithLazyLoading.class)
+                getRouterLink(SimpleCrud.class),
+                getRouterLink(CrudWithSplitLayout.class),
+                getRouterLink(CrudWithFilter.class),
+                getRouterLink(CrudWithLazyLoading.class)
         );
+    }
+
+    private RouterLink getRouterLink(Class clazz) {
+        return new RouterLink(Util.getViewName(clazz), clazz);
     }
 
 }

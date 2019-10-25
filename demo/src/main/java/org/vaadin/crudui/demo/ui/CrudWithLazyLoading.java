@@ -41,7 +41,11 @@ public class CrudWithLazyLoading extends VerticalLayout {
 
         // layout configuration
         setSizeFull();
-        add(new H1("CRUD with lazy loading"), crud, new Anchor(Util.getGitHubLink(this.getClass()), "Source code"));
+        add(
+                new H1(Util.getViewName(this.getClass())),
+                crud,
+                new Anchor(Util.getGitHubLink(this.getClass()),"Source code")
+        );
 
         // logic configuration
         crud.setCrudListener(new LazyCrudListener<User>() {
