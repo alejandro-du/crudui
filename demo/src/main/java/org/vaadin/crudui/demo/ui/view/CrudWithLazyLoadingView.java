@@ -1,7 +1,5 @@
-package org.vaadin.crudui.demo.ui;
+package org.vaadin.crudui.demo.ui.view;
 
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.TextRenderer;
@@ -12,14 +10,15 @@ import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.User;
 import org.vaadin.crudui.demo.repository.GroupRepository;
 import org.vaadin.crudui.demo.repository.UserRepository;
+import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.data.spring.OffsetBasedPageRequest;
 
-@Route("lazy-loading")
-public class CrudWithLazyLoading extends VerticalLayout {
+@Route(value = "lazy-loading", layout = MainLayout.class)
+public class CrudWithLazyLoadingView extends VerticalLayout {
 
-    public CrudWithLazyLoading(UserRepository userRepository, GroupRepository groupRepository) {
+    public CrudWithLazyLoadingView(UserRepository userRepository, GroupRepository groupRepository) {
         // crud instance
         GridCrud<User> crud = new GridCrud<>(User.class);
 
@@ -41,11 +40,7 @@ public class CrudWithLazyLoading extends VerticalLayout {
 
         // layout configuration
         setSizeFull();
-        add(
-                new H1(Util.getViewName(this.getClass())),
-                crud,
-                new Anchor(Util.getGitHubLink(this.getClass()),"Source code")
-        );
+        add(crud);
 
         // logic configuration
         crud.setCrudListener(new LazyCrudListener<User>() {

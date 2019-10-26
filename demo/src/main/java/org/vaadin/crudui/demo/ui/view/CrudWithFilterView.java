@@ -1,7 +1,5 @@
-package org.vaadin.crudui.demo.ui;
+package org.vaadin.crudui.demo.ui.view;
 
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.TextRenderer;
@@ -11,13 +9,14 @@ import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.User;
 import org.vaadin.crudui.demo.service.GroupService;
 import org.vaadin.crudui.demo.service.UserService;
+import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 
-@Route("filter")
-public class CrudWithFilter extends VerticalLayout {
+@Route(value = "filter", layout = MainLayout.class)
+public class CrudWithFilterView extends VerticalLayout {
 
-    public CrudWithFilter(UserService userService, GroupService groupService) {
+    public CrudWithFilterView(UserService userService, GroupService groupService) {
         // crud instance
         GridCrud<User> crud = new GridCrud<>(User.class);
 
@@ -44,11 +43,7 @@ public class CrudWithFilter extends VerticalLayout {
 
         // layout configuration
         setSizeFull();
-        add(
-                new H1(Util.getViewName(this.getClass())),
-                crud,
-                new Anchor(Util.getGitHubLink(this.getClass()),"Source code")
-        );
+        add(crud);
 
         // logic configuration
         crud.setOperations(

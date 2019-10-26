@@ -1,7 +1,5 @@
-package org.vaadin.crudui.demo.ui;
+package org.vaadin.crudui.demo.ui.view;
 
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
@@ -10,14 +8,15 @@ import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.User;
 import org.vaadin.crudui.demo.service.GroupService;
 import org.vaadin.crudui.demo.service.UserService;
+import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 
-@Route("split-layout")
-public class CrudWithSplitLayout extends VerticalLayout {
+@Route(value = "split-layout", layout = MainLayout.class)
+public class CrudWithSplitLayoutView extends VerticalLayout {
 
-    public CrudWithSplitLayout(UserService userService, GroupService groupService) {
+    public CrudWithSplitLayoutView(UserService userService, GroupService groupService) {
         // crud instance
         GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
 
@@ -38,11 +37,7 @@ public class CrudWithSplitLayout extends VerticalLayout {
 
         // layout configuration
         setSizeFull();
-        add(
-                new H1(Util.getViewName(this.getClass())),
-                crud,
-                new Anchor(Util.getGitHubLink(this.getClass()),"Source code")
-        );
+        add(crud);
 
         // logic configuration
         crud.setOperations(
