@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.vaadin.crudui</groupId>
-    <artifactId>crud-ui</artifactId>
+    <artifactId>crudui</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
     <modules>
         <module>crud-ui-addon</module>
         <module>crud-ui-addon-spring</module>
-        <module>crud-ui-demo</module>
+        <module>crud-ui-addon-spring-demo</module>
     </modules>
 
 </project>

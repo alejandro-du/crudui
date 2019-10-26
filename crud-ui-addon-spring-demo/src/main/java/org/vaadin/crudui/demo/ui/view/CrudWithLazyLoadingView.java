@@ -14,7 +14,7 @@ import org.vaadin.crudui.demo.repository.UserRepository;
 import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
-import org.vaadin.data.spring.OffsetBasedPageRequest;
+import org.vaadin.crudui.spring.OffsetBasedPageRequest;
 
 @Route(value = "lazy-loading", layout = MainLayout.class)
 public class CrudWithLazyLoadingView extends VerticalLayout {
