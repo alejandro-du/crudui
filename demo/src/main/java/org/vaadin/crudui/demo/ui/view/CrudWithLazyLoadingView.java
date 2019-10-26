@@ -26,6 +26,7 @@ public class CrudWithLazyLoadingView extends VerticalLayout {
         // grid configuration
         crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
         crud.getGrid().setPageSize(50);
+        crud.getGrid().setColumnReorderingAllowed(true);
 
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);

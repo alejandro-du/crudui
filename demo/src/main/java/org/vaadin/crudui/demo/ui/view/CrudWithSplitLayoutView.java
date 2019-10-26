@@ -25,6 +25,7 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
 
         // grid configuration
         crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
+        crud.getGrid().setColumnReorderingAllowed(true);
 
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);
