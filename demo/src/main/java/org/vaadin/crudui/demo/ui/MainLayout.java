@@ -59,18 +59,32 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        selectTabByCurrentView(event);
+    }
+
+    public void selectTabByCurrentView(BeforeEnterEvent event) {
         Class<?> viewClass = event.getNavigationTarget();
         tabs.setSelectedTab(viewToTab.get(viewClass));
     }
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
+        addSourceCodeAnchorToCurrentView();
+        updatePageTitle();
+    }
+
+    public void addSourceCodeAnchorToCurrentView() {
         Class<? extends HasComponents> viewClass = tabToView.get(tabs.getSelectedTab());
         if (!HomeView.class.equals(viewClass)) {
             HorizontalLayout footer = new HorizontalLayout(new Anchor(DemoUtils.getGitHubLink(viewClass), "Source code"));
             footer.setMargin(true);
             ((HasComponents) getContent()).add(footer);
         }
+    }
+
+    public void updatePageTitle() {
+        Class<? extends HasComponents> viewClass = tabToView.get(tabs.getSelectedTab());
+        UI.getCurrent().getPage().setTitle(DemoUtils.getViewName(viewClass) + " - " +  "Crud UI add-on demo");
     }
 
 }
