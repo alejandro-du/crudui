@@ -20,6 +20,8 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
     public CrudWithSplitLayoutView(UserService userService, GroupService groupService) {
         // crud instance
         GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
+        crud.setClickRowToUpdate(true);
+        crud.setUpdateOperationVisible(false);
 
         // grid configuration
         crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
