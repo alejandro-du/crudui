@@ -1,6 +1,8 @@
 package org.vaadin.data.spring;
 
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.provider.QuerySortOrder;
+import com.vaadin.flow.data.provider.SortDirection;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -8,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Ergin (https://stackoverflow.com/questions/25008472/pagination-in-spring-data-jpa-limit-and-offset)
@@ -63,8 +67,26 @@ public class OffsetBasedPageRequest implements Pageable, Serializable {
     }
 
     public OffsetBasedPageRequest(Query query) {
-        this(query.getOffset(), query.getLimit());
+        this(query.getOffset(), query.getLimit(), toSort(query.getSortOrders()));
     }
+
+    public static Sort toSort(List<QuerySortOrder> querySortOrders) {
+        List<Sort.Order> orders = querySortOrders.stream()
+                .map(q -> toOrder(q))
+                .collect(Collectors.toList());
+
+        return Sort.by(orders);
+    }
+
+    public static Sort.Order toOrder(QuerySortOrder querySortOrder) {
+        Sort.Direction direction = querySortOrder.getDirection().equals(SortDirection.ASCENDING) ?
+                Sort.Direction.ASC : Sort.Direction.DESC;
+
+        String property = querySortOrder.getSorted();
+
+        return new Sort.Order(direction, property);
+    }
+
 
     @Override
     public int getPageNumber() {
