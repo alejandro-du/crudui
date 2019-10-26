@@ -117,8 +117,8 @@
         </dependency>
         <dependency>
             <groupId>org.vaadin.crudui</groupId>
-            <artifactId>crud-ui</artifactId>
-            <version>4.0.2-SNAPSHOT</version>
+            <artifactId>crudui</artifactId>
+            <version>4.1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

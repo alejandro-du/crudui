@@ -4,13 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.vaadin.crudui</groupId>
-    <artifactId>crudui</artifactId>
+    <artifactId>crud-ui</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
-
-    <properties>
-        <vaadin.version>14.0.10</vaadin.version>
-    </properties>
 
     <modules>
         <module>add-on</module>
