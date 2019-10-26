@@ -13,7 +13,9 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.PageConfigurator;
 import org.vaadin.crudui.demo.DemoUtils;
 import org.vaadin.crudui.demo.ui.view.*;
 
@@ -21,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @PWA(name = "Crud UI add-on demo", shortName = "Crud UI demo")
-public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver {
+public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver, PageConfigurator {
 
     private Tabs tabs = new Tabs();
     private Map<Tab, Class<? extends HasComponents>> tabToView = new HashMap<>();
@@ -69,8 +71,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        addSourceCodeAnchorToCurrentView();
         updatePageTitle();
+        addSourceCodeAnchorToCurrentView();
+    }
+
+    public void updatePageTitle() {
+        Class<? extends HasComponents> viewClass = tabToView.get(tabs.getSelectedTab());
+        UI.getCurrent().getPage().setTitle(DemoUtils.getViewName(viewClass) + " - " + "Crud UI add-on demo");
     }
 
     public void addSourceCodeAnchorToCurrentView() {
@@ -82,9 +89,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
         }
     }
 
-    public void updatePageTitle() {
-        Class<? extends HasComponents> viewClass = tabToView.get(tabs.getSelectedTab());
-        UI.getCurrent().getPage().setTitle(DemoUtils.getViewName(viewClass) + " - " +  "Crud UI add-on demo");
+    @Override
+    public void configurePage(InitialPageSettings settings) {
+        updatePageTitle();
     }
 
 }
