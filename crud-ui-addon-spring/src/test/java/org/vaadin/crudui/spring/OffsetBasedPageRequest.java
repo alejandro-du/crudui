@@ -1,4 +1,4 @@
-package org.vaadin.data.spring;
+package org.vaadin.crudui.spring;
 
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.QuerySortOrder;

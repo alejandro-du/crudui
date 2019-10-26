@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.vaadin.crudui</groupId>
-    <artifactId>crudui</artifactId>
+    <artifactId>crud-ui-addon</artifactId>
     <packaging>jar</packaging>
     <version>4.1.1-SNAPSHOT</version>
     <name>Crud UI Add-on</name>

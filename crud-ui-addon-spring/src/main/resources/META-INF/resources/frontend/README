@@ -1,0 +1,1 @@
+Additional frontend files go into this directory such as JavaScript files loaded using @JsModule("./somefile.js")

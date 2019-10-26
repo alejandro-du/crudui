@@ -9,8 +9,9 @@
     <version>1.0.0</version>
 
     <modules>
-        <module>add-on</module>
-        <module>demo</module>
+        <module>crud-ui-addon</module>
+        <module>crud-ui-addon-spring</module>
+        <module>crud-ui-demo</module>
     </modules>
 
 </project>
