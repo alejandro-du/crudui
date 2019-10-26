@@ -3,6 +3,7 @@ package org.vaadin.crudui.demo.ui.view;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
+import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.User;
@@ -24,6 +25,11 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
         crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
 
         // form configuration
+        crud.getCrudFormFactory().setUseBeanValidation(true);
+        crud.getCrudFormFactory().setVisibleProperties(
+                CrudOperation.ADD,
+                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
+                "password");
         crud.getCrudFormFactory().setVisibleProperties(
                 "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup");
         crud.getCrudFormFactory().setFieldProvider("mainGroup",

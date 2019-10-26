@@ -51,6 +51,7 @@ public class User {
 
     @ManyToMany
     @Fetch(FetchMode.JOIN)
+    @NotNull
     private Set<Group> groups = new HashSet<>();
 
     private MaritalStatus maritalStatus;

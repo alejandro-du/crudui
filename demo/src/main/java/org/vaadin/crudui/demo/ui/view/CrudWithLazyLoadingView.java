@@ -4,6 +4,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
+import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.LazyCrudListener;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.demo.entity.Group;
@@ -27,8 +28,13 @@ public class CrudWithLazyLoadingView extends VerticalLayout {
         crud.getGrid().setPageSize(50);
 
         // form configuration
+        crud.getCrudFormFactory().setUseBeanValidation(true);
         crud.getCrudFormFactory().setVisibleProperties(
                 "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup");
+        crud.getCrudFormFactory().setVisibleProperties(
+                CrudOperation.ADD,
+                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
+                "password");
         crud.getCrudFormFactory().setFieldProvider("mainGroup",
                 new ComboBoxProvider<>(groupRepository.findAll()));
         crud.getCrudFormFactory().setFieldProvider("groups",
