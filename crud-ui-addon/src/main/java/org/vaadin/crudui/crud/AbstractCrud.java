@@ -13,20 +13,22 @@ import java.util.Collections;
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implements Crud<T>, HasSize {
+public abstract class AbstractCrud<BEAN_TYPE> extends Composite<VerticalLayout> implements Crud<BEAN_TYPE>, HasSize {
 
-    protected Class<T> domainType;
+    protected Class<BEAN_TYPE> beanType;
 
-    protected FindAllCrudOperationListener<T> findAllOperation = Collections::emptyList;
-    protected AddOperationListener<T> addOperation = t -> null;
-    protected UpdateOperationListener<T> updateOperation = t -> null;
-    protected DeleteOperationListener<T> deleteOperation = t -> { };
+    protected FindAllCrudOperationListener<BEAN_TYPE> findAllOperation = Collections::emptyList;
+    protected AddOperationListener<BEAN_TYPE> addOperation = t -> null;
+    protected UpdateOperationListener<BEAN_TYPE> updateOperation = t -> null;
+    protected DeleteOperationListener<BEAN_TYPE> deleteOperation = t -> {
+    };
 
     protected CrudLayout crudLayout;
-    protected CrudFormFactory<T> crudFormFactory;
+    protected CrudFormFactory<BEAN_TYPE> crudFormFactory;
 
-    public AbstractCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory, CrudListener<T> crudListener) {
-        this.domainType = domainType;
+    public AbstractCrud(Class<BEAN_TYPE> beanType, CrudLayout crudLayout, CrudFormFactory<BEAN_TYPE> crudFormFactory,
+            CrudListener<BEAN_TYPE> crudListener) {
+        this.beanType = beanType;
         this.crudLayout = crudLayout;
         this.crudFormFactory = crudFormFactory;
 
@@ -45,37 +47,40 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
     }
 
     @Override
-    public void setCrudFormFactory(CrudFormFactory<T> crudFormFactory) {
+    public void setCrudFormFactory(CrudFormFactory<BEAN_TYPE> crudFormFactory) {
         this.crudFormFactory = crudFormFactory;
     }
 
     @Override
-    public void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation) {
+    public void setFindAllOperation(FindAllCrudOperationListener<BEAN_TYPE> findAllOperation) {
         this.findAllOperation = findAllOperation;
     }
 
     @Override
-    public void setFindAllOperation(DataProvider<T, ?> dataProvider) {
-        this.findAllOperation = (LazyFindAllCrudOperationListener<T>) () -> dataProvider;
+    public void setFindAllOperation(DataProvider<BEAN_TYPE, ?> dataProvider) {
+        this.findAllOperation = (LazyFindAllCrudOperationListener<BEAN_TYPE>) () -> dataProvider;
     }
 
     @Override
-    public void setAddOperation(AddOperationListener<T> addOperation) {
+    public void setAddOperation(AddOperationListener<BEAN_TYPE> addOperation) {
         this.addOperation = addOperation;
     }
 
     @Override
-    public void setUpdateOperation(UpdateOperationListener<T> updateOperation) {
+    public void setUpdateOperation(UpdateOperationListener<BEAN_TYPE> updateOperation) {
         this.updateOperation = updateOperation;
     }
 
     @Override
-    public void setDeleteOperation(DeleteOperationListener<T> deleteOperation) {
+    public void setDeleteOperation(DeleteOperationListener<BEAN_TYPE> deleteOperation) {
         this.deleteOperation = deleteOperation;
     }
 
     @Override
-    public void setOperations(FindAllCrudOperationListener<T> findAllOperation, AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation, DeleteOperationListener<T> deleteOperation) {
+    public void setOperations(FindAllCrudOperationListener<BEAN_TYPE> findAllOperation,
+            AddOperationListener<BEAN_TYPE> addOperation, UpdateOperationListener<BEAN_TYPE> updateOperation,
+            DeleteOperationListener<BEAN_TYPE> deleteOperation) {
+
         setFindAllOperation(findAllOperation);
         setAddOperation(addOperation);
         setUpdateOperation(updateOperation);
@@ -83,18 +88,19 @@ public abstract class AbstractCrud<T> extends Composite<VerticalLayout> implemen
     }
 
     @Override
-    public CrudFormFactory<T> getCrudFormFactory() {
+    public CrudFormFactory<BEAN_TYPE> getCrudFormFactory() {
         return crudFormFactory;
     }
 
     @Override
-    public void setCrudListener(CrudListener<T> crudListener) {
+    public void setCrudListener(CrudListener<BEAN_TYPE> crudListener) {
         setAddOperation(crudListener::add);
         setUpdateOperation(crudListener::update);
         setDeleteOperation(crudListener::delete);
 
         if (LazyCrudListener.class.isAssignableFrom(crudListener.getClass())) {
-            setFindAllOperation((LazyFindAllCrudOperationListener<T>) ((LazyCrudListener) crudListener)::getDataProvider);
+            setFindAllOperation(
+                    (LazyFindAllCrudOperationListener<BEAN_TYPE>) ((LazyCrudListener) crudListener)::getDataProvider);
         } else {
             setFindAllOperation(crudListener::findAll);
         }

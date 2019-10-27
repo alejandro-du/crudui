@@ -18,31 +18,29 @@ import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 public class CrudWithSplitLayoutView extends VerticalLayout {
 
     public CrudWithSplitLayoutView(UserService userService, GroupService groupService) {
-        // crud instance
+        // crud columns and form fields
         GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
-        crud.setClickRowToUpdate(true);
-        crud.setUpdateOperationVisible(false);
 
         // grid configuration
         crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
-        crud.getGrid().setColumnReorderingAllowed(true);
 
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);
-        crud.getCrudFormFactory().setVisibleProperties(
-                CrudOperation.ADD,
-                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
-                "password");
-        crud.getCrudFormFactory().setVisibleProperties(
-                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup");
-        crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>(groupService.findAll()));
-        crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>(groupService.findAll()));
-        crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName));
-        crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName), Group::getName));
+        crud.getCrudFormFactory().setProperties("name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus",
+                "groups", "active", "mainGroup");
+        crud.getCrudFormFactory().addProperty(CrudOperation.ADD, "password");
+
+        // form fields configuration
+        crud.getCrudFormFactory().getProperties("groups").stream().forEach(
+                property -> property.setFieldProvider(
+                        new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName))
+        );
+
+        crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
+                property -> property.setFieldProvider(
+                        new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName),
+                                Group::getName))
+        );
 
         // layout configuration
         setSizeFull();

@@ -10,7 +10,7 @@
 
     <modules>
         <module>crud-ui-addon</module>
-        <module>crud-ui-addon-spring</module>
+        <module>crud-ui-spring-utils</module>
         <module>crud-ui-addon-spring-demo</module>
     </modules>
 

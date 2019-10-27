@@ -3,56 +3,50 @@ package org.vaadin.crudui.form;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.data.binder.Setter;
+import com.vaadin.flow.function.ValueProvider;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
  */
-public interface CrudFormFactory<T> extends Serializable {
+public interface CrudFormFactory<BEAN_TYPE> extends Serializable {
 
-    Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, ComponentEventListener<ClickEvent<Button>> cancelButtonClickListener, ComponentEventListener<ClickEvent<Button>> operationButtonClickListener);
+    Component buildNewForm(CrudOperation operation, BEAN_TYPE bean, boolean readOnly,
+            ComponentEventListener<ClickEvent<Button>> cancelButtonClickListener,
+            ComponentEventListener<ClickEvent<Button>> operationButtonClickListener);
 
-    String buildCaption(CrudOperation operation, T domainObject);
+    Property<BEAN_TYPE, ?> getProperty(CrudOperation operation, String propertyName);
 
-    void setVisibleProperties(CrudOperation operation, String... properties);
+    List<Property<BEAN_TYPE, ?>> getProperties(String propertyName);
 
-    void setVisibleProperties(String... properties);
+    <PROPERTY_TYPE> Property<BEAN_TYPE, PROPERTY_TYPE> addProperty(CrudOperation operation, Class<PROPERTY_TYPE> type,
+            ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter, Setter<BEAN_TYPE, PROPERTY_TYPE> setter);
 
-    void setDisabledProperties(CrudOperation operation, String... properties);
+    <PROPERTY_TYPE> Map<CrudOperation, Property<BEAN_TYPE, PROPERTY_TYPE>> addProperty(Class<PROPERTY_TYPE> type,
+            ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter, Setter<BEAN_TYPE, PROPERTY_TYPE> setter);
 
-    void setDisabledProperties(String... properties);
+    <PROPERTY_TYPE> AbstractCrudFormFactory<BEAN_TYPE> addProperty(CrudOperation operation, String propertyName);
 
-    void setFieldCaptions(CrudOperation operation, String... captions);
+    AbstractCrudFormFactory<BEAN_TYPE> addProperty(String propertyName);
 
-    void setFieldCaptions(String... captions);
+    AbstractCrudFormFactory<BEAN_TYPE> setProperties(CrudOperation operation, String... propertyNames);
 
-    void setFieldType(CrudOperation operation, String property, Class<? extends HasValueAndElement<?, ?>> type);
+    AbstractCrudFormFactory<BEAN_TYPE> setProperties(String... propertyNames);
 
-    void setFieldType(String property, Class<? extends HasValueAndElement<?, ?>> type);
+    AbstractCrudFormFactory<BEAN_TYPE> setUseBeanValidation(CrudOperation operation, boolean useBeanValidation);
 
-    void setFieldCreationListener(CrudOperation operation, String property, FieldCreationListener listener);
+    AbstractCrudFormFactory<BEAN_TYPE> setUseBeanValidation(boolean useBeanValidation);
 
-    void setFieldCreationListener(String property, FieldCreationListener listener);
+    AbstractCrudFormFactory<BEAN_TYPE> setErrorListener(Consumer<Exception> errorListener);
 
-    void setFieldProvider(CrudOperation operation, String property, FieldProvider<?, ?> provider);
-
-    void setFieldProvider(String property, FieldProvider<?, ?> provider);
-
-    void setConverter(CrudOperation operation, String property, Converter<?, ?> converter);
-
-    void setConverter(String property, Converter<?, ?> converter);
-
-    void setUseBeanValidation(CrudOperation operation, boolean useBeanValidation);
-
-    void setUseBeanValidation(boolean useBeanValidation);
-
-    void setErrorListener(Consumer<Exception> errorListener);
+    String buildCaption(CrudOperation operation, BEAN_TYPE bean);
 
     void showError(CrudOperation operation, Exception e);
 
