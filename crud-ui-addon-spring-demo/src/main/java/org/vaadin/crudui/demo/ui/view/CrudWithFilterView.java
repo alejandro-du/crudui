@@ -1,6 +1,7 @@
 package org.vaadin.crudui.demo.ui.view;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
@@ -41,6 +42,8 @@ public class CrudWithFilterView extends VerticalLayout {
                         new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName),
                                 Group::getName))
         );
+
+        crud.getCrudFormFactory().getProperty(CrudOperation.ADD, "password").setFieldType(PasswordField.class);
 
         // additional components
         TextField filter = new TextField();

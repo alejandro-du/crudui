@@ -6,19 +6,20 @@ Crud UI Add-on provides an API to automatically generate CRUD-like UIs for any J
 
 The API is defined through 4 interfaces:
 
-**`CrudComponent`**: A Vaadin `Component` that can be added to any `ComponentContainer`. This is the actual CRUD final users will see in the browser.
+**`CrudComponent`**: A Vaadin `Component` that can be added into any layout.
 
-**`CrudListener`**: Encapsulates the CRUD operations. You can implement this interface to delegate CRUD operations to your back-end.
+**`CrudListener`**: Interface to delegate CRUD operations to a Java back-end service.
 
-**`CrudLayout`**: Encapsulates layout-related behavior.
+**`CrudLayout`**: Interface to define layouts (how different parts of the `CrudComponent` are arranged.
 
-**`CrudFormFactory`**: Builds the forms required by the CRUD UI.
+**`CrudFormFactory`**: Builds forms for showing and editing data.
 
-The add-on includes several implementations of these interfaces.
+The add-on includes several implementations of the previous interfaces.
 
 # Basic usage
 
-Say, you have the following domain/entity/Java Bean class:
+Having the following Java Bean class:
+
 ```java
 public class User {
 
@@ -39,33 +40,30 @@ public class User {
     ... getters & setters ...
 }
 ```
-&nbsp;
 
-You can create a new CRUD component and add it into any Vaadin layout as follows:
+The following creates a `CrudComponent` adds it into a Vaadin layout:
 ```java
 GridCrud<User> crud = new GridCrud<>(User.class);
 layout.addComponent(crud);
 ```
-&nbsp;
 
-You can enable _Java Bean Validation_ as follows:
+Enable _Java Bean Validation_ as follows:
 ```java
 crud.getCrudFormFactory().setUseBeanValidation(true);
 ```
-&nbsp;
 
-Use lambda expressions or method references to delegate CRUD operations to your backend:
+Use lambda expressions or method references to delegate CRUD operations a Java backend:
 ```java
 crud.setFindAllOperation(() -> backend.findAll());
 crud.setAddOperation(backend::add);
 crud.setUpdateOperation(backend::update);
 crud.setDeleteOperation(backend::delete);
 ```
-&nbsp;
 
 # Advanced usage
 
-As an alternative to method references and lambda expressions, you can implement a `CrudListener` to delegate CRUD operations to your backend:
+As an alternative to method references and lambda expressions, implement `CrudListener` to delegate CRUD operations to a Java backend:
+
 ```java
 crud.setCrudListener(new CrudListener<User>() {
     @Override
@@ -88,98 +86,110 @@ crud.setCrudListener(new CrudListener<User>() {
     }
 });
 ```
-&nbsp;
 
-Use a different `CrudLayout` implementation:
+Set an alternative `CrudLayout` implementation:
+
 ```java
 GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
 ````
-&nbsp;
 
-Set a different `CrudFormFactory`:
+Set a custom `CrudFormFactory` (implementation not shown):
+
 ```java
-GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
-formFactory.setUseBeanValidation(true);
+
+MyCustomCrudFormLayout<User> formFactory = new MyCustomCrudFormLayout<>(User.class);
 crud.setCrudFormFactory(formFactory);
 ```
-&nbsp;
 
 Configure form fields visibility:
-```java
-formFactory.setVisiblePropertyIds(CrudOperation.READ, "name", "birthDate", "email", "groups", "mainGroup", "active");
-formFactory.setVisiblePropertyIds(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
-formFactory.setVisiblePropertyIds(CrudOperation.UPDATE, "name", "birthDate", "email", "groups", "mainGroup", "active");
-formFactory.setVisiblePropertyIds(CrudOperation.DELETE, "name", "email");
-````
-&nbsp;
 
-Use nested properties in `GridCrud` instances:
+```java
+        crud.getCrudFormFactory().setProperties("name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus",
+                "groups", "active", "mainGroup");
+````
+
+Configure the `Grid` when using the `GridCrud` implementation:
+
 ```java
 crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup", "active");
 crud.getGrid().getColumn("mainGroup").setRenderer(group -> group == null ? "" : ((Group) group).getName(), new TextRenderer());
 crud.getGrid().getColumn("mainGroup.name").setHeaderCaption("Main group");
 ```
-&nbsp;
 
 Configure `Grid` renderers:
+
 ```java
 ((Grid.Column<User, Date>) crud.getGrid().getColumn("birthDate")).setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
 ```
-&nbsp;
 
-Configure the type of an input field:
+Configure the field types:
+
 ```java
-formFactory.setFieldType("password", PasswordField.class);
+crud.getCrudFormFactory().getProperty(CrudOperation.ADD, "password").setFieldType(PasswordField.class);
 ```
-&nbsp;
 
 Customize fields after their creation:
 ```java
-formFactory.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
+crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
+        property -> property.setFieldCreationListener(field -> ((ComboBox) field).setPlaceholder("...select..."))
+);
 ```
-&nbsp;
 
 Define a `FieldProvider` to manually create a field:
-```java
-formFactory.setFieldProvider("groups", () -> {
-    CheckBoxGroup<Group> checkboxes = new CheckBoxGroup<>("Groups", groups);
-    checkboxes.setItemCaptionGenerator(Group::getName);
-    return checkboxes;
-});
-```
-&nbsp;
 
-Or use one of the included `FieldProvider` implementations:
+```java
+crud.getCrudFormFactory().getProperties("groups").stream().forEach(
+        property -> property.setFieldProvider(
+                () -> {
+                    CheckboxGroup<Group> checkboxes = new CheckboxGroup<>();
+                    checkboxes.setItems(groupService.findAll());
+                    checkboxes.setItemLabelGenerator(Group::getName);
+                    return checkboxes;
+                }                        
+        )
+);
 ```
-formFactory.setFieldProvider("groups",
-        new CheckBoxGroupProvider<>("Groups", GroupRepository.findAll(), Group::getName));
+
+Use `FieldProvider` implementations included in the addon:
+
 ```
-&nbsp;
+crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
+        property -> property.setFieldProvider(
+                new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName),
+                        Group::getName))
+);
+```
 
 Set a `Converter`:
 
 ````
-formFactory.setConverter("salary", new Converter<String, BigDecimal>() {
-    @Override
-    public Result<BigDecimal> convertToModel(String value, ValueContext valueContext) {
-        return Result.ok(new BigDecimal(value)); // error handling omitted
-    }
+crud.getCrudFormFactory().getProperty(CrudOperation.UPDATE, "salary").setConverter(
+        new Converter<String, BigDecimal>() {
+            @Override
+            public Result<BigDecimal> convertToModel(String value, ValueContext valueContext) {
+                return Result.ok(new BigDecimal(value)); // error handling omitted
+            }
 
-    @Override
-    public String convertToPresentation(BigDecimal value, ValueContext valueContext) {
-        return value.toPlainString();
-    }
-});
+            @Override
+            public String convertToPresentation(BigDecimal value, ValueContext valueContext) {
+                return value.toPlainString();
+            }
+        }
+);
 ````
 
 Customize captions:
+
 ```
+DefaultCrudFormFactory<User> formFactory = new DefaultCrudFormFactory<>(User.class);
+formFactory.getProperty(CrudOperation.ADD, "password").setFieldType(PasswordField.class);
 formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
+
 crud.setRowCountCaption("%d user(s) found");
 ```
-&nbsp;
 
 Set an error listener:
+
 ```
 crud.setErrorConsumer(e -> Notification.show("Error!", Notification.Type.ERROR_MESSAGE));
 ```
