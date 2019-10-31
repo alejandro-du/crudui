@@ -32,12 +32,12 @@ public class SimpleCrudView extends VerticalLayout {
         crud.getCrudFormFactory().addProperty(CrudOperation.ADD, "password");
 
         // form fields configuration
-        crud.getCrudFormFactory().getProperties("groups").stream().forEach(
+        crud.getCrudFormFactory().getProperty("groups").stream().forEach(
                 property -> property.setFieldProvider(
                         new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName))
         );
 
-        crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
+        crud.getCrudFormFactory().getProperty("mainGroup").stream().forEach(
                 property -> property.setFieldProvider(
                         new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName),
                                 Group::getName))

@@ -122,20 +122,20 @@ Configure `Grid` renderers:
 ((Grid.Column<User, Date>) crud.getGrid().getColumn("birthDate")).setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
 ```
 
-Configure the field types:
+Configure the property types:
 
 ```java
-crud.getCrudFormFactory().getProperty(CrudOperation.ADD, "password").setFieldType(PasswordField.class);
+crud.getCrudFormFactory().getField(CrudOperation.ADD, "password").setFieldType(PasswordField.class);
 ```
 
 Customize fields after their creation:
 ```java
 crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
-        property -> property.setFieldCreationListener(field -> ((ComboBox) field).setPlaceholder("...select..."))
+        property -> property.setFieldCreationListener(property -> ((ComboBox) property).setPlaceholder("...select..."))
 );
 ```
 
-Define a `FieldProvider` to manually create a field:
+Define a `FieldProvider` to manually create a property:
 
 ```java
 crud.getCrudFormFactory().getProperties("groups").stream().forEach(
@@ -152,7 +152,7 @@ crud.getCrudFormFactory().getProperties("groups").stream().forEach(
 
 Use `FieldProvider` implementations included in the addon:
 
-```
+```java
 crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
         property -> property.setFieldProvider(
                 new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName),
@@ -162,8 +162,8 @@ crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
 
 Set a `Converter`:
 
-````
-crud.getCrudFormFactory().getProperty(CrudOperation.UPDATE, "salary").setConverter(
+````java
+crud.getCrudFormFactory().getField(CrudOperation.UPDATE, "salary").setConverter(
         new Converter<String, BigDecimal>() {
             @Override
             public Result<BigDecimal> convertToModel(String value, ValueContext valueContext) {
@@ -180,9 +180,9 @@ crud.getCrudFormFactory().getProperty(CrudOperation.UPDATE, "salary").setConvert
 
 Customize captions:
 
-```
+```java
 DefaultCrudFormFactory<User> formFactory = new DefaultCrudFormFactory<>(User.class);
-formFactory.getProperty(CrudOperation.ADD, "password").setFieldType(PasswordField.class);
+formFactory.getField(CrudOperation.ADD, "password").setFieldType(PasswordField.class);
 formFactory.setButtonCaption(CrudOperation.ADD, "Add new user");
 
 crud.setRowCountCaption("%d user(s) found");
@@ -190,6 +190,6 @@ crud.setRowCountCaption("%d user(s) found");
 
 Set an error listener:
 
-```
+```java
 crud.setErrorConsumer(e -> Notification.show("Error!", Notification.Type.ERROR_MESSAGE));
 ```

@@ -8,8 +8,8 @@ import com.vaadin.flow.component.HasValue;
  * @author Alejandro Duarte.
  */
 @FunctionalInterface
-public interface FieldCreationListener extends Serializable {
+public interface FieldCreationListener<T> extends Serializable {
 
-    void fieldCreated(HasValue field);
+    void fieldCreated(HasValue<?, T> field);
 
 }

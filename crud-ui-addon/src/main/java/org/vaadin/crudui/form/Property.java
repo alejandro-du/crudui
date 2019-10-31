@@ -5,13 +5,13 @@ import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.ValueProvider;
 
-public class Property<BEAN_TYPE, PROPERTY_TYPE> {
+public class Property<T, V> {
 
-    private final ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter;
+    private final ValueProvider<T, V> getter;
 
-    private final Setter<BEAN_TYPE, PROPERTY_TYPE> setter;
+    private final Setter<T, V> setter;
 
-    private final Class<PROPERTY_TYPE> type;
+    private final Class<V> type;
 
     private String fieldCaption;
 
@@ -23,21 +23,21 @@ public class Property<BEAN_TYPE, PROPERTY_TYPE> {
 
     private FieldProvider<?, ?> fieldProvider;
 
-    private Converter<?, ?> converter;
+    private Converter<?, V> converter;
 
-    public Property(Class<PROPERTY_TYPE> type, ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter,
-            Setter<BEAN_TYPE, PROPERTY_TYPE> setter) {
+    public Property(Class<V> type, ValueProvider<T, V> getter,
+            Setter<T, V> setter) {
 
         this.type = type;
         this.getter = getter;
         this.setter = setter;
     }
 
-    public ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getGetter() {
+    public ValueProvider<T, V> getGetter() {
         return getter;
     }
 
-    public Setter<BEAN_TYPE, PROPERTY_TYPE> getSetter() {
+    public Setter<T, V> getSetter() {
         return setter;
     }
 
@@ -49,7 +49,7 @@ public class Property<BEAN_TYPE, PROPERTY_TYPE> {
         return fieldCaption;
     }
 
-    public Property<BEAN_TYPE, PROPERTY_TYPE> setFieldCaption(String fieldCaption) {
+    public Property<T, V> setFieldCaption(String fieldCaption) {
         this.fieldCaption = fieldCaption;
         return this;
     }
@@ -58,7 +58,7 @@ public class Property<BEAN_TYPE, PROPERTY_TYPE> {
         return disabled;
     }
 
-    public Property<BEAN_TYPE, PROPERTY_TYPE> setDisabled(boolean disabled) {
+    public Property<T, V> setDisabled(boolean disabled) {
         this.disabled = disabled;
         return this;
     }
@@ -67,7 +67,7 @@ public class Property<BEAN_TYPE, PROPERTY_TYPE> {
         return fieldType;
     }
 
-    public Property<BEAN_TYPE, PROPERTY_TYPE> setFieldType(Class<? extends HasValueAndElement<?, ?>> fieldType) {
+    public Property<T, V> setFieldType(Class<? extends HasValueAndElement<?, ?>> fieldType) {
         this.fieldType = fieldType;
         return this;
     }
@@ -76,7 +76,7 @@ public class Property<BEAN_TYPE, PROPERTY_TYPE> {
         return fieldCreationListener;
     }
 
-    public Property<BEAN_TYPE, PROPERTY_TYPE> setFieldCreationListener(FieldCreationListener fieldCreationListener) {
+    public Property<T, V> setFieldCreationListener(FieldCreationListener fieldCreationListener) {
         this.fieldCreationListener = fieldCreationListener;
         return this;
     }
@@ -85,16 +85,16 @@ public class Property<BEAN_TYPE, PROPERTY_TYPE> {
         return fieldProvider;
     }
 
-    public Property<BEAN_TYPE, PROPERTY_TYPE> setFieldProvider(FieldProvider<?, ?> fieldProvider) {
+    public Property<T, V> setFieldProvider(FieldProvider<?, ?> fieldProvider) {
         this.fieldProvider = fieldProvider;
         return this;
     }
 
-    public Converter<?, ?> getConverter() {
+    public Converter<?, V> getConverter() {
         return converter;
     }
 
-    public Property<BEAN_TYPE, PROPERTY_TYPE> setConverter(Converter<?, ?> converter) {
+    public Property<T, V> setConverter(Converter<?, V> converter) {
         this.converter = converter;
         return this;
     }

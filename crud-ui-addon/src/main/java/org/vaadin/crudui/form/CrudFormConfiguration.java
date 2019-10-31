@@ -7,16 +7,16 @@ import java.util.Map;
 /**
  * @author Alejandro Duarte.
  */
-public class CrudFormConfiguration<BEAN_TYPE> implements Serializable {
+public class CrudFormConfiguration<T> implements Serializable {
 
-    protected Map<String, Property<BEAN_TYPE, ?>> propertiesMap = new LinkedHashMap<>();
+    protected Map<String, Property<T, ?>> propertiesMap = new LinkedHashMap<>();
     protected boolean useBeanValidation;
 
-    public Map<String, Property<BEAN_TYPE, ?>> getPropertiesMap() {
+    public Map<String, Property<T, ?>> getPropertiesMap() {
         return propertiesMap;
     }
 
-    public void setPropertiesMap(Map<String, Property<BEAN_TYPE, ?>> propertiesMap) {
+    public void setPropertiesMap(Map<String, Property<T, ?>> propertiesMap) {
         this.propertiesMap = propertiesMap;
     }
 

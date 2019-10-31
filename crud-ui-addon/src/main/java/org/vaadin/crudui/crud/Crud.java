@@ -7,7 +7,7 @@ import org.vaadin.crudui.layout.CrudLayout;
 /**
  * @author Alejandro Duarte
  */
-public interface Crud<BEAN_TYPE> {
+public interface Crud<T> {
 
     void setAddOperationVisible(boolean visible);
 
@@ -17,25 +17,25 @@ public interface Crud<BEAN_TYPE> {
 
     void setFindAllOperationVisible(boolean visible);
 
-    CrudFormFactory<BEAN_TYPE> getCrudFormFactory();
+    CrudFormFactory<T> getCrudFormFactory();
 
-    void setCrudFormFactory(CrudFormFactory<BEAN_TYPE> crudFormFactory);
+    void setCrudFormFactory(CrudFormFactory<T> crudFormFactory);
 
-    void setFindAllOperation(FindAllCrudOperationListener<BEAN_TYPE> findAllOperation);
+    void setFindAllOperation(FindAllCrudOperationListener<T> findAllOperation);
 
-    void setFindAllOperation(DataProvider<BEAN_TYPE, ?> dataProvider);
+    void setFindAllOperation(DataProvider<T, ?> dataProvider);
 
-    void setAddOperation(AddOperationListener<BEAN_TYPE> addOperation);
+    void setAddOperation(AddOperationListener<T> addOperation);
 
-    void setUpdateOperation(UpdateOperationListener<BEAN_TYPE> updateOperation);
+    void setUpdateOperation(UpdateOperationListener<T> updateOperation);
 
-    void setDeleteOperation(DeleteOperationListener<BEAN_TYPE> deleteOperation);
+    void setDeleteOperation(DeleteOperationListener<T> deleteOperation);
 
-    void setOperations(FindAllCrudOperationListener<BEAN_TYPE> findAllOperation,
-            AddOperationListener<BEAN_TYPE> addOperation, UpdateOperationListener<BEAN_TYPE> updateOperation,
-            DeleteOperationListener<BEAN_TYPE> deleteOperation);
+    void setOperations(FindAllCrudOperationListener<T> findAllOperation,
+            AddOperationListener<T> addOperation, UpdateOperationListener<T> updateOperation,
+            DeleteOperationListener<T> deleteOperation);
 
-    void setCrudListener(CrudListener<BEAN_TYPE> crudListener);
+    void setCrudListener(CrudListener<T> crudListener);
 
     CrudLayout getCrudLayout();
 

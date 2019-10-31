@@ -16,37 +16,37 @@ import java.util.function.Consumer;
 /**
  * @author Alejandro Duarte
  */
-public interface CrudFormFactory<BEAN_TYPE> extends Serializable {
+public interface CrudFormFactory<T> extends Serializable {
 
-    Component buildNewForm(CrudOperation operation, BEAN_TYPE bean, boolean readOnly,
+    Component buildNewForm(CrudOperation operation, T bean, boolean readOnly,
             ComponentEventListener<ClickEvent<Button>> cancelButtonClickListener,
             ComponentEventListener<ClickEvent<Button>> operationButtonClickListener);
 
-    Property<BEAN_TYPE, ?> getProperty(CrudOperation operation, String propertyName);
+    Property<T, ?> getProperty(CrudOperation operation, String propertyName);
 
-    List<Property<BEAN_TYPE, ?>> getProperties(String propertyName);
+    List<Property<T, ?>> getProperty(String propertyName);
 
-    <PROPERTY_TYPE> Property<BEAN_TYPE, PROPERTY_TYPE> addProperty(CrudOperation operation, Class<PROPERTY_TYPE> type,
-            ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter, Setter<BEAN_TYPE, PROPERTY_TYPE> setter);
+    <V> Property<T, V> addProperty(CrudOperation operation, Class<V> type,
+            ValueProvider<T, V> getter, Setter<T, V> setter);
 
-    <PROPERTY_TYPE> Map<CrudOperation, Property<BEAN_TYPE, PROPERTY_TYPE>> addProperty(Class<PROPERTY_TYPE> type,
-            ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter, Setter<BEAN_TYPE, PROPERTY_TYPE> setter);
+    <V> Map<CrudOperation, ? extends Property<T, V>> addProperty(Class<V> type,
+            ValueProvider<T, V> getter, Setter<T, V> setter);
 
-    <PROPERTY_TYPE> AbstractCrudFormFactory<BEAN_TYPE> addProperty(CrudOperation operation, String propertyName);
+    <V> AbstractCrudFormFactory<T> addProperty(CrudOperation operation, String propertyName);
 
-    AbstractCrudFormFactory<BEAN_TYPE> addProperty(String propertyName);
+    AbstractCrudFormFactory<T> addProperty(String propertyName);
 
-    AbstractCrudFormFactory<BEAN_TYPE> setProperties(CrudOperation operation, String... propertyNames);
+    AbstractCrudFormFactory<T> setProperties(CrudOperation operation, String... propertyNames);
 
-    AbstractCrudFormFactory<BEAN_TYPE> setProperties(String... propertyNames);
+    AbstractCrudFormFactory<T> setProperties(String... propertyNames);
 
-    AbstractCrudFormFactory<BEAN_TYPE> setUseBeanValidation(CrudOperation operation, boolean useBeanValidation);
+    AbstractCrudFormFactory<T> setUseBeanValidation(CrudOperation operation, boolean useBeanValidation);
 
-    AbstractCrudFormFactory<BEAN_TYPE> setUseBeanValidation(boolean useBeanValidation);
+    AbstractCrudFormFactory<T> setUseBeanValidation(boolean useBeanValidation);
 
-    AbstractCrudFormFactory<BEAN_TYPE> setErrorListener(Consumer<Exception> errorListener);
+    AbstractCrudFormFactory<T> setErrorListener(Consumer<Exception> errorListener);
 
-    String buildCaption(CrudOperation operation, BEAN_TYPE bean);
+    String buildCaption(CrudOperation operation, T bean);
 
     void showError(CrudOperation operation, Exception e);
 

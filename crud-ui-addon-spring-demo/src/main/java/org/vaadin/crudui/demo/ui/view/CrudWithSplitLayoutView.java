@@ -21,6 +21,8 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
     public CrudWithSplitLayoutView(UserService userService, GroupService groupService) {
         // crud columns and form fields
         GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout());
+        crud.setUpdateOperationVisible(false);
+        crud.setClickRowToUpdate(true);
 
         // grid configuration
         crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
@@ -32,12 +34,12 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
         crud.getCrudFormFactory().addProperty(CrudOperation.ADD, "password");
 
         // form fields configuration
-        crud.getCrudFormFactory().getProperties("groups").stream().forEach(
+        crud.getCrudFormFactory().getProperty("groups").stream().forEach(
                 property -> property.setFieldProvider(
                         new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName))
         );
 
-        crud.getCrudFormFactory().getProperties("mainGroup").stream().forEach(
+        crud.getCrudFormFactory().getProperty("mainGroup").stream().forEach(
                 property -> property.setFieldProvider(
                         new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName),
                                 Group::getName))

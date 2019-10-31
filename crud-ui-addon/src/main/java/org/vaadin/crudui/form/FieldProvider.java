@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.HasValueAndElement;
 
 /**
@@ -13,6 +12,6 @@ import com.vaadin.flow.component.HasValueAndElement;
 @FunctionalInterface
 public interface FieldProvider<C extends Component, T> extends Serializable {
 
-    HasValueAndElement buildField();
+    HasValueAndElement<ComponentValueChangeEvent<C, T>, T> buildField();
 
 }

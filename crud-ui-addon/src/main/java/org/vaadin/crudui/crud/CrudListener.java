@@ -10,10 +10,10 @@ public interface CrudListener<T> extends Serializable {
 
     Collection<T> findAll();
 
-    T add(T domainObjectToAdd);
+    T add(T t);
 
-    T update(T domainObjectToUpdate);
+    T update(T t);
 
-    void delete(T domainObjectToDelete);
+    void delete(T t);
 
 }

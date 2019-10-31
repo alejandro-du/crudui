@@ -18,43 +18,43 @@ import java.util.stream.Collectors;
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractCrudFormFactory<BEAN_TYPE> implements CrudFormFactory<BEAN_TYPE> {
+public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
 
     public static final String GENERATED_PROPERTY_NAME_PREFIX = "--";
-    protected final Class<BEAN_TYPE> beanType;
-    protected final PropertySet<BEAN_TYPE> propertySet;
+    protected final Class<T> beanType;
+    protected final PropertySet<T> propertySet;
     protected Consumer<Exception> errorListener;
-    private Map<CrudOperation, CrudFormConfiguration<BEAN_TYPE>> configurationMap = new HashMap<>();
+    private Map<CrudOperation, CrudFormConfiguration<T>> configurationMap = new HashMap<>();
 
-    public AbstractCrudFormFactory(Class<BEAN_TYPE> beanType) {
+    public AbstractCrudFormFactory(Class<T> beanType) {
         this.beanType = beanType;
         propertySet = BeanPropertySet.get(beanType);
     }
 
-    protected CrudFormConfiguration<BEAN_TYPE> getConfiguration(CrudOperation operation) {
+    protected CrudFormConfiguration<T> getConfiguration(CrudOperation operation) {
         configurationMap.putIfAbsent(operation, new CrudFormConfiguration<>());
         return configurationMap.get(operation);
     }
 
     @Override
-    public Property<BEAN_TYPE, ?> getProperty(CrudOperation operation,
+    public Property<T, ?> getProperty(CrudOperation operation,
             String propertyName) {
         return getConfiguration(operation).getPropertiesMap().get(propertyName);
     }
 
     @Override
-    public List<Property<BEAN_TYPE, ?>> getProperties(String propertyName) {
+    public List<Property<T, ?>> getProperty(String propertyName) {
         return CrudOperation.stream()
                 .map(operation -> getConfiguration(operation).getPropertiesMap().get(propertyName))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public <PROPERTY_TYPE> Property<BEAN_TYPE, PROPERTY_TYPE> addProperty(CrudOperation operation,
-            Class<PROPERTY_TYPE> type, ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter,
-            Setter<BEAN_TYPE, PROPERTY_TYPE> setter) {
+    public <V> Property<T, V> addProperty(CrudOperation operation,
+            Class<V> type, ValueProvider<T, V> getter,
+            Setter<T, V> setter) {
 
-        Property<BEAN_TYPE, PROPERTY_TYPE> property = new Property<>(type, getter, setter);
+        Property<T, V> property = new Property<>(type, getter, setter);
         String getterName = getter.getClass().getName();
         getConfiguration(operation).getPropertiesMap().put(GENERATED_PROPERTY_NAME_PREFIX + getterName, property);
 
@@ -62,12 +62,12 @@ public abstract class AbstractCrudFormFactory<BEAN_TYPE> implements CrudFormFact
     }
 
     @Override
-    public <PROPERTY_TYPE> Map<CrudOperation, Property<BEAN_TYPE, PROPERTY_TYPE>> addProperty(Class<PROPERTY_TYPE> type,
-            ValueProvider<BEAN_TYPE, PROPERTY_TYPE> getter, Setter<BEAN_TYPE, PROPERTY_TYPE> setter) {
-        HashMap<CrudOperation, Property<BEAN_TYPE, PROPERTY_TYPE>> properties = new HashMap<>();
+    public <V> Map<CrudOperation, Property<T, V>> addProperty(Class<V> type,
+            ValueProvider<T, V> getter, Setter<T, V> setter) {
+        HashMap<CrudOperation, Property<T, V>> properties = new HashMap<>();
 
         CrudOperation.stream().forEach(operation -> {
-            Property<BEAN_TYPE, PROPERTY_TYPE> property = addProperty(operation, type, getter,
+            Property<T, V> property = addProperty(operation, type, getter,
                     setter);
             properties.put(operation, property);
         });
@@ -76,13 +76,13 @@ public abstract class AbstractCrudFormFactory<BEAN_TYPE> implements CrudFormFact
     }
 
     @Override
-    public <PROPERTY_TYPE> AbstractCrudFormFactory<BEAN_TYPE> addProperty(CrudOperation operation,
+    public <V> AbstractCrudFormFactory<T> addProperty(CrudOperation operation,
             String propertyName) {
 
-        PropertyDefinition<BEAN_TYPE, PROPERTY_TYPE> definition =
-                (PropertyDefinition<BEAN_TYPE, PROPERTY_TYPE>) propertySet.getProperty(propertyName).get();
-        Class<PROPERTY_TYPE> type = (Class<PROPERTY_TYPE>) propertySet.getProperty(propertyName).get().getType();
-        Property<BEAN_TYPE, PROPERTY_TYPE> property = new Property<>(type, definition.getGetter(),
+        PropertyDefinition<T, V> definition =
+                (PropertyDefinition<T, V>) propertySet.getProperty(propertyName).get();
+        Class<V> type = (Class<V>) propertySet.getProperty(propertyName).get().getType();
+        Property<T, V> property = new Property<>(type, definition.getGetter(),
                 definition.getSetter().get());
         property.setFieldCaption(SharedUtil.propertyIdToHumanFriendly(propertyName));
         getConfiguration(operation).getPropertiesMap().put(propertyName, property);
@@ -91,13 +91,13 @@ public abstract class AbstractCrudFormFactory<BEAN_TYPE> implements CrudFormFact
     }
 
     @Override
-    public AbstractCrudFormFactory<BEAN_TYPE> addProperty(String propertyName) {
+    public AbstractCrudFormFactory<T> addProperty(String propertyName) {
         CrudOperation.stream().forEach(operation -> addProperty(operation, propertyName));
         return this;
     }
 
     @Override
-    public AbstractCrudFormFactory<BEAN_TYPE> setProperties(CrudOperation operation, String... propertyNames) {
+    public AbstractCrudFormFactory<T> setProperties(CrudOperation operation, String... propertyNames) {
         getConfiguration(operation).getPropertiesMap().clear();
         Arrays.stream(propertyNames).forEach(
                 propertyName -> addProperty(operation, propertyName));
@@ -106,7 +106,7 @@ public abstract class AbstractCrudFormFactory<BEAN_TYPE> implements CrudFormFact
     }
 
     @Override
-    public AbstractCrudFormFactory<BEAN_TYPE> setProperties(String... propertyNames) {
+    public AbstractCrudFormFactory<T> setProperties(String... propertyNames) {
         CrudOperation.stream().forEach(
                 operation -> setProperties(operation, propertyNames));
 
@@ -114,13 +114,13 @@ public abstract class AbstractCrudFormFactory<BEAN_TYPE> implements CrudFormFact
     }
 
     @Override
-    public AbstractCrudFormFactory<BEAN_TYPE> setUseBeanValidation(CrudOperation operation, boolean useBeanValidation) {
+    public AbstractCrudFormFactory<T> setUseBeanValidation(CrudOperation operation, boolean useBeanValidation) {
         getConfiguration(operation).setUseBeanValidation(useBeanValidation);
         return this;
     }
 
     @Override
-    public AbstractCrudFormFactory<BEAN_TYPE> setUseBeanValidation(boolean useBeanValidation) {
+    public AbstractCrudFormFactory<T> setUseBeanValidation(boolean useBeanValidation) {
         CrudOperation.stream().forEach(
                 operation -> setUseBeanValidation(operation, useBeanValidation));
 
@@ -128,7 +128,7 @@ public abstract class AbstractCrudFormFactory<BEAN_TYPE> implements CrudFormFact
     }
 
     @Override
-    public AbstractCrudFormFactory<BEAN_TYPE> setErrorListener(Consumer<Exception> errorListener) {
+    public AbstractCrudFormFactory<T> setErrorListener(Consumer<Exception> errorListener) {
         this.errorListener = errorListener;
         return this;
     }

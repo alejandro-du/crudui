@@ -20,7 +20,7 @@ import java.util.Collection;
 /**
  * @author Alejandro Duarte
  */
-public class GridCrud<BEAN_TYPE> extends AbstractCrud<BEAN_TYPE> {
+public class GridCrud<T> extends AbstractCrud<T> {
 
     protected String rowCountCaption = "%d items(s) found";
     protected String savedMessage = "Item saved";
@@ -31,32 +31,32 @@ public class GridCrud<BEAN_TYPE> extends AbstractCrud<BEAN_TYPE> {
     protected Button addButton;
     protected Button updateButton;
     protected Button deleteButton;
-    protected Grid<BEAN_TYPE> grid;
+    protected Grid<T> grid;
 
     private boolean clickRowToUpdate;
 
-    public GridCrud(Class<BEAN_TYPE> beanType) {
+    public GridCrud(Class<T> beanType) {
         this(beanType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(beanType), null);
     }
 
-    public GridCrud(Class<BEAN_TYPE> beanType, CrudLayout crudLayout) {
+    public GridCrud(Class<T> beanType, CrudLayout crudLayout) {
         this(beanType, crudLayout, new DefaultCrudFormFactory<>(beanType), null);
     }
 
-    public GridCrud(Class<BEAN_TYPE> beanType, CrudFormFactory<BEAN_TYPE> crudFormFactory) {
+    public GridCrud(Class<T> beanType, CrudFormFactory<T> crudFormFactory) {
         this(beanType, new WindowBasedCrudLayout(), crudFormFactory, null);
     }
 
-    public GridCrud(Class<BEAN_TYPE> beanType, CrudListener<BEAN_TYPE> crudListener) {
+    public GridCrud(Class<T> beanType, CrudListener<T> crudListener) {
         this(beanType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(beanType), crudListener);
     }
 
-    public GridCrud(Class<BEAN_TYPE> beanType, CrudLayout crudLayout, CrudFormFactory<BEAN_TYPE> crudFormFactory) {
+    public GridCrud(Class<T> beanType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory) {
         this(beanType, crudLayout, crudFormFactory, null);
     }
 
-    public GridCrud(Class<BEAN_TYPE> beanType, CrudLayout crudLayout, CrudFormFactory<BEAN_TYPE> crudFormFactory,
-            CrudListener<BEAN_TYPE> crudListener) {
+    public GridCrud(Class<T> beanType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory,
+            CrudListener<T> crudListener) {
         super(beanType, crudLayout, crudFormFactory, crudListener);
         initLayout();
     }
@@ -120,7 +120,7 @@ public class GridCrud<BEAN_TYPE> extends AbstractCrud<BEAN_TYPE> {
             grid.setDataProvider(findAll.getDataProvider());
 
         } else {
-            Collection<BEAN_TYPE> items = findAllOperation.findAll();
+            Collection<T> items = findAllOperation.findAll();
             grid.setItems(items);
         }
     }
@@ -137,7 +137,7 @@ public class GridCrud<BEAN_TYPE> extends AbstractCrud<BEAN_TYPE> {
 
     protected void gridSelectionChanged() {
         updateButtons();
-        BEAN_TYPE bean = grid.asSingleSelect().getValue();
+        T bean = grid.asSingleSelect().getValue();
 
         if (bean != null) {
             if (clickRowToUpdate) {
@@ -162,16 +162,14 @@ public class GridCrud<BEAN_TYPE> extends AbstractCrud<BEAN_TYPE> {
 
     protected void addButtonClicked() {
         try {
-            BEAN_TYPE bean = beanType.newInstance();
+            T bean = beanType.newInstance();
             showForm(CrudOperation.ADD, bean, false, savedMessage, event -> {
                 try {
-                    BEAN_TYPE addedObject = addOperation.perform(bean);
+                    T addedObject = addOperation.perform(bean);
                     refreshGrid();
                     grid.asSingleSelect().setValue(addedObject);
                     // TODO: grid.scrollTo(addedObject);
                 } catch (IllegalArgumentException ignore) {
-                } catch (CrudOperationException e1) {
-                    refreshGrid();
                 } catch (Exception e2) {
                     refreshGrid();
                     throw e2;
@@ -183,63 +181,64 @@ public class GridCrud<BEAN_TYPE> extends AbstractCrud<BEAN_TYPE> {
     }
 
     protected void updateButtonClicked() {
-        BEAN_TYPE bean = grid.asSingleSelect().getValue();
+        T bean = grid.asSingleSelect().getValue();
         showForm(CrudOperation.UPDATE, bean, false, savedMessage, event -> {
             try {
-                BEAN_TYPE updatedObject = updateOperation.perform(bean);
+                T updatedObject = updateOperation.perform(bean);
                 grid.asSingleSelect().clear();
                 refreshGrid();
                 grid.asSingleSelect().setValue(updatedObject);
                 // TODO: grid.scrollTo(updatedObject);
             } catch (IllegalArgumentException ignore) {
-            } catch (CrudOperationException e1) {
+            } catch (Exception e) {
                 refreshGrid();
-            } catch (Exception e2) {
-                refreshGrid();
-                throw e2;
+                throw e;
             }
         });
     }
 
     protected void deleteButtonClicked() {
-        BEAN_TYPE bean = grid.asSingleSelect().getValue();
+        T bean = grid.asSingleSelect().getValue();
         showForm(CrudOperation.DELETE, bean, true, deletedMessage, event -> {
             try {
                 deleteOperation.perform(bean);
                 refreshGrid();
                 grid.asSingleSelect().clear();
-            } catch (CrudOperationException e1) {
+            } catch (Exception e) {
                 refreshGrid();
-            } catch (Exception e2) {
-                refreshGrid();
-                throw e2;
+                throw e;
             }
         });
     }
 
-    protected void showForm(CrudOperation operation, BEAN_TYPE bean, boolean readOnly, String successMessage,
+    protected void showForm(CrudOperation operation, T bean, boolean readOnly, String successMessage,
             ComponentEventListener<ClickEvent<Button>> buttonClickListener) {
         Component form = crudFormFactory.buildNewForm(operation, bean, readOnly, cancelClickEvent -> {
             if (clickRowToUpdate) {
                 grid.asSingleSelect().clear();
             } else {
-                BEAN_TYPE selected = grid.asSingleSelect().getValue();
+                T selected = grid.asSingleSelect().getValue();
                 crudLayout.hideForm();
                 grid.asSingleSelect().clear();
                 grid.asSingleSelect().setValue(selected);
             }
         }, operationPerformedClickEvent -> {
-            buttonClickListener.onComponentEvent(operationPerformedClickEvent);
-            if (!clickRowToUpdate) {
-                crudLayout.hideForm();
+            try {
+                buttonClickListener.onComponentEvent(operationPerformedClickEvent);
+                if (!clickRowToUpdate) {
+                    crudLayout.hideForm();
+                }
+                showNotification(successMessage);
+            } catch (CrudOperationException e) {
+                crudFormFactory.showError(operation, e);
+                refreshGrid();
             }
-            showNotification(successMessage);
         });
         String caption = crudFormFactory.buildCaption(operation, bean);
         crudLayout.showForm(operation, form, caption);
     }
 
-    public Grid<BEAN_TYPE> getGrid() {
+    public Grid<T> getGrid() {
         return grid;
     }
 
