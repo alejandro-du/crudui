@@ -13,6 +13,6 @@ public interface LazyCrudListener<T> extends CrudListener<T> {
         throw new UnsupportedOperationException("Use fetch and count methods instead.");
     }
 
-    DataProvider<T, Void> getDataProvider();
+    DataProvider<T, ?> getDataProvider();
 
 }
