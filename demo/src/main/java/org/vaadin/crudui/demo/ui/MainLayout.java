@@ -14,7 +14,6 @@ import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.server.InitialPageSettings;
-import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.PageConfigurator;
 import org.vaadin.crudui.demo.DemoUtils;
 import org.vaadin.crudui.demo.ui.view.*;
@@ -22,7 +21,6 @@ import org.vaadin.crudui.demo.ui.view.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@PWA(name = "Crud UI add-on demo", shortName = "Crud UI demo")
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver, PageConfigurator {
 
     private Tabs tabs = new Tabs();
