@@ -10,11 +10,16 @@ import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte
  */
 public interface CrudFormFactory<T> extends Serializable {
+
+    void setNewInstanceSupplier(Supplier<T> newInstanceSupplier);
+
+    Supplier<T> getNewInstanceSupplier();
 
     Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, ComponentEventListener<ClickEvent<Button>> cancelButtonClickListener, ComponentEventListener<ClickEvent<Button>> operationButtonClickListener);
 

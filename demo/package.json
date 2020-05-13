@@ -17,5 +17,5 @@
     "compression-webpack-plugin": "3.0.1",
     "terser": "4.6.7"
   },
-  "vaadinAppPackageHash": "717a3e61d9c03fde0135518830777b7a74a2de12300c39880577bdb46608fa3e"
+  "vaadinAppPackageHash": "4e1f953fa867266cd3258d0cd3cd0598e94ed33db5be5b01ea7f196f9b29e53f"
 }
