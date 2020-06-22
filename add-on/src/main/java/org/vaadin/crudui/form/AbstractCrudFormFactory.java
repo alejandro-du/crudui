@@ -1,14 +1,13 @@
 package org.vaadin.crudui.form;
 
+import com.vaadin.flow.component.HasValueAndElement;
+import com.vaadin.flow.data.converter.Converter;
+import org.vaadin.crudui.crud.CrudOperation;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import com.vaadin.flow.data.converter.Converter;
-import org.vaadin.crudui.crud.CrudOperation;
-
-import com.vaadin.flow.component.HasValueAndElement;
 
 /**
  * @author Alejandro Duarte

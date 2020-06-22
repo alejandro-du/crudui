@@ -96,34 +96,25 @@ GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout()
 ````
 &nbsp;
 
-Set a different `CrudFormFactory`:
+Set a custom `CrudFormFactory`:
 ```java
-GridLayoutCrudFormFactory<User> formFactory = new GridLayoutCrudFormFactory<>(User.class, 2, 2);
-formFactory.setUseBeanValidation(true);
+CustomCrudFormFactory<User> formFactory = new CustomCrudFormFactory<>(User.class);
 crud.setCrudFormFactory(formFactory);
 ```
 &nbsp;
 
 Configure form fields visibility:
 ```java
-formFactory.setVisiblePropertyIds(CrudOperation.READ, "name", "birthDate", "email", "groups", "mainGroup", "active");
-formFactory.setVisiblePropertyIds(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
-formFactory.setVisiblePropertyIds(CrudOperation.UPDATE, "name", "birthDate", "email", "groups", "mainGroup", "active");
-formFactory.setVisiblePropertyIds(CrudOperation.DELETE, "name", "email");
+formFactory.setVisibleProperties(CrudOperation.READ, "name", "birthDate", "email", "groups", "mainGroup", "active");
+formFactory.setVisibleProperties(CrudOperation.ADD, "name", "birthDate", "email", "password", "groups", "mainGroup", "active");
+formFactory.setVisibleProperties(CrudOperation.UPDATE, "name", "birthDate", "email", "groups", "mainGroup", "active");
+formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "email");
 ````
 &nbsp;
 
 Use nested properties in `GridCrud` instances:
 ```java
-crud.getGrid().setColumns("name", "birthDate", "email", "mainGroup", "active");
-crud.getGrid().getColumn("mainGroup").setRenderer(group -> group == null ? "" : ((Group) group).getName(), new TextRenderer());
-crud.getGrid().getColumn("mainGroup.name").setHeaderCaption("Main group");
-```
-&nbsp;
-
-Configure `Grid` renderers:
-```java
-((Grid.Column<User, Date>) crud.getGrid().getColumn("birthDate")).setRenderer(new DateRenderer("%1$tY-%1$tm-%1$te"));
+crud.getGrid().addColumn(user -> user.getMainGroup().getName()).setHeader("Main group").setKey("key");
 ```
 &nbsp;
 
@@ -135,15 +126,16 @@ formFactory.setFieldType("password", PasswordField.class);
 
 Customize fields after their creation:
 ```java
-formFactory.setFieldCreationListener("birthDate", field -> ((DateField) field).setDateFormat("yyyy-MM-dd"));
+formFactory.setFieldCreationListener("birthDate", field -> ... your own logic here ...);
 ```
 &nbsp;
 
 Define a `FieldProvider` to manually create a field:
 ```java
 formFactory.setFieldProvider("groups", () -> {
-    CheckBoxGroup<Group> checkboxes = new CheckBoxGroup<>("Groups", groups);
-    checkboxes.setItemCaptionGenerator(Group::getName);
+    CheckboxGroup<Group> checkboxes = new CheckboxGroup<>();
+    checkboxes.setItems(groups);
+    checkboxes.setItemLabelGenerator(Group::getName);
     return checkboxes;
 });
 ```
@@ -179,7 +171,3 @@ crud.setRowCountCaption("%d user(s) found");
 ```
 &nbsp;
 
-Set an error listener:
-```
-crud.setErrorConsumer(e -> Notification.show("Error!", Notification.Type.ERROR_MESSAGE));
-```
