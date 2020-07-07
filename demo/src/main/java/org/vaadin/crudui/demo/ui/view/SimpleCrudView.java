@@ -44,6 +44,7 @@ public class SimpleCrudView extends VerticalLayout {
         // layout configuration
         setSizeFull();
         add(crud);
+        crud.setFindAllOperationVisible(false);
 
         // logic configuration
         crud.setOperations(

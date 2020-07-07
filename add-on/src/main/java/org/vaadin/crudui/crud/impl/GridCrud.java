@@ -108,7 +108,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
 
     @Override
     public void setFindAllOperationVisible(boolean visible) {
-        findAllButton.setVisible(false);
+        findAllButton.setVisible(visible);
     }
 
     public void refreshGrid() {
