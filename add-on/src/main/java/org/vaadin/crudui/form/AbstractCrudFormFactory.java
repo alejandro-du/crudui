@@ -2,12 +2,12 @@ package org.vaadin.crudui.form;
 
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.function.SerializableConsumer;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * @author Alejandro Duarte
@@ -16,7 +16,7 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
 
     protected Map<CrudOperation, CrudFormConfiguration> configurations = new HashMap<>();
 
-    protected Consumer<Exception> errorListener;
+    protected SerializableConsumer<Exception> errorListener;
 
     @Override
     public void setVisibleProperties(CrudOperation operation, String... properties) {
@@ -99,7 +99,7 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     }
 
     @Override
-    public void setErrorListener(Consumer<Exception> errorListener) {
+    public void setErrorListener(SerializableConsumer<Exception> errorListener) {
         this.errorListener = errorListener;
     }
 

@@ -6,20 +6,20 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.function.SerializableConsumer;
+import com.vaadin.flow.function.SerializableSupplier;
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author Alejandro Duarte
  */
 public interface CrudFormFactory<T> extends Serializable {
 
-    void setNewInstanceSupplier(Supplier<T> newInstanceSupplier);
+    void setNewInstanceSupplier(SerializableSupplier<T> newInstanceSupplier);
 
-    Supplier<T> getNewInstanceSupplier();
+    SerializableSupplier<T> getNewInstanceSupplier();
 
     Component buildNewForm(CrudOperation operation, T domainObject, boolean readOnly, ComponentEventListener<ClickEvent<Button>> cancelButtonClickListener, ComponentEventListener<ClickEvent<Button>> operationButtonClickListener);
 
@@ -57,7 +57,7 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void setUseBeanValidation(boolean useBeanValidation);
 
-    void setErrorListener(Consumer<Exception> errorListener);
+    void setErrorListener(SerializableConsumer<Exception> errorListener);
 
     void showError(CrudOperation operation, Exception e);
 
