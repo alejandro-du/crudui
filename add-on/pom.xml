@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <vaadin.version>14.2.0</vaadin.version>
+        <vaadin.version>19.0.5</vaadin.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <maven.deploy.skip>true</maven.deploy.skip>
