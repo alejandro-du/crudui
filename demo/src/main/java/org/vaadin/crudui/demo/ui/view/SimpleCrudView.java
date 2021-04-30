@@ -1,9 +1,7 @@
 package org.vaadin.crudui.demo.ui.view;
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperationException;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.User;
@@ -13,6 +11,10 @@ import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.Route;
+
 @Route(value = "simple", layout = MainLayout.class)
 public class SimpleCrudView extends VerticalLayout {
 
@@ -21,7 +23,7 @@ public class SimpleCrudView extends VerticalLayout {
         GridCrud<User> crud = new GridCrud<>(User.class);
 
         // grid configuration
-        crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
+        crud.getGrid().setColumns("id", "name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
         crud.getGrid().setColumnReorderingAllowed(true);
 
         // form configuration
@@ -50,7 +52,12 @@ public class SimpleCrudView extends VerticalLayout {
         crud.setOperations(
                 () -> userService.findAll(),
                 user -> userService.save(user),
-                user -> userService.save(user),
+                user -> {
+                    if(user.getId().equals(10L)) {
+                	throw new CrudOperationException("Simulated error.");
+                    }
+		    return userService.save(user);
+		},
                 user -> userService.delete(user)
         );
     }

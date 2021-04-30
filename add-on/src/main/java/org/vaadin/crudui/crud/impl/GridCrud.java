@@ -188,6 +188,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
             } catch (IllegalArgumentException ignore) {
             } catch (CrudOperationException e1) {
                 refreshGrid();
+                throw e1;
             } catch (Exception e2) {
                 refreshGrid();
                 throw e2;

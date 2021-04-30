@@ -7,7 +7,7 @@
 	<groupId>org.vaadin.crudui</groupId>
 	<artifactId>crudui</artifactId>
 	<packaging>jar</packaging>
-	<version>4.3.3-SNAPSHOT</version>
+	<version>4.4.0-SNAPSHOT</version>
 	<name>Crud UI Add-on</name>
 
 	<properties>
@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<vaadin.version>14.2.0</vaadin.version>
+		<vaadin.version>14.5.3</vaadin.version>
 
 		<drivers.dir>${project.basedir}/drivers</drivers.dir>
 		<maven.deploy.skip>true</maven.deploy.skip>
