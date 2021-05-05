@@ -3,28 +3,29 @@ package org.vaadin.crudui.form.impl.field.provider;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import org.vaadin.crudui.form.FieldProvider;
 
 import java.util.Collection;
 
 /**
  * @author Alejandro Duarte
  */
-public class RadioButtonGroupProvider<T> extends AbstractListingProvider<RadioButtonGroup<T>, T> {
+public class RadioButtonGroupProvider<T> implements FieldProvider<RadioButtonGroup<T>> {
+    private ComponentRenderer<? extends Component, T> renderer;
+    protected Collection<T> items;
 
     public RadioButtonGroupProvider(Collection<T> items) {
-        super(items);
+        this(items,null);
     }
 
-    public RadioButtonGroupProvider(String caption, Collection<T> items) {
-        super(caption, items);
-    }
 
-    public RadioButtonGroupProvider(String caption, Collection<T> items, ComponentRenderer<? extends Component, T> renderer) {
-        super(caption, items, renderer);
+    public RadioButtonGroupProvider(Collection<T> items, ComponentRenderer<? extends Component, T> renderer) {
+        this.items = items;
+        this.renderer = renderer;
     }
 
     @Override
-    protected RadioButtonGroup<T> buildAbstractListing() {
+    public RadioButtonGroup<T> buildField() {
         RadioButtonGroup<T> field = new RadioButtonGroup<>();
         if(renderer != null) {
             field.setRenderer(renderer);

@@ -11,8 +11,8 @@ import com.vaadin.flow.component.HasValueAndElement;
  * @author Alejandro Duarte.
  */
 @FunctionalInterface
-public interface FieldProvider<C extends Component, T> extends Serializable {
+public interface FieldProvider<C extends HasValueAndElement> extends Serializable {
 
-    HasValueAndElement buildField();
+   C buildField();
 
 }

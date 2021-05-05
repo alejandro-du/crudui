@@ -69,12 +69,12 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     }
 
     @Override
-    public void setFieldProvider(CrudOperation operation, String property, FieldProvider<?, ?> provider) {
+    public void setFieldProvider(CrudOperation operation, String property, FieldProvider<?> provider) {
         getConfiguration(operation).getFieldProviders().put(property, provider);
     }
 
     @Override
-    public void setFieldProvider(String property, FieldProvider<?, ?> provider) {
+    public void setFieldProvider(String property, FieldProvider<?> provider) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldProvider(operation, property, provider));
     }
 

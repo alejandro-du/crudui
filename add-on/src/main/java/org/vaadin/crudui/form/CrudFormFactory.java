@@ -45,9 +45,9 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void setFieldCreationListener(String property, FieldCreationListener listener);
 
-    void setFieldProvider(CrudOperation operation, String property, FieldProvider<?, ?> provider);
+    void setFieldProvider(CrudOperation operation, String property, FieldProvider<?> provider);
 
-    void setFieldProvider(String property, FieldProvider<?, ?> provider);
+    void setFieldProvider(String property, FieldProvider<?> provider);
 
     void setConverter(CrudOperation operation, String property, Converter<?, ?> converter);
 

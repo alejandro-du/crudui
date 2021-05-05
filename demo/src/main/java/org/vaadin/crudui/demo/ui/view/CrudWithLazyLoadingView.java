@@ -41,9 +41,9 @@ public class CrudWithLazyLoadingView extends VerticalLayout {
         crud.getCrudFormFactory().setFieldProvider("groups",
                 new CheckBoxGroupProvider<>(groupRepository.findAll()));
         crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>("Groups", groupRepository.findAll(), Group::getName));
+                new CheckBoxGroupProvider<>(groupRepository.findAll(), Group::getName));
         crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>("Main Group", groupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));
+                new ComboBoxProvider<>( groupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));
 
         // layout configuration
         setSizeFull();

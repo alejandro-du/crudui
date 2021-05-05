@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <vaadin.version>14.5.3</vaadin.version>
+        <vaadin.version>19.0.6</vaadin.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
@@ -118,7 +118,7 @@
         <dependency>
             <groupId>org.vaadin.crudui</groupId>
             <artifactId>crudui</artifactId>
-            <version>4.4.0-SNAPSHOT</version>
+            <version>4.4.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

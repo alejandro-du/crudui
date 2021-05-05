@@ -6,29 +6,30 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import org.vaadin.crudui.form.FieldProvider;
 
 /**
  * @author Alejandro Duarte
  */
-public class ComboBoxProvider<T> extends AbstractListingProvider<ComboBox<T>, T> {
+public class ComboBoxProvider<T> implements FieldProvider<ComboBox<T>> {
 
     private ItemLabelGenerator<T> itemLabelGenerator;
+    private ComponentRenderer<? extends Component, T> renderer;
+    protected Collection<T> items;
 
     public ComboBoxProvider(Collection<T> items) {
-        super(items);
+       this(items,null,null);
     }
 
-    public ComboBoxProvider(String caption, Collection<T> items) {
-        super(caption, items);
-    }
-
-    public ComboBoxProvider(String caption, Collection<T> items, ComponentRenderer<? extends Component, T> renderer, ItemLabelGenerator<T> itemLabelGenerator) {
-        super(caption, items, renderer);
+    public ComboBoxProvider(Collection<T> items, ComponentRenderer<? extends Component, T> renderer,ItemLabelGenerator<T> itemLabelGenerator) {
+        this.items = items;
+        this.renderer = renderer;
         this.itemLabelGenerator = itemLabelGenerator;
     }
 
     @Override
-    protected ComboBox<T> buildAbstractListing() {
+    public ComboBox<T> buildField() {
+
         ComboBox<T> field = new ComboBox<>();
         if(renderer != null) {
             field.setRenderer(renderer);

@@ -20,7 +20,7 @@ public class CrudFormConfiguration implements Serializable {
     protected List<String> fieldCaptions = new ArrayList<>();
     protected Map<Object, Class<? extends HasValueAndElement<?, ?>>> fieldTypes = new HashMap<>();
     protected Map<Object, FieldCreationListener> fieldCreationListeners = new HashMap<>();
-    protected Map<Object, FieldProvider<?, ?>> fieldProviders = new HashMap<>();
+    protected Map<Object, FieldProvider<?>> fieldProviders = new HashMap<>();
     protected Map<Object, Converter<?, ?>> converters = new HashMap<>();
     protected boolean useBeanValidation;
 
@@ -64,11 +64,11 @@ public class CrudFormConfiguration implements Serializable {
         this.fieldCreationListeners = fieldCreationListeners;
     }
 
-    public Map<Object, FieldProvider<?, ?>> getFieldProviders() {
+    public Map<Object, FieldProvider<?>> getFieldProviders() {
         return fieldProviders;
     }
 
-    public void setFieldProviders(Map<Object, FieldProvider<?, ?>> fieldProviders) {
+    public void setFieldProviders(Map<Object, FieldProvider<?>> fieldProviders) {
         this.fieldProviders = fieldProviders;
     }
 

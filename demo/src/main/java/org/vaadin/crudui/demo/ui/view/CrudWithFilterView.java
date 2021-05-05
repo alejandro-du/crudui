@@ -44,9 +44,9 @@ public class CrudWithFilterView extends VerticalLayout {
         crud.getCrudFormFactory().setFieldProvider("groups",
                 new CheckBoxGroupProvider<>(groupService.findAll()));
         crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName));
+                new CheckBoxGroupProvider<Group>(groupService.findAll(), Group::getName));
         crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName), Group::getName));
+                new ComboBoxProvider<Group>(groupService.findAll(), new TextRenderer<>(Group::getName), Group::getName));
 
         // layout configuration
         setSizeFull();

@@ -40,9 +40,9 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
         crud.getCrudFormFactory().setFieldProvider("groups",
                 new CheckBoxGroupProvider<>(groupService.findAll()));
         crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName));
+                new CheckBoxGroupProvider<>( groupService.findAll(), Group::getName));
         crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName), Group::getName));
+                new ComboBoxProvider<>( groupService.findAll(), new TextRenderer<>(Group::getName), Group::getName));
 
         // layout configuration
         setSizeFull();

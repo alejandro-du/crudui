@@ -3,36 +3,33 @@ package org.vaadin.crudui.form.impl.field.provider;
 
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import org.vaadin.crudui.form.FieldProvider;
 
 import java.util.Collection;
 
 /**
  * @author Alejandro Duarte
  */
-public class CheckBoxGroupProvider<T> extends AbstractListingProvider<CheckboxGroup<T>, T> {
+public class CheckBoxGroupProvider<T> implements FieldProvider<CheckboxGroup<T>> {
 
     private ItemLabelGenerator<T> itemLabelGenerator;
+    private Collection<T> items;
 
     public CheckBoxGroupProvider(Collection<T> items) {
-        super(items);
+        this(items, null);
     }
 
-    public CheckBoxGroupProvider(String caption, Collection<T> items) {
-        super(caption, items);
-    }
-
-    public CheckBoxGroupProvider(String caption, Collection<T> items, ItemLabelGenerator<T> itemLabelGenerator) {
-        super(caption, items);
+    public CheckBoxGroupProvider(Collection<T> items, ItemLabelGenerator<T> itemLabelGenerator) {
+        this.items = items;
         this.itemLabelGenerator = itemLabelGenerator;
     }
 
     @Override
-    protected CheckboxGroup<T> buildAbstractListing() {
+    public CheckboxGroup<T> buildField() {
         CheckboxGroup<T> field = new CheckboxGroup<>();
         if (itemLabelGenerator != null) {
             field.setItemLabelGenerator(itemLabelGenerator);
         }
         return field;
     }
-
 }
