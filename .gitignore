@@ -21,3 +21,9 @@ nbdist/
 
 ### JRebel ###
 rebel.xml
+
+# Vaadin
+node_modules/
+drivers/
+error-screenshots/
+webpack.generated.js
