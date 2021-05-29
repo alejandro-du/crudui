@@ -1,19 +1,20 @@
 package org.vaadin.crudui.form.impl.field.provider;
 
+import java.util.Collection;
+
+import org.vaadin.crudui.form.FieldProvider;
+
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValueAndElement;
-import com.vaadin.flow.data.binder.HasItems;
+import com.vaadin.flow.data.provider.HasListDataView;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
-import org.vaadin.crudui.form.FieldProvider;
-
-import java.util.Collection;
 
 /**
  * @author Alejandro Duarte
  */
-public abstract class AbstractListingProvider<C extends Component & HasItems<T> & HasValueAndElement, T>
+public abstract class AbstractListingProvider<C extends Component & HasListDataView<T, ?> & HasValueAndElement, T>
         implements FieldProvider<C, T> {
 
     protected String caption;
