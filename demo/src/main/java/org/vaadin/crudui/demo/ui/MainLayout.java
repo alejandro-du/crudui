@@ -42,6 +42,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
         addTab(CrudWithSplitLayoutView.class);
         addTab(CrudWithFilterView.class);
         addTab(CrudWithLazyLoadingView.class);
+        addTab(SimpleTreeCrudView.class);
     }
 
     private void tabsSelectionChanged(Tabs.SelectedChangeEvent event) {
