@@ -8,7 +8,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataProvider;
+import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
 import org.vaadin.crudui.crud.AbstractCrud;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -148,7 +151,18 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
   protected void findAllButtonClicked() {
     grid.asSingleSelect().clear();
     refreshGrid();
-    showNotification(String.format(rowCountCaption, grid.getDataProvider().size(new Query())));
+
+    int count = countRows();
+    showNotification(String.format(rowCountCaption, count));
+  }
+
+  private int countRows() {
+    Query query = new Query();
+    DataProvider provider = grid.getDataProvider();
+    if (HierarchicalDataProvider.class.isAssignableFrom(provider.getClass()))
+      query = new HierarchicalQuery(null, null);
+
+    return provider.size(query);
   }
 
   protected void addButtonClicked() {
