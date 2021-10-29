@@ -23,7 +23,7 @@ public class DefaultFieldProvider implements FieldProvider {
     }
 
     @Override
-    public HasValueAndElement buildField() {
+    public HasValueAndElement buildField(Object t) {
         if (Boolean.class.isAssignableFrom(type) || boolean.class == type) {
             return new Checkbox();
         }
