@@ -4,6 +4,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
+import org.springframework.data.domain.PageRequest;
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.LazyCrudListener;
 import org.vaadin.crudui.crud.impl.GridCrud;
@@ -14,7 +15,6 @@ import org.vaadin.crudui.demo.repository.UserRepository;
 import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
-import org.vaadin.data.spring.OffsetBasedPageRequest;
 
 @Route(value = "lazy-loading", layout = MainLayout.class)
 public class CrudWithLazyLoadingView extends VerticalLayout {
@@ -50,11 +50,13 @@ public class CrudWithLazyLoadingView extends VerticalLayout {
         add(crud);
 
         // logic configuration
-        crud.setCrudListener(new LazyCrudListener<User>() {
+        crud.setCrudListener(new LazyCrudListener<>() {
             @Override
             public DataProvider<User, Void> getDataProvider() {
                 return DataProvider.fromCallbacks(
-                        query -> userRepository.findAll(new OffsetBasedPageRequest(query)).stream(),
+                        query -> userRepository.findAll(
+                                PageRequest.of(query.getPage(), query.getPageSize())
+                        ).stream(),
                         query -> (int) userRepository.count()
                 );
             }
