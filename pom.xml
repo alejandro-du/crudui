@@ -10,7 +10,7 @@
 
     <modules>
         <module>add-on</module>
-        <module>demo</module>
+        <module>crud-ui-demo</module>
     </modules>
 
 </project>

@@ -13,15 +13,13 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.server.InitialPageSettings;
-import com.vaadin.flow.server.PageConfigurator;
 import org.vaadin.crudui.demo.DemoUtils;
 import org.vaadin.crudui.demo.ui.view.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver, PageConfigurator {
+public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver {
 
     private Tabs tabs = new Tabs();
     private Map<Tab, Class<? extends HasComponents>> tabToView = new HashMap<>();
@@ -86,11 +84,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
             footer.setMargin(true);
             ((HasComponents) getContent()).add(footer);
         }
-    }
-
-    @Override
-    public void configurePage(InitialPageSettings settings) {
-        updatePageTitle();
     }
 
 }
