@@ -7,9 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.vaadin.crudui.demo.entity.Category;
 import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.MaritalStatus;
 import org.vaadin.crudui.demo.entity.User;
+import org.vaadin.crudui.demo.service.CategoryService;
 import org.vaadin.crudui.demo.service.GroupService;
 import org.vaadin.crudui.demo.service.UserService;
 
@@ -35,15 +37,15 @@ public class Application {
     }
 
     @Bean
-    public ApplicationListener<ContextRefreshedEvent> initDatabase(GroupService groupService, UserService userService) {
+    public ApplicationListener<ContextRefreshedEvent> initDatabase(GroupService groupService, UserService userService, CategoryService categoryService) {
         return event -> {
             if (groupService.count() == 0) {
-                createDemoData(groupService, userService);
+                createDemoData(groupService, userService,categoryService);
             }
         };
     }
 
-    private void createDemoData(GroupService groupService, UserService userService) {
+    private void createDemoData(GroupService groupService, UserService userService, CategoryService categoryService) {
         log.info("Creating demo data...");
 
         Stream.of("Services,IT,HR,Management,Marketing,Sales,Operations,Finance".split(","))
@@ -80,6 +82,20 @@ public class Application {
                     );
                 })
                 .forEach(userService::save);
+
+        String[] languages = new String[]{"Java","Javascript","Dart"};
+        String[][] frameworks = new String[][]{
+            {"Vaadin Flow","Spring","Guice"},
+            {"Vaadin Fusion","React","Angular"},
+            {"Flutter"}
+        };
+
+        for (int i = 0; i < languages.length; i++) {
+            Category lang = categoryService.save(new Category(languages[i],languages[i],null ));
+            for (int j = 0; j < frameworks[i].length; j++) {
+                Category lib = categoryService.save(new Category(frameworks[i][j], frameworks[i][j],lang));
+            }
+        }
 
         log.info("Demo data created.");
     }
