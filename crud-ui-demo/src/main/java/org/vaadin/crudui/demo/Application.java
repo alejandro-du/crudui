@@ -37,10 +37,11 @@ public class Application {
     }
 
     @Bean
-    public ApplicationListener<ContextRefreshedEvent> initDatabase(GroupService groupService, UserService userService, CategoryService categoryService) {
+    public ApplicationListener<ContextRefreshedEvent> initDatabase(GroupService groupService, UserService userService,
+            CategoryService categoryService) {
         return event -> {
             if (groupService.count() == 0) {
-                createDemoData(groupService, userService,categoryService);
+                createDemoData(groupService, userService, categoryService);
             }
         };
     }
@@ -56,14 +57,16 @@ public class Application {
 
         groupService.findAll();
 
-        String[] firstNames = "Maria,Nicole,Sandra,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill".split(",");
+        String[] firstNames = "Maria,Nicole,Sandra,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill"
+                .split(",");
         String[] lastNames = "Smith,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee".split(",");
 
         Random rand = new Random();
 
         IntStream.rangeClosed(1, DEMO_USERS_COUNT)
                 .mapToObj(i -> {
-                    String name = firstNames[rand.nextInt(firstNames.length)] + " " + lastNames[rand.nextInt(lastNames.length)];
+                    String name = firstNames[rand.nextInt(firstNames.length)] + " "
+                            + lastNames[rand.nextInt(lastNames.length)];
                     ArrayList<Group> groups = IntStream.rangeClosed(1, 1 + rand.nextInt(2))
                             .mapToObj(j -> allGroups.get(rand.nextInt(allGroups.size())))
                             .collect(Collectors.toCollection(ArrayList::new));
@@ -78,22 +81,21 @@ public class Application {
                             rand.nextInt(10) > 0,
                             groups.get(rand.nextInt(groups.size())),
                             new HashSet<>(groups),
-                            MaritalStatus.values()[rand.nextInt(MaritalStatus.values().length)]
-                    );
+                            MaritalStatus.values()[rand.nextInt(MaritalStatus.values().length)]);
                 })
                 .forEach(userService::save);
 
-        String[] languages = new String[]{"Java","Javascript","Dart"};
-        String[][] frameworks = new String[][]{
-            {"Vaadin Flow","Spring","Guice"},
-            {"Vaadin Fusion","React","Angular"},
-            {"Flutter"}
+        String[] languages = new String[] { "Java", "Javascript", "Dart" };
+        String[][] frameworks = new String[][] {
+                { "Vaadin", "Spring", "Guice" },
+                { "Hilla", "React", "Svelte" },
+                { "Flutter" }
         };
 
         for (int i = 0; i < languages.length; i++) {
-            Category lang = categoryService.save(new Category(languages[i],languages[i],null ));
+            Category language = categoryService.save(new Category(languages[i], languages[i], null));
             for (int j = 0; j < frameworks[i].length; j++) {
-                Category lib = categoryService.save(new Category(frameworks[i][j], frameworks[i][j],lang));
+                categoryService.save(new Category(frameworks[i][j], frameworks[i][j], language));
             }
         }
 

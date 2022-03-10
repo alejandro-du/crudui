@@ -132,7 +132,7 @@ formFactory.setFieldCreationListener("birthDate", field -> ... your own logic he
 
 Define a `FieldProvider` to manually create a field:
 ```java
-formFactory.setFieldProvider("groups", () -> {
+formFactory.setFieldProvider("groups", user -> {
     CheckboxGroup<Group> checkboxes = new CheckboxGroup<>();
     checkboxes.setItems(groups);
     checkboxes.setItemLabelGenerator(Group::getName);
