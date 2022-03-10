@@ -19,6 +19,9 @@ dist/
 nbdist/
 .nb-gradle/
 
+### VS Code ###
+.vscode/
+
 ### JRebel ###
 rebel.xml
 
