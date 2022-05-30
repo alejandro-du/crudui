@@ -20,12 +20,12 @@ The add-on includes several implementations of these interfaces.
 
 There is one minor fix in this forked version:
 
-- Only show success notification if no CrudOperationException encountered; show error messages from CrudOperationException when relevant
+- Only show success notification if no CrudOperationException encountered
 
-There are two minor enhancements in this forked version:
+There are three minor enhancements in this forked version:
 
+- Show error messages from CrudOperationException when relevant
 - Provide ENTER shortcut for operation button on the form
-
 - New method on grid to add an optional Update button column
 
 # Basic usage
