@@ -16,6 +16,18 @@ The API is defined through 4 interfaces:
 
 The add-on includes several implementations of these interfaces.
 
+# Enhancements in this fork
+
+There is one minor fix in this forked version:
+
+- Only show success notification if no CrudOperationException encountered; show error messages from CrudOperationException when relevant
+
+There are two minor enhancements in this forked version:
+
+- Provide ENTER shortcut for operation button on the form
+
+- New method on grid to add an optional Update button column
+
 # Basic usage
 
 Say, you have the following domain/entity/Java Bean class:
