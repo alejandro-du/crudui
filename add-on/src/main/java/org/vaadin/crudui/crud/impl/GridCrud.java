@@ -1,11 +1,15 @@
 package org.vaadin.crudui.crud.impl;
 
-import com.vaadin.flow.component.grid.Grid;
 import java.util.Collection;
+
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.LazyFindAllCrudOperationListener;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
+
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 
 /**
  * @author Alejandro Duarte
@@ -51,6 +55,18 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
             Collection<T> items = findAllOperation.findAll();
             grid.setItems(items);
         }
+    }
+
+    public void addUpdateButtonColumn() {
+        grid.addComponentColumn(item -> {
+            Button button = new Button(VaadinIcon.PENCIL.create());
+            button.addClickListener(e -> {
+                grid.select(item);
+                updateButtonClicked();
+            });
+
+            return button;
+        });
     }
 
 }
