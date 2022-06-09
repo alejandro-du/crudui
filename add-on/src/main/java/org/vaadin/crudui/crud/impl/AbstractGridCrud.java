@@ -1,5 +1,14 @@
 package org.vaadin.crudui.crud.impl;
 
+import org.vaadin.crudui.crud.AbstractCrud;
+import org.vaadin.crudui.crud.CrudListener;
+import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.crud.CrudOperationException;
+import org.vaadin.crudui.form.CrudFormFactory;
+import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
+import org.vaadin.crudui.layout.CrudLayout;
+import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
+
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
@@ -12,14 +21,6 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
-import org.vaadin.crudui.crud.AbstractCrud;
-import org.vaadin.crudui.crud.CrudListener;
-import org.vaadin.crudui.crud.CrudOperation;
-import org.vaadin.crudui.crud.CrudOperationException;
-import org.vaadin.crudui.form.CrudFormFactory;
-import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
-import org.vaadin.crudui.layout.CrudLayout;
-import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 /**
  * @author Alejandro Duarte
@@ -172,6 +173,7 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
         T addedObject = addOperation.perform(domainObject);
         refreshGrid();
         grid.asSingleSelect().setValue(addedObject);
+        showNotification(savedMessage);
         // TODO: grid.scrollTo(addedObject);
       } catch (IllegalArgumentException ignore) {
       } catch (CrudOperationException e1) {
@@ -191,10 +193,12 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
         grid.asSingleSelect().clear();
         refreshGrid();
         grid.asSingleSelect().setValue(updatedObject);
+        showNotification(savedMessage);
         // TODO: grid.scrollTo(updatedObject);
       } catch (IllegalArgumentException ignore) {
       } catch (CrudOperationException e1) {
         refreshGrid();
+        showNotification(e1.getMessage());
         throw e1;
       } catch (Exception e2) {
         refreshGrid();
@@ -210,7 +214,9 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
         deleteOperation.perform(domainObject);
         refreshGrid();
         grid.asSingleSelect().clear();
+        showNotification(deletedMessage);
       } catch (CrudOperationException e1) {
+          showNotification(e1.getMessage());
         refreshGrid();
       } catch (Exception e2) {
         refreshGrid();
@@ -234,7 +240,6 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
       if (!clickRowToUpdate) {
         crudLayout.hideForm();
       }
-      showNotification(successMessage);
     });
     String caption = crudFormFactory.buildCaption(operation, domainObject);
     crudLayout.showForm(operation, form, caption);
