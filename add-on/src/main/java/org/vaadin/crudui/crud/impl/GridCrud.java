@@ -1,6 +1,8 @@
 package org.vaadin.crudui.crud.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.LazyFindAllCrudOperationListener;
@@ -9,12 +11,17 @@ import org.vaadin.crudui.layout.CrudLayout;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.icon.VaadinIcon;
 
 /**
  * @author Alejandro Duarte
  */
 public class GridCrud<T> extends AbstractGridCrud<T> {
+
+    private Column<T> componentColumn;
+
+    private final Map<T, Button> map = new HashMap<>();
 
     public GridCrud(Class<T> domainType) {
         super(domainType);
@@ -58,15 +65,28 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
     }
 
     public void addUpdateButtonColumn() {
-        grid.addComponentColumn(item -> {
-            Button button = new Button(VaadinIcon.PENCIL.create());
-            button.addClickListener(e -> {
-                grid.select(item);
-                updateButtonClicked();
-            });
+        if (componentColumn == null) {
+            componentColumn = grid.addComponentColumn(item -> {
+                Button button = new Button(VaadinIcon.PENCIL.create());
+                button.addClickListener(e -> {
+                    grid.select(item);
+                    updateButtonClicked();
+                });
 
-            return button;
-        });
+                if (map.put(item, button) == null) {
+                    button.setEnabled(false);
+                }
+
+                return button;
+            });
+        }
     }
 
+    public Button getUpdateButton(T item) {
+        return map.get(item);
+    }
+
+    public void setUpdateButtonColumnEnabled(boolean enabled) {
+        map.values().stream().forEach(b -> b.setEnabled(enabled));
+    }
 }
