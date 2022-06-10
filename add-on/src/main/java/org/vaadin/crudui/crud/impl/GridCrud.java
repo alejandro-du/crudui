@@ -1,8 +1,8 @@
 package org.vaadin.crudui.crud.impl;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.LazyFindAllCrudOperationListener;
@@ -21,7 +21,7 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
 
     private Column<T> componentColumn;
 
-    private final Map<T, Button> map = new HashMap<>();
+    private final Map<T, Button> map = new WeakHashMap<>();
 
     public GridCrud(Class<T> domainType) {
         super(domainType);
