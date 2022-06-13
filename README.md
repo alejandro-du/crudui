@@ -18,9 +18,11 @@ The add-on includes several implementations of these interfaces.
 
 # Enhancements in this fork
 
-There is one minor fix in this forked version:
+There are three minor fixes in this forked version:
 
 - Only show success notification if no CrudOperationException encountered
+- More consistent grid selection following add/update operations
+- Convention ordering of operation and cancel buttons on the default form
 
 There are three minor enhancements in this forked version:
 
