@@ -57,6 +57,8 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void setUseBeanValidation(boolean useBeanValidation);
 
+    void setShowNotifications(boolean showNotifications);
+
     void setErrorListener(SerializableConsumer<Exception> errorListener);
 
     void showError(CrudOperation operation, Exception e);
