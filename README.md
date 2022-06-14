@@ -24,11 +24,12 @@ There are three minor fixes in this forked version:
 - More consistent grid selection following add/update operations
 - Convention ordering of operation and cancel buttons on the default form
 
-There are three minor enhancements in this forked version:
+There are four minor enhancements in this forked version:
 
 - Show error messages from CrudOperationException when relevant
 - Provide ENTER shortcut for operation button on the form
 - New method on grid to add an optional Update button column
+- New method on form factory to enable/disable notifications, cf. the existing method on grid
 
 # Basic usage
 
