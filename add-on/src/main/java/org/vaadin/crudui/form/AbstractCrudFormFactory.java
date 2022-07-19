@@ -1,6 +1,7 @@
 package org.vaadin.crudui.form;
 
 import com.vaadin.flow.component.HasValueAndElement;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.SerializableConsumer;
 import org.vaadin.crudui.crud.CrudOperation;
@@ -17,6 +18,8 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     protected Map<CrudOperation, CrudFormConfiguration> configurations = new HashMap<>();
 
     protected SerializableConsumer<Exception> errorListener;
+
+    protected boolean showNotifications;
 
     @Override
     public void setVisibleProperties(CrudOperation operation, String... properties) {
@@ -96,6 +99,17 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     @Override
     public void setUseBeanValidation(boolean useBeanValidation) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setUseBeanValidation(operation, useBeanValidation));
+    }
+
+    @Override
+    public void setShowNotifications(boolean showNotifications) {
+        this.showNotifications = showNotifications;
+    }
+
+    public void showNotification(String text) {
+      if (showNotifications) {
+        Notification.show(text);
+      }
     }
 
     @Override
