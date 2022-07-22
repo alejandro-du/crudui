@@ -38,7 +38,7 @@ public abstract class AbstractListingProvider<C extends Component & HasListDataV
     }
 
     @Override
-    public HasValueAndElement<ComponentValueChangeEvent<C, T>, T> buildField(T t) {
+    public C buildField(T t) {
         C field = buildAbstractListing();
         field.setItems(items);
         return field;
