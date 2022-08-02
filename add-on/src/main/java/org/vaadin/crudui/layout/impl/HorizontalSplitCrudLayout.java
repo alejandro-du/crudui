@@ -2,7 +2,6 @@ package org.vaadin.crudui.layout.impl;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
 
 /**
  * @author Alejandro Duarte.

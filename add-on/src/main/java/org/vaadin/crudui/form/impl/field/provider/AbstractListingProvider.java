@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import org.vaadin.crudui.form.FieldProvider;
 
-import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.data.provider.HasListDataView;

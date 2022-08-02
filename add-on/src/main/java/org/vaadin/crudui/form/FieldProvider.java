@@ -2,7 +2,6 @@ package org.vaadin.crudui.form;
 
 import java.io.Serializable;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValueAndElement;
 
 /**
