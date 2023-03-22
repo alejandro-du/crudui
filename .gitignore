@@ -30,3 +30,4 @@ node_modules/
 drivers/
 error-screenshots/
 webpack.generated.js
+crud-ui-demo/frontend/generated
