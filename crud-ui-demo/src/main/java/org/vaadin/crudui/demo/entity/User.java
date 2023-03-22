@@ -17,6 +17,7 @@ import java.util.Set;
  * @author Alejandro Duarte
  */
 @Entity
+@Table(name="uzer")
 public class User {
 
     @NotNull
