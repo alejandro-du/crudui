@@ -50,7 +50,7 @@ public class Application {
         log.info("Creating demo data...");
 
         Stream.of("Services,IT,HR,Management,Marketing,Sales,Operations,Finance".split(","))
-                .map(name -> new Group(name))
+                .map(Group::new)
                 .forEach(groupService::save);
 
         List<Group> allGroups = groupService.findAll();

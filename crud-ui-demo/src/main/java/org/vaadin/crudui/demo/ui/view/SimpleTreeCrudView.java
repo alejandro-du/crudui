@@ -1,7 +1,5 @@
 package org.vaadin.crudui.demo.ui.view;
 
-import javax.annotation.PostConstruct;
-
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,6 +11,8 @@ import org.vaadin.crudui.crud.impl.TreeGridCrud;
 import org.vaadin.crudui.demo.entity.Category;
 import org.vaadin.crudui.demo.service.CategoryService;
 import org.vaadin.crudui.demo.ui.MainLayout;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author XakepSDK

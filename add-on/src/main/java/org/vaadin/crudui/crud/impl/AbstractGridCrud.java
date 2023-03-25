@@ -56,6 +56,10 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
     this(domainType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(domainType), crudListener);
   }
 
+  public AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudListener<T> crudListener) {
+	this(domainType, crudLayout, new DefaultCrudFormFactory<>(domainType), crudListener);
+  }
+
   public AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory) {
     this(domainType, crudLayout, crudFormFactory, null);
   }
