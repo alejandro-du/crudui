@@ -7,7 +7,7 @@
 	<groupId>org.vaadin.crudui</groupId>
 	<artifactId>crudui</artifactId>
 	<packaging>jar</packaging>
-	<version>7.0.0</version>
+	<version>7.0.1-SNAPSHOT</version>
 	<name>Crud UI Add-on</name>
 
 	<properties>
@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<vaadin.version>24.0.2</vaadin.version>
+		<vaadin.version>24.0.5</vaadin.version>
 
 		<drivers.dir>${project.basedir}/drivers</drivers.dir>
 		<maven.deploy.skip>true</maven.deploy.skip>
@@ -72,9 +72,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons</artifactId>
-			<version>2.5.6</version>
+			<version>3.0.6</version>
 			<optional>true</optional>
 			<scope>provided</scope>
 		</dependency>
@@ -92,7 +92,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
