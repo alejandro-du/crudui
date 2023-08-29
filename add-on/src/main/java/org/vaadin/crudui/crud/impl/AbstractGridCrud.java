@@ -201,7 +201,6 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
         grid.deselect(updatedObject);
         showNotification(savedMessage);
         // TODO: grid.scrollTo(updatedObject);
-      } catch (IllegalArgumentException ignore) {
       } catch (CrudOperationException e1) {
         refreshGrid();
         showNotification(e1.getMessage());
