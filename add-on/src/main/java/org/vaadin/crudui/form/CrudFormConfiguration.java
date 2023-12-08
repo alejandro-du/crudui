@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.data.binder.Setter;
 
 /**
  * @author Alejandro Duarte.
@@ -21,6 +23,9 @@ public class CrudFormConfiguration implements Serializable {
     protected Map<Object, FieldCreationListener> fieldCreationListeners = new HashMap<>();
     protected Map<Object, FieldProvider<?, ?>> fieldProviders = new HashMap<>();
     protected Map<Object, Converter<?, ?>> converters = new HashMap<>();
+    protected Map<Object, ValueProvider<?,?>> getters = new HashMap<>();
+    protected Map<Object, Setter<?,?>> setters = new HashMap<>();
+    protected Map<Object, Class<?>> propertyTypes = new HashMap<>();
     protected boolean useBeanValidation;
 
     public List<String> getVisibleProperties() {
@@ -86,4 +91,30 @@ public class CrudFormConfiguration implements Serializable {
     public void setUseBeanValidation(boolean useBeanValidation) {
         this.useBeanValidation = useBeanValidation;
     }
+
+    public Map<Object, ValueProvider<?, ?>> getGetters() {
+        return getters;
+    }
+
+    public void setGetters(Map<Object, ValueProvider<?, ?>> getters) {
+        this.getters = getters;
+    }
+
+    public Map<Object, Setter<?, ?>> getSetters() {
+        return setters;
+    }
+
+    public void setSetters(Map<Object, Setter<?, ?>> setters) {
+        this.setters = setters;
+    }
+
+    public Map<Object, Class<?>> getPropertyTypes() {
+        return propertyTypes;
+    }
+
+    public void setPropertyTypes(Map<Object, Class<?>> propertyTypes) {
+        this.propertyTypes = propertyTypes;
+    }
+
+    
 }
