@@ -5,9 +5,12 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.SerializableSupplier;
+import com.vaadin.flow.function.ValueProvider;
+
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.io.Serializable;
@@ -63,4 +66,7 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void showError(CrudOperation operation, Exception e);
 
+    void addSpecialField(String property, Class<?> propertyType, ValueProvider<T,?> getter, Setter<T,?> setter);
+
+    void addSpecialField(CrudOperation operation,String property, Class<?> propertyType, ValueProvider<T,?> getter, Setter<T,?> setter);
 }

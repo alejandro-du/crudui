@@ -2,8 +2,11 @@ package org.vaadin.crudui.form;
 
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.SerializableConsumer;
+import com.vaadin.flow.function.ValueProvider;
+
 import org.vaadin.crudui.crud.CrudOperation;
 
 import java.util.Arrays;
@@ -68,7 +71,8 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
 
     @Override
     public void setFieldCreationListener(String property, FieldCreationListener listener) {
-        Arrays.stream(CrudOperation.values()).forEach(operation -> setFieldCreationListener(operation, property, listener));
+        Arrays.stream(CrudOperation.values())
+                .forEach(operation -> setFieldCreationListener(operation, property, listener));
     }
 
     @Override
@@ -107,9 +111,9 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     }
 
     public void showNotification(String text) {
-      if (showNotifications) {
-        Notification.show(text);
-      }
+        if (showNotifications) {
+            Notification.show(text);
+        }
     }
 
     @Override
@@ -122,4 +126,20 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
         return configurations.get(operation);
     }
 
+    @Override
+    public void addSpecialField(CrudOperation operation, String property, Class<?> propertyType,
+            ValueProvider<T, ?> getter, Setter<T, ?> setter) {
+        getConfiguration(operation).getPropertyTypes().put(property, propertyType);
+        getConfiguration(operation).getGetters().put(property, getter);
+        getConfiguration(operation).getSetters().put(property, setter);
+
+    }
+
+    @Override
+    public void addSpecialField(String property, Class<?> propertyType, ValueProvider<T, ?> getter,
+            Setter<T, ?> setter) {
+        Arrays.stream(CrudOperation.values())
+                .forEach(operation -> addSpecialField(operation, property, propertyType, getter, setter));
+
+    }
 }
