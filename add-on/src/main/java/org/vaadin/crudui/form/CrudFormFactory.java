@@ -29,6 +29,10 @@ public interface CrudFormFactory<T> extends Serializable {
 
     void setVisibleProperties(String... properties);
 
+    void hideProperties(String... properties);
+
+    void hideProperties(CrudOperation operation, String... properties);
+
     void setDisabledProperties(CrudOperation operation, String... properties);
 
     void setDisabledProperties(String... properties);

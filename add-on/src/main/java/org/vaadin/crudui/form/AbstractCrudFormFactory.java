@@ -6,6 +6,7 @@ import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.SerializableConsumer;
 import org.vaadin.crudui.crud.CrudOperation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,21 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
     @Override
     public void setVisibleProperties(String... properties) {
         Arrays.stream(CrudOperation.values()).forEach(operation -> setVisibleProperties(operation, properties));
+    }
+
+    @Override
+    public void hideProperties(CrudOperation operation, String... hiddenProps) {
+        CrudFormConfiguration configuration = getConfiguration(operation);
+        ArrayList<String> visibleProps = new ArrayList<>(configuration.getVisibleProperties());
+        for (String prop : hiddenProps) {
+            visibleProps.remove(prop);
+        }
+        configuration.setVisibleProperties(visibleProps);
+    }
+
+    @Override
+    public void hideProperties(String... hiddenProps) {
+        Arrays.stream(CrudOperation.values()).forEach(operation -> hideProperties(operation, hiddenProps));
     }
 
     @Override

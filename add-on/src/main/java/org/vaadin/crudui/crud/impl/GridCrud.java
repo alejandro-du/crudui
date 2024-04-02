@@ -53,6 +53,11 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
         return new VGrid<T>(domainType);
     }
 
+    @Override
+    public VGrid<T> getGrid() {
+        return (VGrid<T>) super.getGrid();
+    }
+
     public void refreshGrid() {
         if (LazyFindAllCrudOperationListener.class.isAssignableFrom(findAllOperation.getClass())) {
             LazyFindAllCrudOperationListener findAll = (LazyFindAllCrudOperationListener) findAllOperation;
