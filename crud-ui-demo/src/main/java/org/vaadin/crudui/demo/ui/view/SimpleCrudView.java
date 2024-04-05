@@ -25,8 +25,6 @@ public class SimpleCrudView extends VerticalLayout {
         GridCrud<User> crud = new GridCrud<>(User.class);
 
         // grid configuration
-        Arrays.asList("password", "groups", "mainGroup").forEach(toHide ->
-                crud.getGrid().getColumnByKey(toHide).setVisible(false));
         // By default, columns come directly from the class, hide some columns...
         crud.getGrid().hideProperties("password", "groups", "mainGroup");
         // ... or fully define columns to show
