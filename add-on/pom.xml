@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<vaadin.version>24.0.5</vaadin.version>
+		<vaadin.version>24.3.8</vaadin.version>
 
 		<drivers.dir>${project.basedir}/drivers</drivers.dir>
 		<maven.deploy.skip>true</maven.deploy.skip>
@@ -52,10 +52,6 @@
 			<id>Vaadin Directory</id>
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
-		<repository>
-			<id>Vaadin prereleases</id>
-			<url>http://maven.vaadin.com/vaadin-prereleases</url>
-		</repository>
 	</repositories>
 
 	<dependencyManagement>
@@ -82,9 +78,14 @@
 			<artifactId>vaadin-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>in.virit</groupId>
+			<artifactId>viritin</artifactId>
+			<version>2.8.7</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons</artifactId>
-			<version>3.0.6</version>
+			<version>3.2.2</version>
 			<optional>true</optional>
 			<scope>provided</scope>
 		</dependency>

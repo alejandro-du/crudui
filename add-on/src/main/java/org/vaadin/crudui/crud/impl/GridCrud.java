@@ -13,6 +13,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import org.vaadin.firitin.components.grid.VGrid;
 
 /**
  * @author Alejandro Duarte
@@ -49,7 +50,12 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
 
     @Override
     protected Grid<T> createGrid() {
-        return new Grid<T>(domainType);
+        return new VGrid<T>(domainType);
+    }
+
+    @Override
+    public VGrid<T> getGrid() {
+        return (VGrid<T>) super.getGrid();
     }
 
     public void refreshGrid() {
