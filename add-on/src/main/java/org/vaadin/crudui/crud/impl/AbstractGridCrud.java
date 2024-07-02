@@ -178,7 +178,7 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 				grid.asSingleSelect().setValue(addedObject);
 				grid.deselect(addedObject);
 				showNotification(savedMessage);
-				// TODO: grid.scrollTo(addedObject);
+				grid.scrollToItem(addedObject);
 			} catch (IllegalArgumentException ignore) {
 			}
 		});
@@ -194,7 +194,7 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 				grid.asSingleSelect().setValue(updatedObject);
 				grid.deselect(updatedObject);
 				showNotification(savedMessage);
-				// TODO: grid.scrollTo(updatedObject);
+				grid.scrollToItem(updatedObject);
 			} catch (CrudOperationException e1) {
 				showNotification(e1.getMessage());
 				throw e1;
