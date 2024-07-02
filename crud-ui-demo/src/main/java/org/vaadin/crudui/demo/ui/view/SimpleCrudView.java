@@ -18,48 +18,49 @@ import com.vaadin.flow.router.Route;
 @Route(value = "simple", layout = MainLayout.class)
 public class SimpleCrudView extends VerticalLayout {
 
-    public SimpleCrudView(UserService userService, GroupService groupService) {
-        // crud instance
-        GridCrud<User> crud = new GridCrud<>(User.class);
+	public SimpleCrudView(UserService userService, GroupService groupService) {
+		// crud instance
+		GridCrud<User> crud = new GridCrud<>(User.class);
 
-        // grid configuration
-        crud.getGrid().setColumns("id", "name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
-        crud.getGrid().setColumnReorderingAllowed(true);
+		// grid configuration
+		crud.getGrid().setColumns("id", "name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
+		crud.getGrid().setColumnReorderingAllowed(true);
 
-        // form configuration
-        crud.getCrudFormFactory().setUseBeanValidation(true);
-        crud.getCrudFormFactory().setVisibleProperties(
-                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup");
-        crud.getCrudFormFactory().setVisibleProperties(
-                CrudOperation.ADD,
-                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
-                "password");
-        crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>(groupService.findAll()));
-        crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>(groupService.findAll()));
-        crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName));
-        crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName), Group::getName));
+		// form configuration
+		crud.getCrudFormFactory().setUseBeanValidation(true);
+		crud.getCrudFormFactory().setVisibleProperties(
+				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active",
+				"mainGroup");
+		crud.getCrudFormFactory().setVisibleProperties(
+				CrudOperation.ADD,
+				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
+				"password");
+		crud.getCrudFormFactory().setFieldProvider("mainGroup",
+				new ComboBoxProvider<>(groupService.findAll()));
+		crud.getCrudFormFactory().setFieldProvider("groups",
+				new CheckBoxGroupProvider<>(groupService.findAll()));
+		crud.getCrudFormFactory().setFieldProvider("groups",
+				new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName));
+		crud.getCrudFormFactory().setFieldProvider("mainGroup",
+				new ComboBoxProvider<>("Main Group", groupService.findAll(), new TextRenderer<>(Group::getName),
+						Group::getName));
 
-        // layout configuration
-        setSizeFull();
-        add(crud);
-        crud.setFindAllOperationVisible(false);
+		// layout configuration
+		setSizeFull();
+		add(crud);
+		crud.setFindAllOperationVisible(false);
 
-        // logic configuration
-        crud.setOperations(
-                () -> userService.findAll(),
-                user -> userService.save(user),
-                user -> {
-                    if(user.getId().equals(10L)) {
-                	throw new CrudOperationException("Simulated error.");
-                    }
-		    return userService.save(user);
-		},
-                user -> userService.delete(user)
-        );
-    }
+		// logic configuration
+		crud.setOperations(
+				userService::findAll,
+				userService::save,
+				user -> {
+					if (user.getId().equals(10L)) {
+						throw new CrudOperationException("Simulated error.");
+					}
+					return userService.save(user);
+				},
+				userService::delete);
+	}
 
 }
