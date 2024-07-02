@@ -7,11 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.vaadin.crudui.demo.entity.Category;
+import org.vaadin.crudui.demo.entity.Technology;
 import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.MaritalStatus;
 import org.vaadin.crudui.demo.entity.User;
-import org.vaadin.crudui.demo.service.CategoryService;
+import org.vaadin.crudui.demo.service.TechnologyService;
 import org.vaadin.crudui.demo.service.GroupService;
 import org.vaadin.crudui.demo.service.UserService;
 
@@ -38,15 +38,15 @@ public class Application {
 
     @Bean
     public ApplicationListener<ContextRefreshedEvent> initDatabase(GroupService groupService, UserService userService,
-            CategoryService categoryService) {
+            TechnologyService technologyService) {
         return event -> {
             if (groupService.count() == 0) {
-                createDemoData(groupService, userService, categoryService);
+                createDemoData(groupService, userService, technologyService);
             }
         };
     }
 
-    private void createDemoData(GroupService groupService, UserService userService, CategoryService categoryService) {
+    private void createDemoData(GroupService groupService, UserService userService, TechnologyService technologyService) {
         log.info("Creating demo data...");
 
         Stream.of("Services,IT,HR,Management,Marketing,Sales,Operations,Finance".split(","))
@@ -85,17 +85,17 @@ public class Application {
                 })
                 .forEach(userService::save);
 
-        String[] languages = new String[] { "Java", "Javascript", "Dart" };
-        String[][] frameworks = new String[][] {
+        String[] techs = new String[] { "Java", "Javascript", "Dart" };
+        String[][] components = new String[][] {
                 { "Vaadin", "Spring", "Guice" },
                 { "Hilla", "React", "Svelte" },
                 { "Flutter" }
         };
 
-        for (int i = 0; i < languages.length; i++) {
-            Category language = categoryService.save(new Category(languages[i], languages[i], null));
-            for (int j = 0; j < frameworks[i].length; j++) {
-                categoryService.save(new Category(frameworks[i][j], frameworks[i][j], language));
+        for (int i = 0; i < techs.length; i++) {
+            Technology tech = technologyService.save(new Technology(techs[i], techs[i], null));
+            for (int j = 0; j < components[i].length; j++) {
+                technologyService.save(new Technology(components[i][j], components[i][j], tech));
             }
         }
 
