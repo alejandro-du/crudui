@@ -28,78 +28,79 @@ import java.util.stream.Stream;
 @SpringBootApplication
 public class Application {
 
-    public static final int DEMO_USERS_COUNT = UserService.USERS_COUNT_LIMIT / 2;
+	public static final int DEMO_USERS_COUNT = UserService.USERS_COUNT_LIMIT / 2;
 
-    private static Logger log = LoggerFactory.getLogger(Application.class);
+	private static Logger log = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    @Bean
-    public ApplicationListener<ContextRefreshedEvent> initDatabase(GroupService groupService, UserService userService,
-            TechnologyService technologyService) {
-        return event -> {
-            if (groupService.count() == 0) {
-                createDemoData(groupService, userService, technologyService);
-            }
-        };
-    }
+	@Bean
+	public ApplicationListener<ContextRefreshedEvent> initDatabase(GroupService groupService, UserService userService,
+			TechnologyService technologyService) {
+		return event -> {
+			if (groupService.count() == 0) {
+				createDemoData(groupService, userService, technologyService);
+			}
+		};
+	}
 
-    private void createDemoData(GroupService groupService, UserService userService, TechnologyService technologyService) {
-        log.info("Creating demo data...");
+	private void createDemoData(GroupService groupService, UserService userService,
+			TechnologyService technologyService) {
+		log.info("Creating demo data...");
 
-        Stream.of("Services,IT,HR,Management,Marketing,Sales,Operations,Finance".split(","))
-                .map(Group::new)
-                .forEach(groupService::save);
+		Stream.of("Services,IT,HR,Management,Marketing,Sales,Operations,Finance".split(","))
+				.map(Group::new)
+				.forEach(groupService::save);
 
-        List<Group> allGroups = groupService.findAll();
+		List<Group> allGroups = groupService.findAll();
 
-        groupService.findAll();
+		groupService.findAll();
 
-        String[] firstNames = "Maria,Nicole,Sandra,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill"
-                .split(",");
-        String[] lastNames = "Smith,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee".split(",");
+		String[] firstNames = "Maria,Nicole,Sandra,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill"
+				.split(",");
+		String[] lastNames = "Smith,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee".split(",");
 
-        Random rand = new Random();
+		Random rand = new Random();
 
-        IntStream.rangeClosed(1, DEMO_USERS_COUNT)
-                .mapToObj(i -> {
-                    String name = firstNames[rand.nextInt(firstNames.length)] + " "
-                            + lastNames[rand.nextInt(lastNames.length)];
-                    ArrayList<Group> groups = IntStream.rangeClosed(1, 1 + rand.nextInt(2))
-                            .mapToObj(j -> allGroups.get(rand.nextInt(allGroups.size())))
-                            .collect(Collectors.toCollection(ArrayList::new));
+		IntStream.rangeClosed(1, DEMO_USERS_COUNT)
+				.mapToObj(i -> {
+					String name = firstNames[rand.nextInt(firstNames.length)] + " "
+							+ lastNames[rand.nextInt(lastNames.length)];
+					ArrayList<Group> groups = IntStream.rangeClosed(1, 1 + rand.nextInt(2))
+							.mapToObj(j -> allGroups.get(rand.nextInt(allGroups.size())))
+							.collect(Collectors.toCollection(ArrayList::new));
 
-                    return new User(
-                            name,
-                            LocalDate.now().minusDays(365 * 10),
-                            rand.nextInt(9000000) + 1000000,
-                            name.replace(" ", "").toLowerCase() + i + "@test.com",
-                            BigDecimal.valueOf(5000),
-                            UUID.randomUUID().toString(),
-                            rand.nextInt(10) > 0,
-                            groups.get(rand.nextInt(groups.size())),
-                            new HashSet<>(groups),
-                            MaritalStatus.values()[rand.nextInt(MaritalStatus.values().length)]);
-                })
-                .forEach(userService::save);
+					return new User(
+							name,
+							LocalDate.now().minusDays(365 * 10),
+							rand.nextInt(9000000) + 1000000,
+							name.replace(" ", "").toLowerCase() + i + "@test.com",
+							BigDecimal.valueOf(5000),
+							UUID.randomUUID().toString(),
+							rand.nextInt(10) > 0,
+							groups.get(rand.nextInt(groups.size())),
+							new HashSet<>(groups),
+							MaritalStatus.values()[rand.nextInt(MaritalStatus.values().length)]);
+				})
+				.forEach(userService::save);
 
-        String[] techs = new String[] { "Java", "Javascript", "Dart" };
-        String[][] components = new String[][] {
-                { "Vaadin", "Spring", "Guice" },
-                { "Hilla", "React", "Svelte" },
-                { "Flutter" }
-        };
+		String[] techs = new String[] { "Java", "Javascript", "Dart" };
+		String[][] components = new String[][] {
+				{ "Vaadin", "Spring", "Guice" },
+				{ "Hilla", "React", "Svelte" },
+				{ "Flutter" }
+		};
 
-        for (int i = 0; i < techs.length; i++) {
-            Technology tech = technologyService.save(new Technology(techs[i], techs[i], null));
-            for (int j = 0; j < components[i].length; j++) {
-                technologyService.save(new Technology(components[i][j], components[i][j], tech));
-            }
-        }
+		for (int i = 0; i < techs.length; i++) {
+			Technology tech = technologyService.save(new Technology(techs[i], techs[i], null));
+			for (int j = 0; j < components[i].length; j++) {
+				technologyService.save(new Technology(components[i][j], components[i][j], tech));
+			}
+		}
 
-        log.info("Demo data created.");
-    }
+		log.info("Demo data created.");
+	}
 
 }

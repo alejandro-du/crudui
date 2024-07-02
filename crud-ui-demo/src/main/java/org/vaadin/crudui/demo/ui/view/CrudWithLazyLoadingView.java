@@ -19,63 +19,63 @@ import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 @Route(value = "lazy-loading", layout = MainLayout.class)
 public class CrudWithLazyLoadingView extends VerticalLayout {
 
-    public CrudWithLazyLoadingView(UserRepository userRepository, GroupRepository groupRepository) {
-        // crud instance
-        GridCrud<User> crud = new GridCrud<>(User.class);
+	public CrudWithLazyLoadingView(UserRepository userRepository, GroupRepository groupRepository) {
+		// crud instance
+		GridCrud<User> crud = new GridCrud<>(User.class);
 
-        // grid configuration
-        crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
-        crud.getGrid().setPageSize(50);
-        crud.getGrid().setColumnReorderingAllowed(true);
+		// grid configuration
+		crud.getGrid().setColumns("name", "birthDate", "maritalStatus", "email", "phoneNumber", "active");
+		crud.getGrid().setPageSize(50);
+		crud.getGrid().setColumnReorderingAllowed(true);
 
-        // form configuration
-        crud.getCrudFormFactory().setUseBeanValidation(true);
-        crud.getCrudFormFactory().setVisibleProperties(
-                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup");
-        crud.getCrudFormFactory().setVisibleProperties(
-                CrudOperation.ADD,
-                "name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
-                "password");
-        crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>(groupRepository.findAll()));
-        crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>(groupRepository.findAll()));
-        crud.getCrudFormFactory().setFieldProvider("groups",
-                new CheckBoxGroupProvider<>("Groups", groupRepository.findAll(), Group::getName));
-        crud.getCrudFormFactory().setFieldProvider("mainGroup",
-                new ComboBoxProvider<>("Main Group", groupRepository.findAll(), new TextRenderer<>(Group::getName), Group::getName));
+		// form configuration
+		crud.getCrudFormFactory().setUseBeanValidation(true);
+		crud.getCrudFormFactory().setVisibleProperties(
+				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active",
+				"mainGroup");
+		crud.getCrudFormFactory().setVisibleProperties(
+				CrudOperation.ADD,
+				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
+				"password");
+		crud.getCrudFormFactory().setFieldProvider("mainGroup",
+				new ComboBoxProvider<>(groupRepository.findAll()));
+		crud.getCrudFormFactory().setFieldProvider("groups",
+				new CheckBoxGroupProvider<>(groupRepository.findAll()));
+		crud.getCrudFormFactory().setFieldProvider("groups",
+				new CheckBoxGroupProvider<>("Groups", groupRepository.findAll(), Group::getName));
+		crud.getCrudFormFactory().setFieldProvider("mainGroup",
+				new ComboBoxProvider<>("Main Group", groupRepository.findAll(), new TextRenderer<>(Group::getName),
+						Group::getName));
 
-        // layout configuration
-        setSizeFull();
-        add(crud);
+		// layout configuration
+		setSizeFull();
+		add(crud);
 
-        // logic configuration
-        crud.setCrudListener(new LazyCrudListener<>() {
-            @Override
-            public DataProvider<User, Void> getDataProvider() {
-                return DataProvider.fromCallbacks(
-                        query -> userRepository.findAll(
-                                PageRequest.of(query.getPage(), query.getPageSize())
-                        ).stream(),
-                        query -> (int) userRepository.count()
-                );
-            }
+		// logic configuration
+		crud.setCrudListener(new LazyCrudListener<>() {
+			@Override
+			public DataProvider<User, Void> getDataProvider() {
+				return DataProvider.fromCallbacks(
+						query -> userRepository.findAll(
+								PageRequest.of(query.getPage(), query.getPageSize())).stream(),
+						query -> (int) userRepository.count());
+			}
 
-            @Override
-            public User add(User user) {
-                return userRepository.save(user);
-            }
+			@Override
+			public User add(User user) {
+				return userRepository.save(user);
+			}
 
-            @Override
-            public User update(User user) {
-                return userRepository.save(user);
-            }
+			@Override
+			public User update(User user) {
+				return userRepository.save(user);
+			}
 
-            @Override
-            public void delete(User user) {
-                userRepository.delete(user);
-            }
-        });
-    }
+			@Override
+			public void delete(User user) {
+				userRepository.delete(user);
+			}
+		});
+	}
 
 }

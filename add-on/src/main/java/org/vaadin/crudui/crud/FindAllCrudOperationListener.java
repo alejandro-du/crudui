@@ -9,6 +9,6 @@ import java.util.Collection;
 @FunctionalInterface
 public interface FindAllCrudOperationListener<T> extends Serializable {
 
-    Collection<T> findAll();
+	Collection<T> findAll();
 
 }

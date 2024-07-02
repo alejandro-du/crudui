@@ -10,19 +10,19 @@ import java.util.stream.Stream;
  */
 public interface CrudLayout {
 
-    void setMainComponent(Component component);
+	void setMainComponent(Component component);
 
-    void addFilterComponent(Component component);
+	void addFilterComponent(Component component);
 
-    default void addFilterComponents(Component... components) {
-        Stream.of(components).forEach(this::addFilterComponent);
-    }
+	default void addFilterComponents(Component... components) {
+		Stream.of(components).forEach(this::addFilterComponent);
+	}
 
-    void addToolbarComponent(Component component);
-    
+	void addToolbarComponent(Component component);
+
 	void showForm(CrudOperation operation, Component form, String caption);
-	
-    void hideForm();
+
+	void hideForm();
 
 	void showDialog(String caption, Component form);
 

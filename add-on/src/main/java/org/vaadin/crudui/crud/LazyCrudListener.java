@@ -9,10 +9,10 @@ import java.util.Collection;
  */
 public interface LazyCrudListener<T> extends CrudListener<T> {
 
-    default Collection<T> findAll() {
-        throw new UnsupportedOperationException("Use fetch and count methods instead.");
-    }
+	default Collection<T> findAll() {
+		throw new UnsupportedOperationException("Use fetch and count methods instead.");
+	}
 
-    DataProvider<T, ?> getDataProvider();
+	DataProvider<T, ?> getDataProvider();
 
 }

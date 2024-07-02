@@ -8,6 +8,6 @@ import java.io.Serializable;
 @FunctionalInterface
 public interface AddOperationListener<T> extends Serializable {
 
-    T perform(T domainObject);
+	T perform(T domainObject);
 
 }

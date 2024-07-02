@@ -9,22 +9,22 @@ import java.util.List;
 @Service
 public class GroupService {
 
-    private final GroupRepository groupRepository;
+	private final GroupRepository groupRepository;
 
-    public GroupService(GroupRepository groupRepository) {
-        this.groupRepository = groupRepository;
-    }
+	public GroupService(GroupRepository groupRepository) {
+		this.groupRepository = groupRepository;
+	}
 
-    public List<Group> findAll() {
-        return groupRepository.findAll();
-    }
+	public List<Group> findAll() {
+		return groupRepository.findAll();
+	}
 
-    public int count() {
-        return (int) groupRepository.count();
-    }
+	public int count() {
+		return (int) groupRepository.count();
+	}
 
-    public Group save(Group group) {
-        return groupRepository.save(group);
-    }
+	public Group save(Group group) {
+		return groupRepository.save(group);
+	}
 
 }

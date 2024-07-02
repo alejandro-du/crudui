@@ -16,35 +16,36 @@ import java.util.Date;
  */
 public class DefaultFieldProvider implements FieldProvider {
 
-    private Class<?> type;
+	private Class<?> type;
 
-    public DefaultFieldProvider(Class<?> type) {
-        this.type = type;
-    }
+	public DefaultFieldProvider(Class<?> type) {
+		this.type = type;
+	}
 
-    @Override
-    public HasValueAndElement buildField(Object t) {
-        if (Boolean.class.isAssignableFrom(type) || boolean.class == type) {
-            return new Checkbox();
-        }
+	@Override
+	public HasValueAndElement buildField(Object t) {
+		if (Boolean.class.isAssignableFrom(type) || boolean.class == type) {
+			return new Checkbox();
+		}
 
-        if (LocalDate.class.isAssignableFrom(type) || Date.class.isAssignableFrom(type)) {
-            return new DatePicker();
-        }
+		if (LocalDate.class.isAssignableFrom(type) || Date.class.isAssignableFrom(type)) {
+			return new DatePicker();
+		}
 
-        if (Enum.class.isAssignableFrom(type)) {
-            Object[] values = type.getEnumConstants();
-            ComboBox comboBox = new ComboBox<>();
-            comboBox.setItems(Arrays.asList(values));
-            return comboBox;
-        }
+		if (Enum.class.isAssignableFrom(type)) {
+			Object[] values = type.getEnumConstants();
+			ComboBox comboBox = new ComboBox<>();
+			comboBox.setItems(Arrays.asList(values));
+			return comboBox;
+		}
 
-        if (String.class.isAssignableFrom(type) || Character.class.isAssignableFrom(type) || Byte.class.isAssignableFrom(type)
-                || Number.class.isAssignableFrom(type) || type.isPrimitive()) {
-            return new TextField();
-        }
+		if (String.class.isAssignableFrom(type) || Character.class.isAssignableFrom(type)
+				|| Byte.class.isAssignableFrom(type)
+				|| Number.class.isAssignableFrom(type) || type.isPrimitive()) {
+			return new TextField();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 }

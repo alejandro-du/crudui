@@ -5,8 +5,8 @@ package org.vaadin.crudui.crud;
  */
 public class CrudOperationException extends RuntimeException {
 
-    public CrudOperationException(String message) {
-        super(message);
-    }
+	public CrudOperationException(String message) {
+		super(message);
+	}
 
 }

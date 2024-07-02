@@ -8,32 +8,33 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
  */
 public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
 
-    public HorizontalSplitCrudLayout() {
-        secondComponentHeaderLayout.setMargin(false);
-    }
+	public HorizontalSplitCrudLayout() {
+		secondComponentHeaderLayout.setMargin(false);
+	}
 
-    @Override
-    protected SplitLayout buildMainLayout() {
-        SplitLayout mainLayout = new SplitLayout(firstComponent, secondComponent);
-        mainLayout.setSizeFull();
-        mainLayout.setSplitterPosition(65);
-        return mainLayout;
-    }
+	@Override
+	protected SplitLayout buildMainLayout() {
+		SplitLayout mainLayout = new SplitLayout(firstComponent, secondComponent);
+		mainLayout.setSizeFull();
+		mainLayout.setSplitterPosition(65);
+		return mainLayout;
+	}
 
-    @Override
-    protected void addToolbarLayout(Component toolbarLayout) {
-        secondComponentHeaderLayout.add(toolbarLayout);
-    }
+	@Override
+	protected void addToolbarLayout(Component toolbarLayout) {
+		secondComponentHeaderLayout.add(toolbarLayout);
+	}
 
-    @Override
-    public void addToolbarComponent(Component component) {
-        if (!secondComponentHeaderLayout.isVisible()) {
-            secondComponentHeaderLayout.setVisible(true);
-            secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1, secondComponentHeaderLayout.getElement());
-        }
+	@Override
+	public void addToolbarComponent(Component component) {
+		if (!secondComponentHeaderLayout.isVisible()) {
+			secondComponentHeaderLayout.setVisible(true);
+			secondComponent.getElement().insertChild(secondComponent.getComponentCount() - 1,
+					secondComponentHeaderLayout.getElement());
+		}
 
-        toolbarLayout.setVisible(true);
-        toolbarLayout.add(component);
-    }
+		toolbarLayout.setVisible(true);
+		toolbarLayout.add(component);
+	}
 
 }

@@ -11,26 +11,27 @@ import java.util.Collection;
  */
 public class RadioButtonGroupProvider<T> extends AbstractListingProvider<RadioButtonGroup<T>, T> {
 
-    public RadioButtonGroupProvider(Collection<T> items) {
-        super(items);
-    }
+	public RadioButtonGroupProvider(Collection<T> items) {
+		super(items);
+	}
 
-    public RadioButtonGroupProvider(String caption, Collection<T> items) {
-        super(caption, items);
-    }
+	public RadioButtonGroupProvider(String caption, Collection<T> items) {
+		super(caption, items);
+	}
 
-    public RadioButtonGroupProvider(String caption, Collection<T> items, ComponentRenderer<? extends Component, T> renderer) {
-        super(caption, items, renderer);
-    }
+	public RadioButtonGroupProvider(String caption, Collection<T> items,
+			ComponentRenderer<? extends Component, T> renderer) {
+		super(caption, items, renderer);
+	}
 
-    @Override
-    protected RadioButtonGroup<T> buildAbstractListing() {
-        RadioButtonGroup<T> field = new RadioButtonGroup<>();
-        if(renderer != null) {
-            field.setRenderer(renderer);
-        }
-        field.setItems(items);
-        return field;
-    }
+	@Override
+	protected RadioButtonGroup<T> buildAbstractListing() {
+		RadioButtonGroup<T> field = new RadioButtonGroup<>();
+		if (renderer != null) {
+			field.setRenderer(renderer);
+		}
+		field.setItems(items);
+		return field;
+	}
 
 }

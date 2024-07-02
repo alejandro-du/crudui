@@ -10,6 +10,6 @@ import com.vaadin.flow.component.HasValue;
 @FunctionalInterface
 public interface FieldCreationListener extends Serializable {
 
-    void fieldCreated(HasValue field);
+	void fieldCreated(HasValue field);
 
 }

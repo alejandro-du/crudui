@@ -8,6 +8,6 @@ import java.io.Serializable;
 @FunctionalInterface
 public interface DeleteOperationListener<T> extends Serializable {
 
-    void perform(T domainObject);
+	void perform(T domainObject);
 
 }
