@@ -40,31 +40,31 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 
 	private boolean clickRowToUpdate;
 
-	public AbstractGridCrud(Class<T> domainType) {
+	AbstractGridCrud(Class<T> domainType) {
 		this(domainType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(domainType), null);
 	}
 
-	public AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout) {
+	AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout) {
 		this(domainType, crudLayout, new DefaultCrudFormFactory<>(domainType), null);
 	}
 
-	public AbstractGridCrud(Class<T> domainType, CrudFormFactory<T> crudFormFactory) {
+	AbstractGridCrud(Class<T> domainType, CrudFormFactory<T> crudFormFactory) {
 		this(domainType, new WindowBasedCrudLayout(), crudFormFactory, null);
 	}
 
-	public AbstractGridCrud(Class<T> domainType, CrudListener<T> crudListener) {
+	AbstractGridCrud(Class<T> domainType, CrudListener<T> crudListener) {
 		this(domainType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(domainType), crudListener);
 	}
 
-	public AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudListener<T> crudListener) {
+	AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudListener<T> crudListener) {
 		this(domainType, crudLayout, new DefaultCrudFormFactory<>(domainType), crudListener);
 	}
 
-	public AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory) {
+	AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory) {
 		this(domainType, crudLayout, crudFormFactory, null);
 	}
 
-	public AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory,
+	AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudFormFactory<T> crudFormFactory,
 			CrudListener<T> crudListener) {
 		super(domainType, crudLayout, crudFormFactory, crudListener);
 		initLayout();
