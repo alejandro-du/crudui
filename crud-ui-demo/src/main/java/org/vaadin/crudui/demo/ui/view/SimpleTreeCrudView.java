@@ -20,7 +20,7 @@ public class SimpleTreeCrudView extends VerticalLayout {
 
 		crud.setChildItemProvider(technologyService::findChildren);
 
-		crud.getCrudFormFactory().setVisibleProperties("name", "parent", "description");
+		crud.getCrudFormFactory().setVisibleProperties("name", "version", "parent", "lastPatchedAt", "description");
 		crud.getCrudFormFactory().setFieldProvider("description", technology -> new TextArea());
 		crud.getCrudFormFactory().setFieldProvider("parent",
 				technology -> new ComboBox<Technology>("Parent", technologyService.findAll()));

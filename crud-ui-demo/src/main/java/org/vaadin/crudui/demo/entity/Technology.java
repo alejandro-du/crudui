@@ -1,6 +1,7 @@
 package org.vaadin.crudui.demo.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,9 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Positive;
 
 /**
  * @author Boniface Chacha
@@ -24,16 +26,19 @@ public class Technology implements Serializable {
 	@GeneratedValue
 	private Long id;
 
-	@Version
-	private Integer version;
-
 	@NotBlank
 	@NotNull
 	@Column(unique = true)
 	private String name;
 
+	@Positive
+	private Double version;
+
 	@Lob
 	private String description;
+
+	@Past
+	private LocalDateTime lastPatchedAt;
 
 	@ManyToOne
 	private Technology parent;
@@ -55,11 +60,11 @@ public class Technology implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getVersion() {
+	public Double getVersion() {
 		return version;
 	}
 
-	public void setVersion(Integer version) {
+	public void setVersion(Double version) {
 		this.version = version;
 	}
 
@@ -73,6 +78,14 @@ public class Technology implements Serializable {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public LocalDateTime getLastPatchedAt() {
+		return lastPatchedAt;
+	}
+
+	public void setLastPatchedAt(LocalDateTime lastPatchedAt) {
+		this.lastPatchedAt = lastPatchedAt;
 	}
 
 	public void setDescription(String description) {
@@ -98,4 +111,5 @@ public class Technology implements Serializable {
 	public boolean isRoot() {
 		return !hasParent();
 	}
+
 }
