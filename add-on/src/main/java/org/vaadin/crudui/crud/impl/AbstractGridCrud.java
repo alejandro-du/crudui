@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
@@ -178,7 +179,9 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 				grid.asSingleSelect().setValue(addedObject);
 				grid.deselect(addedObject);
 				showNotification(savedMessage);
-				grid.scrollToItem(addedObject);
+				if (!grid.getClass().isAssignableFrom(TreeGrid.class)) {
+					grid.scrollToItem(addedObject);
+				}
 			} catch (IllegalArgumentException ignore) {
 			}
 		});
@@ -194,7 +197,9 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 				grid.asSingleSelect().setValue(updatedObject);
 				grid.deselect(updatedObject);
 				showNotification(savedMessage);
-				grid.scrollToItem(updatedObject);
+				if (!grid.getClass().isAssignableFrom(TreeGrid.class)) {
+					grid.scrollToItem(updatedObject);
+				}
 			} catch (CrudOperationException e1) {
 				showNotification(e1.getMessage());
 				throw e1;
