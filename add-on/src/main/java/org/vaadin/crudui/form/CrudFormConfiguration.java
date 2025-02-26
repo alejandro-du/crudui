@@ -14,6 +14,7 @@ import com.vaadin.flow.data.converter.Converter;
  */
 public class CrudFormConfiguration implements Serializable {
 
+	protected String caption;
 	protected List<String> visibleProperties = new ArrayList<>();
 	protected List<String> disabledProperties = new ArrayList<>();
 	protected List<String> fieldCaptions = new ArrayList<>();
@@ -22,6 +23,14 @@ public class CrudFormConfiguration implements Serializable {
 	protected Map<Object, FieldProvider<?, ?>> fieldProviders = new HashMap<>();
 	protected Map<Object, Converter<?, ?>> converters = new HashMap<>();
 	protected boolean useBeanValidation;
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
 
 	public List<String> getVisibleProperties() {
 		return visibleProperties;

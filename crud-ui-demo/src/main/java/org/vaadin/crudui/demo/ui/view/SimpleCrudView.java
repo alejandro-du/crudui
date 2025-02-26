@@ -1,5 +1,9 @@
 package org.vaadin.crudui.demo.ui.view;
 
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.Route;
+
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.CrudOperationException;
 import org.vaadin.crudui.crud.impl.GridCrud;
@@ -10,10 +14,6 @@ import org.vaadin.crudui.demo.service.UserService;
 import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
-
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.router.Route;
 
 @Route(value = "simple", layout = MainLayout.class)
 public class SimpleCrudView extends VerticalLayout {
@@ -28,6 +28,7 @@ public class SimpleCrudView extends VerticalLayout {
 
 		// form configuration
 		crud.getCrudFormFactory().setUseBeanValidation(true);
+		crud.getCrudFormFactory().setCaption(CrudOperation.ADD, "Create new User");
 		crud.getCrudFormFactory().setVisibleProperties(
 				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active",
 				"mainGroup");

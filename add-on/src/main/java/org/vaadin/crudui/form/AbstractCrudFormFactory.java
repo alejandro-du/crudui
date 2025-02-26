@@ -22,6 +22,11 @@ public abstract class AbstractCrudFormFactory<T> implements CrudFormFactory<T> {
 	protected boolean showNotifications;
 
 	@Override
+	public void setCaption(CrudOperation operation, String caption) {
+		getConfiguration(operation).setCaption(caption);
+	}
+
+	@Override
 	public void setVisibleProperties(CrudOperation operation, String... properties) {
 		getConfiguration(operation).setVisibleProperties(Arrays.asList(properties));
 	}

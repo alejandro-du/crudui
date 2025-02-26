@@ -27,6 +27,8 @@ public interface CrudFormFactory<T> extends Serializable {
 
 	String buildCaption(CrudOperation operation, T domainObject);
 
+	void setCaption(CrudOperation operation, String caption);
+
 	void setVisibleProperties(CrudOperation operation, String... properties);
 
 	void setVisibleProperties(String... properties);
