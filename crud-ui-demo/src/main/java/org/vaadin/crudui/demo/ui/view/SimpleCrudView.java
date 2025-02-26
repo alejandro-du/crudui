@@ -36,6 +36,9 @@ public class SimpleCrudView extends VerticalLayout {
 				CrudOperation.ADD,
 				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
 				"password");
+		crud.getCrudFormFactory().setFieldCaptions(
+				"The name", "The birthdate", "The e-mail", "The Salary", "The phone number", "The marital status", "The groups", "Is it active?",
+				"The main group", "The password");
 		crud.getCrudFormFactory().setFieldProvider("mainGroup",
 				new ComboBoxProvider<>(groupService.findAll()));
 		crud.getCrudFormFactory().setFieldProvider("groups",
