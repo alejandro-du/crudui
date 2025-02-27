@@ -11,12 +11,14 @@ import org.vaadin.crudui.demo.service.TechnologyService;
 import org.vaadin.crudui.demo.ui.MainLayout;
 
 @Route(value = "simple-tree", layout = MainLayout.class)
-public class SimpleTreeCrudView extends VerticalLayout {
+public class CustomTreeCrudView extends VerticalLayout {
 
-	public SimpleTreeCrudView(TechnologyService technologyService) {
+	public CustomTreeCrudView(TechnologyService technologyService) {
 		TreeGridCrud<Technology> crud = new TreeGridCrud<>(Technology.class);
 		crud.getGrid().removeAllColumns();
 		crud.getGrid().addHierarchyColumn(Technology::getName).setHeader("Name");
+		crud.getGrid().addColumn(Technology::getVersion).setHeader("Version");
+		crud.getGrid().addColumn(Technology::getLastPatchedAt).setHeader("Last Patched At");
 
 		crud.setChildItemProvider(technologyService::findChildren);
 

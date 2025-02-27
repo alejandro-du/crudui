@@ -46,9 +46,11 @@ public class Technology implements Serializable {
 	public Technology() {
 	}
 
-	public Technology(String name, String description, Technology parent) {
+	public Technology(String name, Double version, String description, LocalDateTime lastPatchedAt, Technology parent) {
 		this.name = name;
+		this.version = version;
 		this.description = description;
+		this.lastPatchedAt = lastPatchedAt;
 		this.parent = parent;
 	}
 

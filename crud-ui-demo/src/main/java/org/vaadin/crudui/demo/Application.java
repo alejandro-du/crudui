@@ -17,6 +17,7 @@ import org.vaadin.crudui.demo.service.UserService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -86,17 +87,17 @@ public class Application {
 				})
 				.forEach(userService::save);
 
-		String[] techs = new String[] { "Java", "Javascript", "Dart" };
-		String[][] components = new String[][] {
-				{ "Vaadin", "Spring", "Guice" },
+		String[] parentTechs = new String[] { "Java", "Javascript", "Databases" };
+		String[][] childrenTechs = new String[][] {
+				{ "Vaadin", "Spring", "Quarkus" },
 				{ "Hilla", "React", "Svelte" },
-				{ "Flutter" }
+				{ "MariaDB", "MySQL", "Postgres" }
 		};
 
-		for (int i = 0; i < techs.length; i++) {
-			Technology tech = technologyService.save(new Technology(techs[i], techs[i], null));
-			for (int j = 0; j < components[i].length; j++) {
-				technologyService.save(new Technology(components[i][j], components[i][j], tech));
+		for (int i = 0; i < parentTechs.length; i++) {
+			Technology tech = technologyService.save(new Technology(parentTechs[i], null, parentTechs[i], null, null));
+			for (int j = 0; j < childrenTechs[i].length; j++) {
+				technologyService.save(new Technology(childrenTechs[i][j], rand.nextDouble(), childrenTechs[i][j], LocalDateTime.now(), tech));
 			}
 		}
 

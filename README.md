@@ -2,11 +2,13 @@
 [![Stars on Vaadin Directory](https://img.shields.io/vaadin-directory/star/crud-ui-add-on.svg)](https://vaadin.com/directory/component/crud-ui-add-on)
 [![Latest version on vaadin.com/directory](https://img.shields.io/vaadin-directory/v/crud-ui-add-on.svg)](https://img.shields.io/vaadin-directory/v/crud-ui-add-on.svg)
 
-Crud UI Add-on provides an API to automatically generate CRUD-like UIs for any Java Bean at runtime.
+_For questions on usage, please [use the forum](https://vaadin.com/forum/t/crud-ui-add-on/156634/1)._
+
+Crud UI Add-on provides an API to automatically generate CRUD-like UIs with grids and forms for any Java Bean at runtime.
 
 The API is defined through 4 interfaces and their implementations:
 
-* **`CrudComponent`**: A Vaadin `Component` that can be added to any `ComponentContainer`. This is the actual CRUD final users will see in the browser. Implementations:
+* **`Crud`**: A Vaadin UI component that can be added to any `ComponentContainer`. This is the actual CRUD final users will see in the browser. Implementations:
 
   * `GridCrud`: A CRUD UI based on Vaadin's standard `Grid` component.
   * `TreeGridCrud`: A CRUD UI based on Vaadin's standard `TreeGrid` component.
