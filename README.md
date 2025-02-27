@@ -33,18 +33,10 @@ Let's say, you have the following domain/entity/Java Bean class:
 ```java
 public class User {
 
-    @NotNull // Validation API is required! Add it as a dependency on your project
     private Long id;
-
-    @NotNull
     private String name;
-
     private Date birthDate;
-
-    @Email
     private String email;
-
-    @NotNull
     private String password;
 
     ... getters & setters ...
@@ -57,13 +49,7 @@ GridCrud<User> crud = new GridCrud<>(User.class);
 someLayout.addComponent(crud);
 ```
 
-You can enable _Java Bean Validation_ as follows (don't forget to add the corresponding Java Validation API dependency to your project):
-
-```java
-crud.getCrudFormFactory().setUseBeanValidation(true);
-```
-
-Then use lambda expressions or method references to delegate CRUD operations to your backend implemented for example with JPA/Hibernate, Spring Data, or MyBatis):
+Then use lambda expressions or method references to delegate CRUD operations to your backend implemented for example with JPA/Hibernate, Spring Data, MyBatis, and others:
 
 ```java
 crud.setFindAllOperation(() -> backend.findAll());
@@ -73,6 +59,12 @@ crud.setDeleteOperation(backend::delete);
 ```
 
 # Advanced usage
+
+You can enable _Java Bean Validation_ as follows (don't forget to add the corresponding Java Validation API dependency to your project):
+
+```java
+crud.getCrudFormFactory().setUseBeanValidation(true);
+```
 
 As an alternative to method references and lambda expressions, you can implement the `CrudListener` interface to connect the CRUD UI to your backend:
 
@@ -100,6 +92,25 @@ crud.setCrudListener(new CrudListener<User>() {
     }
 });
 ```
+
+To enable lazy loading implement `LazyCrudListener` and use the Vaadin's `DataProvider` interface:
+
+```java
+crud.setCrudListener(new LazyCrudListener<>() {
+	@Override
+	public DataProvider<User, Void> getDataProvider() {
+		return DataProvider.fromCallbacks(
+			query -> userService.findAll(query.getPage(), query.getPageSize()).stream(),
+			query -> (int) userService.countAll()
+		);
+	}
+
+	... other CRUD methods ...
+
+});
+```
+
+# Customization
 
 To change the general layout, use an alternative `CrudLayout` implementation (defaults to `WindowBasedCrudLayout`):
 

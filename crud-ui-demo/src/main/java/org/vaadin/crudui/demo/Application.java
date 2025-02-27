@@ -97,7 +97,7 @@ public class Application {
 		for (int i = 0; i < parentTechs.length; i++) {
 			Technology tech = technologyService.save(new Technology(parentTechs[i], null, parentTechs[i], null, null));
 			for (int j = 0; j < childrenTechs[i].length; j++) {
-				technologyService.save(new Technology(childrenTechs[i][j], rand.nextDouble(), childrenTechs[i][j], LocalDateTime.now(), tech));
+				technologyService.save(new Technology(childrenTechs[i][j], rand.nextDouble() * 10, childrenTechs[i][j], LocalDateTime.now(), tech));
 			}
 		}
 

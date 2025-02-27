@@ -49,8 +49,7 @@ public class CustomCrudView extends VerticalLayout {
 				"password");
 		crud.getCrudFormFactory().setFieldCaptions(
 				"The name", "The birthdate", "The e-mail", "The Salary", "The phone number", "The marital status",
-				"The groups", "Is it active?",
-				"The main group", "The password");
+				"The groups", "Is it active?", "The main group", "The password");
 		crud.getCrudFormFactory().setFieldProvider("mainGroup",
 				new ComboBoxProvider<>(groupService.findAll()));
 		crud.getCrudFormFactory().setFieldProvider("groups",

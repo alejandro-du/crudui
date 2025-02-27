@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.html.Anchor;
@@ -83,8 +84,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 		Class<? extends HasComponents> viewClass = tabToView.get(tabs.getSelectedTab());
 		if (!HomeView.class.equals(viewClass)) {
 			HorizontalLayout footer = new HorizontalLayout(
-					new Anchor(DemoUtils.getGitHubLink(viewClass), "Source code"));
-			footer.setMargin(true);
+					new Html("<span>Source code 👉&nbsp;</span>"),
+					new Anchor(DemoUtils.getGitHubLink(viewClass), viewClass.getSimpleName() + ".java"));
+			footer.setSpacing(false);
 			((HasComponents) getContent()).add(footer);
 		}
 	}
