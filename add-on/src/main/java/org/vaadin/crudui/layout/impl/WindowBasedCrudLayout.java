@@ -103,6 +103,8 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
 
 		dialog = new Dialog(new H3(caption), dialogLayout);
 		dialog.setWidth(formWindowWidth);
+		dialog.setDraggable(true);
+		dialog.setResizable(true);
 		dialog.open();
 	}
 

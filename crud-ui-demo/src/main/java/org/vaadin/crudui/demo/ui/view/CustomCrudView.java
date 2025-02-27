@@ -19,14 +19,20 @@ import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
+import org.vaadin.crudui.form.impl.field.provider.MultiSelectComboBoxProvider;
+import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 @Route(value = "simple", layout = MainLayout.class)
 public class CustomCrudView extends VerticalLayout {
 
 	public CustomCrudView(UserService userService, GroupService groupService) {
 
+		// choose a CrudLayout implementation
+		WindowBasedCrudLayout crudLayout = new WindowBasedCrudLayout();
+		crudLayout.setFormWindowWidth("70%");
+
 		// crud instance
-		GridCrud<User> crud = new GridCrud<>(User.class);
+		GridCrud<User> crud = new GridCrud<>(User.class, crudLayout);
 		crud.setClickRowToUpdate(true);
 		crud.setUpdateOperationVisible(false);
 		HasValue<?, String> nameFilter = crud.addFilterProperty("Filter by name");
@@ -51,9 +57,7 @@ public class CustomCrudView extends VerticalLayout {
 				"The name", "The birthdate", "The e-mail", "The Salary", "The phone number", "The marital status",
 				"The groups", "Is it active?", "The main group", "The password");
 		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>(groupService.findAll()));
-		formFactory.setFieldProvider("groups", new CheckBoxGroupProvider<>(groupService.findAll()));
-		formFactory.setFieldProvider("groups",
-				new CheckBoxGroupProvider<>("Groups", groupService.findAll(), Group::getName));
+		formFactory.setFieldProvider("groups",new MultiSelectComboBoxProvider<>("Groups", groupService.findAll(), Group::getName));
 		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>("Main Group", groupService.findAll(),
 				new TextRenderer<>(Group::getName), Group::getName));
 
