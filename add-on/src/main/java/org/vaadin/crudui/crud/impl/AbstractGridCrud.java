@@ -4,10 +4,12 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalDataProvider;
@@ -123,6 +125,16 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 	@Override
 	public void setFindAllOperationVisible(boolean visible) {
 		findAllButton.setVisible(visible);
+	}
+
+	public HasValue<?, String> addFilterProperty(String caption) {
+		TextField field = new TextField();
+		field.setPlaceholder(caption);
+		field.setPrefixComponent(VaadinIcon.SEARCH.create());
+		field.setClearButtonVisible(true);
+		field.addValueChangeListener(e -> findAllButtonClicked());
+		crudLayout.addFilterComponent(field);
+		return field;
 	}
 
 	public void setClickRowToUpdate(boolean clickRowToUpdate) {

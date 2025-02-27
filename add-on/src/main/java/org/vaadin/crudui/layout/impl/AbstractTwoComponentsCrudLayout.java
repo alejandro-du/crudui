@@ -1,20 +1,19 @@
 package org.vaadin.crudui.layout.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.layout.CrudLayout;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Alejandro Duarte.
@@ -54,20 +53,13 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 		secondComponentHeaderLayout.setSpacing(true);
 
 		toolbarLayout.setVisible(false);
-		// FIXME figure out replacement
-		// toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 		addToolbarLayout(toolbarLayout);
 
 		filterLayout.setVisible(false);
 		filterLayout.setSpacing(true);
 		filterLayout.setMargin(true);
-		firstComponentHeaderLayout.add(filterLayout);
-
 		filterLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-		Icon icon = VaadinIcon.SEARCH.create();
-		icon.getStyle().set("padding-left", "1em");
-		icon.setSize(".9em");
-		filterLayout.add(icon);
+		firstComponentHeaderLayout.add(filterLayout);
 
 		mainComponentLayout.setSizeFull();
 		mainComponentLayout.setMargin(false);
@@ -107,12 +99,6 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 		filterLayout.setVisible(true);
 		filterLayout.add(component);
 	}
-
-	// @Override
-	// public void showForm(CrudOperation operation, Component form) {
-	// String caption = formCaptions.get(operation);
-	// showDialog(caption, form);
-	// }
 
 	@Override
 	public void showForm(CrudOperation operation, Component form, String formCaption) {

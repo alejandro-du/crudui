@@ -1,14 +1,15 @@
 package org.vaadin.crudui.crud;
 
+import java.util.Collections;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
+
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
-
-import java.util.Collections;
 
 /**
  * @author Alejandro Duarte

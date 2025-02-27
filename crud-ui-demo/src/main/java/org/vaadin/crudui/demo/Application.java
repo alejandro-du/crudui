@@ -1,5 +1,17 @@
 package org.vaadin.crudui.demo;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -7,21 +19,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.vaadin.crudui.demo.entity.Technology;
 import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.MaritalStatus;
+import org.vaadin.crudui.demo.entity.Technology;
 import org.vaadin.crudui.demo.entity.User;
-import org.vaadin.crudui.demo.service.TechnologyService;
 import org.vaadin.crudui.demo.service.GroupService;
+import org.vaadin.crudui.demo.service.TechnologyService;
 import org.vaadin.crudui.demo.service.UserService;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * The entry point of the Spring Boot application.
@@ -59,9 +63,9 @@ public class Application {
 
 		groupService.findAll();
 
-		String[] firstNames = "Maria,Nicole,Sandra,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill"
+		String[] firstNames = "Maria,Nicole,Sandra,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill,Alejandro"
 				.split(",");
-		String[] lastNames = "Smith,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee".split(",");
+		String[] lastNames = "Smith,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee,Duarte".split(",");
 
 		Random rand = new Random();
 

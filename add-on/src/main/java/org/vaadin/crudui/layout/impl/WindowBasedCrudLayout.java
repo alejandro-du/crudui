@@ -3,19 +3,17 @@ package org.vaadin.crudui.layout.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.vaadin.crudui.crud.CrudOperation;
-import org.vaadin.crudui.layout.CrudLayout;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
+import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.layout.CrudLayout;
 
 /**
  * @author Alejandro Duarte
@@ -48,18 +46,12 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
 		headerLayout.setMargin(true);
 
 		toolbarLayout.setVisible(false);
-		// FIXME find out Lumo style equivalent
-		// toolbarLayout.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 		headerLayout.add(toolbarLayout);
 
 		filterLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 		filterLayout.setVisible(false);
 		filterLayout.setSpacing(true);
 		headerLayout.add(filterLayout);
-
-		Icon icon = VaadinIcon.SEARCH.create();
-		icon.setSize(".9em");
-		filterLayout.add(icon);
 
 		mainComponentLayout.setWidth("100%");
 		mainComponentLayout.setHeight(null);
