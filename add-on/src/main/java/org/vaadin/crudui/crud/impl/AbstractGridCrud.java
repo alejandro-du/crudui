@@ -244,10 +244,10 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 				grid.asSingleSelect().clear();
 			} else {
 				T selected = grid.asSingleSelect().getValue();
-				crudLayout.hideForm();
 				grid.asSingleSelect().clear();
 				grid.asSingleSelect().setValue(selected);
 			}
+			crudLayout.hideForm();
 		}, operationPerformedClickEvent -> {
 			buttonClickListener.onComponentEvent(operationPerformedClickEvent);
 			if (!clickRowToUpdate) {
