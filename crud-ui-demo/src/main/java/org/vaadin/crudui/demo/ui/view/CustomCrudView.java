@@ -17,7 +17,6 @@ import org.vaadin.crudui.demo.service.GroupService;
 import org.vaadin.crudui.demo.service.UserService;
 import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.CrudFormFactory;
-import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.field.provider.MultiSelectComboBoxProvider;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
