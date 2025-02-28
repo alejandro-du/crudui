@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -22,7 +23,7 @@ import org.vaadin.crudui.crud.CrudOperationException;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.CrudLayout;
-import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
+import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 
 /**
  * @author Alejandro Duarte
@@ -43,7 +44,7 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 	private boolean clickRowToUpdate;
 
 	AbstractGridCrud(Class<T> domainType) {
-		this(domainType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(domainType), null);
+		this(domainType, new HorizontalSplitCrudLayout(), new DefaultCrudFormFactory<>(domainType), null);
 	}
 
 	AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout) {
@@ -51,11 +52,11 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 	}
 
 	AbstractGridCrud(Class<T> domainType, CrudFormFactory<T> crudFormFactory) {
-		this(domainType, new WindowBasedCrudLayout(), crudFormFactory, null);
+		this(domainType, new HorizontalSplitCrudLayout(), crudFormFactory, null);
 	}
 
 	AbstractGridCrud(Class<T> domainType, CrudListener<T> crudListener) {
-		this(domainType, new WindowBasedCrudLayout(), new DefaultCrudFormFactory<>(domainType), crudListener);
+		this(domainType, new HorizontalSplitCrudLayout(), new DefaultCrudFormFactory<>(domainType), crudListener);
 	}
 
 	AbstractGridCrud(Class<T> domainType, CrudLayout crudLayout, CrudListener<T> crudListener) {
@@ -75,10 +76,12 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 	protected void initLayout() {
 		findAllButton = new Button(VaadinIcon.REFRESH.create(), e -> findAllButtonClicked());
 		findAllButton.getElement().setAttribute("title", "Refresh list");
+		findAllButton.setVisible(false);
 
 		crudLayout.addToolbarComponent(findAllButton);
 
 		addButton = new Button(VaadinIcon.PLUS.create(), e -> addButtonClicked());
+		addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		addButton.getElement().setAttribute("title", "Add");
 		crudLayout.addToolbarComponent(addButton);
 
@@ -87,6 +90,7 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 		crudLayout.addToolbarComponent(updateButton);
 
 		deleteButton = new Button(VaadinIcon.TRASH.create(), e -> deleteButtonClicked());
+		deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		deleteButton.getElement().setAttribute("title", "Delete");
 		crudLayout.addToolbarComponent(deleteButton);
 
@@ -221,12 +225,17 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 
 	protected void deleteButtonClicked() {
 		T domainObject = grid.asSingleSelect().getValue();
+		showDeleteConfirmation(domainObject);
+	}
+
+	public void showDeleteConfirmation(T domainObject) {
 		showForm(CrudOperation.DELETE, domainObject, true, deletedMessage, event -> {
 			try {
 				deleteOperation.perform(domainObject);
 				refreshGrid();
 				grid.asSingleSelect().clear();
 				showNotification(deletedMessage);
+				crudLayout.hideForm();
 			} catch (CrudOperationException e1) {
 				showNotification(e1.getMessage());
 				refreshGrid();

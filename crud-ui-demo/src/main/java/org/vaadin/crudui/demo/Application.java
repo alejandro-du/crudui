@@ -63,9 +63,10 @@ public class Application {
 
 		groupService.findAll();
 
-		String[] firstNames = "Maria,Nicole,Sandra,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill,Alejandro"
+		String[] firstNames = "Maria,Edgar,Juan,Angelica,Nicole,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill,Alejandro"
 				.split(",");
-		String[] lastNames = "Smith,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee,Duarte".split(",");
+		String[] lastNames = "Smith,Duarte,Avendano,Vento,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee"
+				.split(",");
 
 		Random rand = new Random();
 
@@ -79,7 +80,7 @@ public class Application {
 
 					return new User(
 							name,
-							LocalDate.now().minusDays(365 * 10),
+							LocalDate.now().minusDays(rand.nextInt(365 * 99)),
 							rand.nextInt(9000000) + 1000000,
 							name.replace(" ", "").toLowerCase() + i + "@test.com",
 							BigDecimal.valueOf(5000),
@@ -99,9 +100,12 @@ public class Application {
 		};
 
 		for (int i = 0; i < parentTechs.length; i++) {
-			Technology tech = technologyService.save(new Technology(parentTechs[i], null, parentTechs[i], null, null));
+			Technology parentTech = technologyService
+					.save(new Technology(parentTechs[i], null, parentTechs[i], null, null));
 			for (int j = 0; j < childrenTechs[i].length; j++) {
-				technologyService.save(new Technology(childrenTechs[i][j], rand.nextDouble() * 10, childrenTechs[i][j], LocalDateTime.now(), tech));
+				var technology = new Technology(childrenTechs[i][j], rand.nextDouble() * 10, childrenTechs[i][j],
+						LocalDateTime.now(), parentTech);
+				technologyService.save(technology);
 			}
 		}
 

@@ -8,7 +8,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -38,18 +38,20 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
 		mainLayout.setSizeFull();
 		mainLayout.setMargin(false);
 		mainLayout.setPadding(false);
-		mainLayout.setSpacing(false);
+		mainLayout.setSpacing(true);
 		setSizeFull();
 
 		headerLayout.setVisible(false);
+		headerLayout.setWidthFull();
 		headerLayout.setSpacing(true);
-		headerLayout.setMargin(true);
+		headerLayout.setMargin(false);
 
 		toolbarLayout.setVisible(false);
 		headerLayout.add(toolbarLayout);
 
-		filterLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+		filterLayout.setJustifyContentMode(JustifyContentMode.START);
 		filterLayout.setVisible(false);
+		filterLayout.setWidthFull();
 		filterLayout.setSpacing(true);
 		headerLayout.add(filterLayout);
 
@@ -81,6 +83,7 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
 
 		filterLayout.setVisible(true);
 		filterLayout.add(component);
+		filterLayout.expand(component);
 	}
 
 	@Override
@@ -94,7 +97,6 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
 		toolbarLayout.add(component);
 	}
 
-	@Override
 	public void showDialog(String caption, Component form) {
 		VerticalLayout dialogLayout = new VerticalLayout(form);
 		dialogLayout.setWidth("100%");

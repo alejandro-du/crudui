@@ -2,6 +2,13 @@ package org.vaadin.crudui.demo.ui.view;
 
 import java.util.List;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValueAndElement;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.Route;
+
 import org.vaadin.crudui.crud.CrudOperation;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.demo.entity.Group;
@@ -12,20 +19,12 @@ import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
-import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
-
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValueAndElement;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.router.Route;
+import org.vaadin.crudui.layout.impl.VerticalSplitCrudLayout;
 
 @Route(value = "split-layout", layout = MainLayout.class)
 public class CrudWithSplitLayoutView extends VerticalLayout {
 
 	public CrudWithSplitLayoutView(UserService userService, GroupService groupService) {
-
 		// form configuration
 		DefaultCrudFormFactory<User> formFactory = new DefaultCrudFormFactory<User>(User.class) {
 			@Override
@@ -36,12 +35,12 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
 		};
 		formFactory.setUseBeanValidation(true);
 		formFactory.setVisibleProperties(
-				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active",
-				"mainGroup");
-		formFactory.setVisibleProperties(
-				CrudOperation.ADD,
+				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup");
+		formFactory.setVisibleProperties(CrudOperation.ADD,
 				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
 				"password");
+		formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "mainGroup");
+		formFactory.setFieldCaptions(CrudOperation.DELETE, "The name", "The main group");
 		formFactory.setFieldProvider("mainGroup",
 				new ComboBoxProvider<>(groupService.findAll()));
 		formFactory.setFieldProvider("groups",
@@ -53,7 +52,7 @@ public class CrudWithSplitLayoutView extends VerticalLayout {
 						Group::getName));
 
 		// crud instance
-		GridCrud<User> crud = new GridCrud<>(User.class, new HorizontalSplitCrudLayout(), formFactory);
+		GridCrud<User> crud = new GridCrud<>(User.class, new VerticalSplitCrudLayout(), formFactory);
 		crud.setClickRowToUpdate(true);
 		crud.setUpdateOperationVisible(false);
 

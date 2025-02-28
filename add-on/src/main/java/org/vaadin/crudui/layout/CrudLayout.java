@@ -1,9 +1,10 @@
 package org.vaadin.crudui.layout;
 
-import com.vaadin.flow.component.Component;
-import org.vaadin.crudui.crud.CrudOperation;
-
 import java.util.stream.Stream;
+
+import com.vaadin.flow.component.Component;
+
+import org.vaadin.crudui.crud.CrudOperation;
 
 /**
  * @author Alejandro Duarte
@@ -23,7 +24,5 @@ public interface CrudLayout {
 	void showForm(CrudOperation operation, Component form, String caption);
 
 	void hideForm();
-
-	void showDialog(String caption, Component form);
 
 }

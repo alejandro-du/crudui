@@ -6,9 +6,10 @@ import java.util.Map;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -24,41 +25,49 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 	protected VerticalLayout secondComponent = new VerticalLayout();
 	protected HorizontalLayout firstComponentHeaderLayout = new HorizontalLayout();
 	protected HorizontalLayout secondComponentHeaderLayout = new HorizontalLayout();
-	protected HorizontalLayout toolbarLayout = new HorizontalLayout();
+	protected VerticalLayout formComponentLayout = new VerticalLayout();
+	protected HorizontalLayout formCaptionLayout = new HorizontalLayout();
+	protected HorizontalLayout toolbar = new HorizontalLayout();
 	protected HorizontalLayout filterLayout = new HorizontalLayout();
 	protected VerticalLayout mainComponentLayout = new VerticalLayout();
-	protected VerticalLayout formComponentLayout = new VerticalLayout();
-	protected VerticalLayout formCaptionLayout = new VerticalLayout();
 
 	protected Map<CrudOperation, String> formCaptions = new HashMap<>();
 
 	public AbstractTwoComponentsCrudLayout() {
-		Component mainLayout = buildMainLayout();
-		getContent().add(mainLayout);
-		setSizeFull();
-
 		firstComponent.setMargin(false);
 		firstComponent.setPadding(false);
 		firstComponent.setSpacing(false);
-
-		secondComponent.setMargin(true);
-		secondComponent.setPadding(false);
-		secondComponent.setSpacing(true);
+		firstComponent.add(firstComponentHeaderLayout);
 
 		firstComponentHeaderLayout.setVisible(false);
 		firstComponentHeaderLayout.setSpacing(true);
 		firstComponentHeaderLayout.setMargin(false);
 
-		secondComponentHeaderLayout.setVisible(false);
-		secondComponentHeaderLayout.setSpacing(true);
+		formCaptionLayout.setWidthFull();
+		formCaptionLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
-		toolbarLayout.setVisible(false);
-		addToolbarLayout(toolbarLayout);
+		secondComponent.setSizeFull();
+		secondComponent.setMargin(false);
+		secondComponent.setPadding(false);
+		secondComponent.add(secondComponentHeaderLayout);
+
+		secondComponentHeaderLayout.setVisible(false);
+		secondComponentHeaderLayout.setWidthFull();
+		secondComponentHeaderLayout.setSpacing(true);
+		secondComponentHeaderLayout.setPadding(true);
+		secondComponentHeaderLayout.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+		secondComponentHeaderLayout.add(formCaptionLayout, toolbar);
+
+		formComponentLayout.setSizeFull();
+		formComponentLayout.setMargin(false);
+		formComponentLayout.setPadding(false);
+		secondComponent.add(formComponentLayout);
+		secondComponent.expand(formComponentLayout);
+
+		toolbar.setJustifyContentMode(JustifyContentMode.END);
 
 		filterLayout.setVisible(false);
 		filterLayout.setSpacing(true);
-		filterLayout.setMargin(true);
-		filterLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 		firstComponentHeaderLayout.add(filterLayout);
 
 		mainComponentLayout.setSizeFull();
@@ -67,25 +76,28 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 		firstComponent.add(mainComponentLayout);
 		firstComponent.expand(mainComponentLayout);
 
-		formCaptionLayout.setMargin(true);
-
-		formComponentLayout.setSizeFull();
-		formComponentLayout.setMargin(false);
-		formComponentLayout.setPadding(false);
-		secondComponent.add(formComponentLayout);
-		secondComponent.expand(formComponentLayout);
-
+		setFormCaption(CrudOperation.ADD, "Add");
+		setFormCaption(CrudOperation.UPDATE, "Update");
 		setFormCaption(CrudOperation.DELETE, "Are you sure you want to delete this item?");
+
+		Component mainLayout = buildMainLayout();
+		getContent().add(mainLayout);
+		setSizeFull();
 	}
 
 	protected abstract Component buildMainLayout();
-
-	protected abstract void addToolbarLayout(Component toolbarLayout);
 
 	@Override
 	public void setMainComponent(Component component) {
 		mainComponentLayout.removeAll();
 		mainComponentLayout.add(component);
+	}
+
+	@Override
+	public void addToolbarComponent(Component component) {
+		secondComponentHeaderLayout.setVisible(true);
+		toolbar.setVisible(true);
+		toolbar.add(component);
 	}
 
 	@Override
@@ -103,19 +115,12 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 	@Override
 	public void showForm(CrudOperation operation, Component form, String formCaption) {
 		String caption = (formCaption != null ? formCaption : formCaptions.get(operation));
-		showDialog(caption, form);
-	}
+		formCaptionLayout.removeAll();
 
-	@Override
-	public void showDialog(String caption, Component form) {
 		if (caption != null) {
-			Div label = new Div(new Text(caption));
-			label.getStyle().set("color", "var(--lumo-primary-text-color)");
-			formCaptionLayout.removeAll();
-			formCaptionLayout.add(label);
-			secondComponent.addComponentAtIndex(secondComponent.getComponentCount() - 1, formCaptionLayout);
-		} else if (formCaptionLayout.getElement().getParent() != null) {
-			formCaptionLayout.getElement().getParent().removeChild(formCaptionLayout.getElement());
+			H3 h3 = new H3(caption);
+			h3.setWidthFull();
+			formCaptionLayout.add(h3);
 		}
 
 		formComponentLayout.removeAll();
@@ -125,9 +130,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 	@Override
 	public void hideForm() {
 		formComponentLayout.removeAll();
-		if (formCaptionLayout.getElement().getParent() != null) {
-			formCaptionLayout.getElement().getParent().removeChild(formCaptionLayout.getElement());
-		}
+		formCaptionLayout.removeAll();
 	}
 
 	public void setFormCaption(CrudOperation operation, String caption) {
