@@ -187,6 +187,7 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 	}
 
 	protected void addButtonClicked() {
+		grid.asSingleSelect().clear();
 		T domainObject = crudFormFactory.getNewInstanceSupplier().get();
 		showForm(CrudOperation.ADD, domainObject, false, savedMessage, event -> {
 			try {
