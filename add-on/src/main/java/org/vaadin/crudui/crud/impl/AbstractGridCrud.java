@@ -250,14 +250,14 @@ public abstract class AbstractGridCrud<T> extends AbstractCrud<T> {
 	protected void showForm(CrudOperation operation, T domainObject, boolean readOnly, String successMessage,
 			ComponentEventListener<ClickEvent<Button>> buttonClickListener) {
 		Component form = crudFormFactory.buildNewForm(operation, domainObject, readOnly, cancelClickEvent -> {
-			if (clickRowToUpdate) {
+			if (clickRowToUpdate || operation == CrudOperation.ADD) {
 				grid.asSingleSelect().clear();
+				crudLayout.hideForm();
 			} else {
 				T selected = grid.asSingleSelect().getValue();
 				grid.asSingleSelect().clear();
-				grid.asSingleSelect().setValue(selected);
+				grid.select(selected);
 			}
-			crudLayout.hideForm();
 		}, operationPerformedClickEvent -> {
 			buttonClickListener.onComponentEvent(operationPerformedClickEvent);
 			if (!clickRowToUpdate) {
