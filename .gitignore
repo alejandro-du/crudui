@@ -1,9 +1,26 @@
+node_modules
+HELP.md
 target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-### Eclipse ###
+/**/package-lock.json
+/**/package.json
+/**/tsconfig.json
+/**/types.d.ts
+/**/vite.config.ts
+/**/vite.generated.ts
+/**/dev.bundle
+
+### STS ###
+.apt_generated
 .classpath
+.factorypath
 .project
 .settings
+.springBeans
+.sts4-cache
 
 ### IntelliJ IDEA ###
 .idea
@@ -12,21 +29,14 @@ target/
 *.ipr
 
 ### NetBeans ###
-nbproject/private/
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
-
-### JRebel ###
-rebel.xml
-
-# Vaadin
-node_modules/
-drivers/
-error-screenshots/
-webpack.generated.js

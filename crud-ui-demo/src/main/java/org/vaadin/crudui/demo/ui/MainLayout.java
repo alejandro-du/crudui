@@ -11,6 +11,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -29,17 +30,19 @@ import org.vaadin.crudui.demo.ui.view.DefaultView;
 import org.vaadin.crudui.demo.ui.view.HomeView;
 import org.vaadin.crudui.demo.ui.view.TreeView;
 
+@JsModule("theme-handler.js")
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver {
 
 	private VerticalLayout viewContainer = new VerticalLayout();
 	private HorizontalLayout footer = new HorizontalLayout();
 	private Tabs tabs = new Tabs();
-	private Image logo = new Image("https://i.imgur.com/GPpnszs.png", "Vaadin Logo");
-	private Button themeSwitch = new Button(VaadinIcon.MOON_O.create());
+	private Image logo = new Image();
+	private Button themeSwitcher = new Button(VaadinIcon.MOON_O.create());
 	private Map<Tab, Class<? extends HasComponents>> tabToView = new HashMap<>();
 	private Map<Class<? extends HasComponents>, Tab> viewToTab = new HashMap<>();
 
 	public MainLayout() {
+		logo.addClassName("logo");
 		logo.setHeight("44px");
 
 		tabs.addSelectedChangeListener(this::tabsSelectionChanged);
@@ -48,10 +51,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 		addTab(DefaultView.class);
 		addTab(TreeView.class);
 
-		themeSwitch.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-		themeSwitch.addClickListener(e -> switchTheme());
+		themeSwitcher.setId("theme-switch");
+		themeSwitcher.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+		themeSwitcher.addClickListener(e -> UI.getCurrent().getPage().executeJs("window.switchTheme()"));
 
-		var headerLayout = new HorizontalLayout(logo, tabs, themeSwitch);
+		var headerLayout = new HorizontalLayout(logo, tabs, themeSwitcher);
 		headerLayout.setMargin(true);
 		headerLayout.setWidthFull();
 		headerLayout.expand(tabs);
@@ -72,26 +76,14 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 		content.add(viewContainer, footer);
 
 		setContent(content);
-		switchTheme();
+		UI.getCurrent().getPage().executeJs("window.applySystemTheme()");
 	}
 
 	@Override
 	public void showRouterLayoutContent(HasElement content) {
 		viewContainer.removeAll();
 		viewContainer.add(content.getElement().getComponent().get());
-        afterNavigation();
-	}
-
-	private void switchTheme() {
-		if (UI.getCurrent().getElement().getAttribute("theme") == null) {
-			UI.getCurrent().getElement().setAttribute("theme", "dark");
-			themeSwitch.setIcon(VaadinIcon.SUN_O.create());
-			logo.setSrc("https://i.imgur.com/3xp1nLI.png");
-		} else {
-			UI.getCurrent().getElement().removeAttribute("theme");
-			themeSwitch.setIcon(VaadinIcon.MOON_O.create());
-			logo.setSrc("https://i.imgur.com/GPpnszs.png");
-		}
+		afterNavigation();
 	}
 
 	private void tabsSelectionChanged(Tabs.SelectedChangeEvent event) {
@@ -134,8 +126,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 		if (!HomeView.class.equals(viewClass)) {
 			footer.add(
 					new Html("<span>Source code 👉&nbsp;</span>"),
-					new Anchor(DemoUtils.getGitHubLink(viewClass), viewClass.getSimpleName() + ".java")
-			);
+					new Anchor(DemoUtils.getGitHubLink(viewClass), viewClass.getSimpleName() + ".java"));
 		}
 	}
 
