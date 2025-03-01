@@ -104,7 +104,7 @@ public class Application {
 					.save(new Technology(parentTechs[i], null, parentTechs[i], null, null));
 			for (int j = 0; j < childrenTechs[i].length; j++) {
 				var technology = new Technology(childrenTechs[i][j], rand.nextDouble() * 10, childrenTechs[i][j],
-						LocalDateTime.now(), parentTech);
+						LocalDateTime.now().minusHours(rand.nextInt(24 * 60)), parentTech);
 				technologyService.save(technology);
 			}
 		}

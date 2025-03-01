@@ -129,9 +129,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 	}
 
 	public void addSourceCodeAnchorToCurrentView() {
+		footer.removeAll();
 		Class<? extends HasComponents> viewClass = tabToView.get(tabs.getSelectedTab());
 		if (!HomeView.class.equals(viewClass)) {
-			footer.removeAll();
 			footer.add(
 					new Html("<span>Source code 👉&nbsp;</span>"),
 					new Anchor(DemoUtils.getGitHubLink(viewClass), viewClass.getSimpleName() + ".java")

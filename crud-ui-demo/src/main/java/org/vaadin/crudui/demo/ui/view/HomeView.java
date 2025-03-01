@@ -33,7 +33,7 @@ public class HomeView extends VerticalLayout {
 						</p>
 						<p>
 							Use the tabs above to navigate through the different demo views.
-							There's a link to the corresponding implementation at the <b>bottom of each view</b>.
+							There's a link to the implementation at the <b>bottom of each view</b>.
 						</p>
 					</div>
 					"""),

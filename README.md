@@ -18,7 +18,6 @@ The API is defined through 4 interfaces and their implementations:
   * `WindowBasedCrudLayout`: Shows forms in pop-up windows.
   * `HorizontalSplitCrudLayout`: Grid on the left, form on the right in a split layout.
   * `VerticalSplitCrudLayout`: Grid on the top, form on the bottom in a draggable split layout.
-  * `VerticalCrudLayout`: Grid on the top, form on the bottom in a vertical layout (no draggable split).
 
 * **`CrudFormFactory`**: Builds required UI forms for new, update, delete operations. Implementations:
 
