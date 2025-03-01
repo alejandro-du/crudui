@@ -11,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.crudui.demo.entity.Technology;
 import org.vaadin.crudui.demo.repository.TechnologyRepository;
 
-/**
- * @author Boniface Chacha
- */
-
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class TechnologyService {

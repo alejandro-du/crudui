@@ -12,9 +12,6 @@ import com.vaadin.flow.router.Route;
 import org.apache.commons.io.FileUtils;
 import org.vaadin.crudui.demo.ui.MainLayout;
 
-/**
- * @author Alejandro Duarte
- */
 @Route(value = "", layout = MainLayout.class)
 public class HomeView extends VerticalLayout {
 

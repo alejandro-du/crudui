@@ -15,9 +15,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
 
-/**
- * @author Boniface Chacha
- */
 @Entity
 @Table(name = "technology")
 public class Technology implements Serializable {

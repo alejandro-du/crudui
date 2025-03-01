@@ -20,9 +20,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
-/**
- * @author Alejandro Duarte
- */
 @Entity
 @Table(name = "user_")
 public class User {

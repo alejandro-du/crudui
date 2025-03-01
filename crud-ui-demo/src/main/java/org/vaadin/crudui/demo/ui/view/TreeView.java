@@ -15,12 +15,12 @@ public class TreeView extends VerticalLayout {
 
 	public TreeView(TechnologyService technologyService) {
 		TreeGridCrud<Technology> crud = new TreeGridCrud<>(Technology.class);
+		crud.setShowNotifications(false);
+
 		crud.getGrid().removeAllColumns();
 		crud.getGrid().addHierarchyColumn(Technology::getName).setHeader("Name");
 		crud.getGrid().addColumn(Technology::getVersion).setHeader("Version");
 		crud.getGrid().addColumn(Technology::getLastPatchedAt).setHeader("Last Patched At");
-
-		crud.setChildItemProvider(technologyService::findChildren);
 
 		crud.getCrudFormFactory().setVisibleProperties("name", "version", "parent", "lastPatchedAt", "description");
 		crud.getCrudFormFactory().setFieldProvider("description", technology -> new TextArea());
@@ -28,14 +28,11 @@ public class TreeView extends VerticalLayout {
 				technology -> new ComboBox<Technology>("Parent", technologyService.findAll()));
 
 		crud.setFindAllOperation(technologyService::findRoots);
-
+		crud.setChildItemProvider(technologyService::findChildren);
 		crud.setAddOperation(technologyService::save);
 		crud.setUpdateOperation(technologyService::save);
 		crud.setDeleteOperation(technologyService::delete);
 
-		crud.setChildItemProvider(technologyService::findChildren);
-
-		crud.setShowNotifications(false);
 		addAndExpand(crud);
 		setSizeFull();
 	}

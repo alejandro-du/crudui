@@ -5,9 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/**
- * @author Alejandro Duarte.
- */
 @Entity
 @Table(name = "group_")
 public class Group {

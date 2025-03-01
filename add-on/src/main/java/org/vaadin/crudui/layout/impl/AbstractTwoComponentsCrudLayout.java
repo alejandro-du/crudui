@@ -40,6 +40,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 		firstComponent.add(firstComponentHeaderLayout);
 
 		firstComponentHeaderLayout.setVisible(false);
+		firstComponentHeaderLayout.setWidthFull();
 		firstComponentHeaderLayout.setSpacing(true);
 		firstComponentHeaderLayout.setMargin(false);
 
@@ -67,6 +68,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 		toolbar.setJustifyContentMode(JustifyContentMode.END);
 
 		filterLayout.setVisible(false);
+		filterLayout.setWidthFull();
 		filterLayout.setSpacing(true);
 		firstComponentHeaderLayout.add(filterLayout);
 
@@ -110,6 +112,7 @@ public abstract class AbstractTwoComponentsCrudLayout extends Composite<Div> imp
 
 		filterLayout.setVisible(true);
 		filterLayout.add(component);
+		filterLayout.expand(component);
 	}
 
 	@Override

@@ -1,8 +1,5 @@
 package org.vaadin.crudui.demo.entity;
 
-/**
- * @author Alejandro Duarte
- */
 public enum MaritalStatus {
 
 	SINGLE, MARRIED, OTHER;
