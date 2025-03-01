@@ -9,9 +9,9 @@ import org.vaadin.crudui.demo.service.UserService;
 import org.vaadin.crudui.demo.ui.MainLayout;
 
 @Route(value = "default", layout = MainLayout.class)
-public class DefaultCrudView extends VerticalLayout {
+public class DefaultView extends VerticalLayout {
 
-	public DefaultCrudView(UserService userService) {
+	public DefaultView(UserService userService) {
 		GridCrud<User> crud = new GridCrud<>(User.class);
 		crud.setOperations(userService::findAll, userService::save, userService::save, userService::delete);
 

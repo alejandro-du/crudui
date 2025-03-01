@@ -24,10 +24,10 @@ import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.field.provider.MultiSelectComboBoxProvider;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
-@Route(value = "simple", layout = MainLayout.class)
-public class CustomCrudView extends VerticalLayout {
+@Route(value = "customized", layout = MainLayout.class)
+public class CustomizedView extends VerticalLayout {
 
-	public CustomCrudView(UserService userService, GroupService groupService) {
+	public CustomizedView(UserService userService, GroupService groupService) {
 
 		// choose a CrudLayout implementation
 		WindowBasedCrudLayout crudLayout = new WindowBasedCrudLayout();

@@ -10,10 +10,10 @@ import org.vaadin.crudui.demo.entity.Technology;
 import org.vaadin.crudui.demo.service.TechnologyService;
 import org.vaadin.crudui.demo.ui.MainLayout;
 
-@Route(value = "simple-tree", layout = MainLayout.class)
-public class CustomTreeCrudView extends VerticalLayout {
+@Route(value = "tree", layout = MainLayout.class)
+public class TreeView extends VerticalLayout {
 
-	public CustomTreeCrudView(TechnologyService technologyService) {
+	public TreeView(TechnologyService technologyService) {
 		TreeGridCrud<Technology> crud = new TreeGridCrud<>(Technology.class);
 		crud.getGrid().removeAllColumns();
 		crud.getGrid().addHierarchyColumn(Technology::getName).setHeader("Name");

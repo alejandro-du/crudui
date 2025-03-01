@@ -11,6 +11,7 @@ public class HorizontalSplitCrudLayout extends AbstractTwoComponentsCrudLayout {
 	@Override
 	protected SplitLayout buildMainLayout() {
 		SplitLayout mainLayout = new SplitLayout(firstComponent, secondComponent);
+		mainLayout.setOrientation(SplitLayout.Orientation.HORIZONTAL);
 		mainLayout.setSizeFull();
 		mainLayout.setSplitterPosition(65);
 		mainLayout.addThemeVariants(SplitLayoutVariant.LUMO_MINIMAL);

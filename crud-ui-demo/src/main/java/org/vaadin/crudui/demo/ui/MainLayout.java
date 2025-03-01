@@ -24,11 +24,10 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 
 import org.vaadin.crudui.demo.DemoUtils;
-import org.vaadin.crudui.demo.ui.view.CrudWithSplitLayoutView;
-import org.vaadin.crudui.demo.ui.view.CustomCrudView;
-import org.vaadin.crudui.demo.ui.view.CustomTreeCrudView;
-import org.vaadin.crudui.demo.ui.view.DefaultCrudView;
+import org.vaadin.crudui.demo.ui.view.CustomizedView;
+import org.vaadin.crudui.demo.ui.view.DefaultView;
 import org.vaadin.crudui.demo.ui.view.HomeView;
+import org.vaadin.crudui.demo.ui.view.TreeView;
 
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver {
 
@@ -45,10 +44,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 
 		tabs.addSelectedChangeListener(this::tabsSelectionChanged);
 		addTab(HomeView.class);
-		addTab(DefaultCrudView.class);
-		addTab(CustomCrudView.class);
-		addTab(CrudWithSplitLayoutView.class);
-		addTab(CustomTreeCrudView.class);
+		addTab(CustomizedView.class);
+		addTab(DefaultView.class);
+		addTab(TreeView.class);
 
 		themeSwitch.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
 		themeSwitch.addClickListener(e -> switchTheme());
