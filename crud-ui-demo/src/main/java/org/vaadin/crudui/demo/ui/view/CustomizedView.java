@@ -22,23 +22,50 @@ import org.vaadin.crudui.demo.ui.MainLayout;
 import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.field.provider.MultiSelectComboBoxProvider;
+import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 @Route(value = "customized", layout = MainLayout.class)
-public class CustomizedView extends VerticalLayout {
+public class CustomizedView extends VerticalLayout implements LazyCrudListener<User> {
+
+	private UserService userService;
+	private HasValue<?, String> nameFilter;
 
 	public CustomizedView(UserService userService, GroupService groupService) {
+		this.userService = userService;
 
-		// choose a CrudLayout implementation
+		// CRUD layout configuration
 		WindowBasedCrudLayout crudLayout = new WindowBasedCrudLayout();
 		crudLayout.setFormWindowWidth("70%");
 
-		// crud instance
-		GridCrud<User> crud = new GridCrud<>(User.class, crudLayout);
+		// CRUD forms configuration
+		CrudFormFactory<User> formFactory = new DefaultCrudFormFactory<>(User.class);
+		formFactory.setUseBeanValidation(true);
+		formFactory.setCaption(CrudOperation.ADD, "Create new User");
+
+		formFactory.setVisibleProperties(
+				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active",
+				"mainGroup");
+		formFactory.setFieldCaptions(
+				"The name", "The birthdate", "The e-mail", "The Salary", "The phone number", "The marital status",
+				"The groups", "Is it active?", "The main group", "The password");
+		formFactory.setVisibleProperties(CrudOperation.ADD,
+				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
+				"password");
+
+		formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "mainGroup");
+
+		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>(groupService.findAll()));
+		formFactory.setFieldProvider("groups",
+				new MultiSelectComboBoxProvider<>("Groups", groupService.findAll(), Group::getName));
+		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>("Main Group", groupService.findAll(),
+				new TextRenderer<>(Group::getName), Group::getName));
+
+		// CRUD component configuration
+		GridCrud<User> crud = new GridCrud<>(User.class, crudLayout, formFactory, this);
 		crud.setClickRowToUpdate(true);
 		crud.setUpdateOperationVisible(false);
 		crud.setDeleteOperationVisible(false);
-		HasValue<?, String> nameFilter = crud.addFilterProperty("Filter by name");
 
 		// grid configuration
 		Grid<User> grid = crud.getGrid();
@@ -52,59 +79,38 @@ public class CustomizedView extends VerticalLayout {
 			return button;
 		}).setFlexGrow(0);
 
-		// forms configuration
-		CrudFormFactory<User> formFactory = crud.getCrudFormFactory();
-		formFactory.setUseBeanValidation(true);
-		formFactory.setCaption(CrudOperation.ADD, "Create new User");
-		formFactory.setVisibleProperties(
-				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup");
-		formFactory.setFieldCaptions(
-				"The name", "The birthdate", "The e-mail", "The Salary", "The phone number", "The marital status",
-				"The groups", "Is it active?", "The main group", "The password");
-		formFactory.setVisibleProperties(CrudOperation.ADD,
-				"name", "birthDate", "email", "salary", "phoneNumber", "maritalStatus", "groups", "active", "mainGroup",
-				"password");
-		formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "mainGroup");
-		formFactory.setFieldCaptions(CrudOperation.DELETE, "The name", "The main group");
-		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>(groupService.findAll()));
-		formFactory.setFieldProvider("groups",
-				new MultiSelectComboBoxProvider<>("Groups", groupService.findAll(), Group::getName));
-		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>("Main Group", groupService.findAll(),
-				new TextRenderer<>(Group::getName), Group::getName));
+		// filters
+		nameFilter = crud.addFilterProperty("Filter by name");
 
-		// layout configuration
+		// view configuration
 		setSizeFull();
 		add(crud);
+	}
 
-		// logic configuration
-		crud.setCrudListener(new LazyCrudListener<>() {
-			@Override
-			public DataProvider<User, Void> getDataProvider() {
-				return DataProvider.fromCallbacks(
-						query -> userService.findByNameContainingIgnoreCase(
-								nameFilter.getValue(), query.getPage(), query.getPageSize()).stream(),
-						query -> (int) userService.countByNameContainingIgnoreCase(nameFilter.getValue()));
-			}
+	@Override
+	public DataProvider<User, Void> getDataProvider() {
+		return DataProvider.fromCallbacks(
+				query -> userService.findByNameContainingIgnoreCase(
+						nameFilter.getValue(), query.getPage(), query.getPageSize()).stream(),
+				query -> (int) userService.countByNameContainingIgnoreCase(nameFilter.getValue()));
+	}
 
-			@Override
-			public User add(User user) {
-				return userService.save(user);
-			}
+	@Override
+	public User add(User user) {
+		return userService.save(user);
+	}
 
-			@Override
-			public User update(User user) {
-				if (user.getId().equals(1L)) {
-					throw new CrudOperationException("Simulated exception (only for user ID 1).");
-				}
-				return userService.save(user);
-			}
+	@Override
+	public User update(User user) {
+		if (user.getId().equals(1L)) {
+			throw new CrudOperationException("Simulated exception (only for user ID 1).");
+		}
+		return userService.save(user);
+	}
 
-			@Override
-			public void delete(User user) {
-				userService.delete(user);
-			}
-		});
-
+	@Override
+	public void delete(User user) {
+		userService.delete(user);
 	}
 
 }

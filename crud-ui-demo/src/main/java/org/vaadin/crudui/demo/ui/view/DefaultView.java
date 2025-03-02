@@ -13,7 +13,11 @@ public class DefaultView extends VerticalLayout {
 
 	public DefaultView(UserService userService) {
 		GridCrud<User> crud = new GridCrud<>(User.class);
-		crud.setOperations(userService::findAll, userService::save, userService::save, userService::delete);
+		crud.setOperations(
+				userService::findAll,
+				userService::save,
+				userService::save,
+				userService::delete);
 
 		add(crud);
 		setSizeFull();
