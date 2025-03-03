@@ -54,8 +54,8 @@ public class CustomizedView extends VerticalLayout implements LazyCrudListener<U
 				"password");
 
 		formFactory.setVisibleProperties(CrudOperation.DELETE, "name", "mainGroup");
+		formFactory.setFieldCaptions(CrudOperation.DELETE, "The name", "The main group");
 
-		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>(groupService.findAll()));
 		formFactory.setFieldProvider("groups",
 				new MultiSelectComboBoxProvider<>("Groups", groupService.findAll(), Group::getName));
 		formFactory.setFieldProvider("mainGroup", new ComboBoxProvider<>("Main Group", groupService.findAll(),
