@@ -3,6 +3,9 @@ package org.vaadin.crudui.demo.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -51,6 +54,11 @@ public class Technology implements Serializable {
 		this.parent = parent;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -97,10 +105,6 @@ public class Technology implements Serializable {
 
 	public void setParent(Technology parent) {
 		this.parent = parent;
-	}
-
-	public String toString() {
-		return name;
 	}
 
 	public boolean hasParent() {
