@@ -12,7 +12,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.demo.entity.Group;
@@ -42,7 +41,7 @@ public class PlaygroundView extends VerticalLayout {
 						CrudField.of(User::getBirthDate, User::setBirthDate, LocalDate.class).label("Birth date"),
 						CrudField.of(User::getSalary, User::setSalary, BigDecimal.class).label("Salary"),
 						CrudField.of(User::getGroups, User::setGroups, Set.class).label("In groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField),
-						mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), new TextRenderer<>(Group::getName), Group::getName)).onUpdate(this::populateMainGroupBox),
+						mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of(User::getActive, User::setActive, Boolean.class).label("Active"))
 				//*/
 				//*
@@ -51,7 +50,7 @@ public class PlaygroundView extends VerticalLayout {
 				.add(CrudField.of(User::getBirthDate, User::setBirthDate, LocalDate.class).label("Birth date"))
 				.add(CrudField.of(User::getSalary, User::setSalary, BigDecimal.class).label("Salary"))
 				.add(CrudField.of(User::getGroups, User::setGroups, Set.class).label("In groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField))
-				.add(mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), new TextRenderer<>(Group::getName), Group::getName)).onUpdate(this::populateMainGroupBox))
+				.add(mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), Group::getName)).onUpdate(this::populateMainGroupBox))
 				.add(CrudField.of(User::getActive, User::setActive, Boolean.class).label("Active"))
 				//*/
 				//**
@@ -64,7 +63,7 @@ public class PlaygroundView extends VerticalLayout {
 						CrudField.of("phoneNumber").label("The phone number"),
 						CrudField.of("maritalStatus").label("The marital status"),
 						CrudField.of("groups").label("The groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField2),
-						mainGroupField2.label("The main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), new TextRenderer<>(Group::getName), Group::getName)).onUpdate(this::populateMainGroupBox),
+						mainGroupField2.label("The main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of("active").label("Is it active?"))
 				//*/
 				.build();

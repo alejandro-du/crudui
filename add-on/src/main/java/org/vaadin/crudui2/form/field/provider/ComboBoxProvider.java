@@ -20,6 +20,10 @@ public class ComboBoxProvider<V> implements FieldProvider<ComboBox<V>, V> {
 		this.itemLabelGenerator = itemLabelGenerator;
 	}
 
+	public ComboBoxProvider(Collection<V> items, ItemLabelGenerator<V> itemLabelGenerator) {
+		this(items, null, itemLabelGenerator);
+	}
+
 	public ComboBoxProvider(Collection<V> items) {
 		this(items, null, null);
 	}
