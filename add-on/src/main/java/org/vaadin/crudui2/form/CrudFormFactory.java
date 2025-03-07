@@ -1,13 +1,17 @@
 package org.vaadin.crudui2.form;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.BasicBeanDescription;
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.shared.HasClearButton;
 import com.vaadin.flow.shared.util.SharedUtil;
@@ -65,7 +69,7 @@ public class CrudFormFactory<B> {
 
 		var vaadinFieldByBuilder = new HashMap<Builder<?, ?, ?>, AbstractField<?, ?>>();
 		var crudFieldByVaadinField = new HashMap<AbstractField<?, ?>, CrudField<B, ?, ?>>();
-		var vaadinFieldByCrudField = new HashMap<CrudField<B, ?, ?>, AbstractField<?, ?>>();
+		var vaadinFieldByCrudField = new LinkedHashMap<CrudField<B, ?, ?>, AbstractField<?, ?>>();
 		var notifiers = new HashMap<AbstractField<?, ?>, List<Builder<B, ?, ?>>>();
 
 		fieldBuilders.forEach(builder -> {
@@ -95,6 +99,7 @@ public class CrudFormFactory<B> {
 				vaadinFieldByBuilder.put(builder, vaadinField);
 				crudFieldByVaadinField.put(vaadinField, crudField);
 				vaadinFieldByCrudField.put(crudField, vaadinField);
+
 			} catch (TypeBasedFieldProvider.UnsupportedFieldTypeException ignored) {
 				// no field is created
 			}
@@ -102,6 +107,7 @@ public class CrudFormFactory<B> {
 
 		addNotifiers(form, vaadinFieldByBuilder, crudFieldByVaadinField, notifiers);
 		updateFields(form, crudFieldByVaadinField, vaadinFieldByCrudField);
+		focusOnFirstField(vaadinFieldByCrudField.values());
 
 		return form;
 	}
@@ -118,8 +124,8 @@ public class CrudFormFactory<B> {
 		vaadinField.setEnabled(crudField.isEnabled());
 	}
 
-	private void updateFields(CrudForm<B> form, HashMap<AbstractField<?, ?>, CrudField<B, ?, ?>> crudFieldByVaadinField,
-			HashMap<CrudField<B, ?, ?>, AbstractField<?, ?>> vaadinFieldByCrudField) {
+	private void updateFields(CrudForm<B> form, Map<AbstractField<?, ?>, CrudField<B, ?, ?>> crudFieldByVaadinField,
+			Map<CrudField<B, ?, ?>, AbstractField<?, ?>> vaadinFieldByCrudField) {
 		form.addValueChangeListener(event -> {
 			crudFieldByVaadinField.values().forEach(crudField -> {
 				if (crudField.getUpdateHandler() != null) {
@@ -131,9 +137,9 @@ public class CrudFormFactory<B> {
 		});
 	}
 
-	private void addNotifiers(CrudForm<B> form, HashMap<Builder<?, ?, ?>, AbstractField<?, ?>> vaadinFieldByBuilder,
-			HashMap<AbstractField<?, ?>, CrudField<B, ?, ?>> crudFieldByVaadinField,
-			HashMap<AbstractField<?, ?>, List<Builder<B, ?, ?>>> notifiers) {
+	private void addNotifiers(CrudForm<B> form, Map<Builder<?, ?, ?>, AbstractField<?, ?>> vaadinFieldByBuilder,
+			Map<AbstractField<?, ?>, CrudField<B, ?, ?>> crudFieldByVaadinField,
+			Map<AbstractField<?, ?>, List<Builder<B, ?, ?>>> notifiers) {
 		notifiers.forEach((vaadinFieldNotifier, builderListeners) -> {
 			vaadinFieldNotifier.addValueChangeListener(event -> {
 				builderListeners.forEach(builderListener -> {
@@ -147,6 +153,15 @@ public class CrudFormFactory<B> {
 				});
 			});
 		});
+	}
+
+	private void focusOnFirstField(Collection<AbstractField<?, ?>> fields) {
+		fields.stream()
+				.filter(field -> !field.isReadOnly())
+				.filter(field -> Focusable.class.isAssignableFrom(field.getClass()))
+				.findFirst()
+				.map(field -> (Focusable) field)
+				.ifPresent(Focusable::focus);
 	}
 
 	private void autoGenerateFieldBuilders() {

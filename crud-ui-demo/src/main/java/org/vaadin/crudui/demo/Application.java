@@ -61,19 +61,26 @@ public class Application {
 
 		List<Group> allGroups = groupService.findAll();
 
-		groupService.findAll();
+		String[] firstNames = """
+				Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill,Iris,Kathryn,
+				Jussi,Eva,Laura,Jonathan,Joonas,Alexander,Mari,Maria,Marian,Edgar,Juan,James,
+				Michael,David,Chris,Robert,William,Joseph,Charles,Thomas,Matthew,Mark,Paul,Steven,
+				Alejandro
+				""".split(",");
 
-		String[] firstNames = "Maria,Edgar,Juan,Angelica,Nicole,Brenda,Clare,Cathy,Elizabeth,Tom,John,Daniel,Edward,Hank,Arthur,Bill,Alejandro"
-				.split(",");
-		String[] lastNames = "Smith,Duarte,Avendano,Vento,Johnson,Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee"
-				.split(",");
+		String[] lastNames = """
+				Moore,Hall,Anderson,Lopez,Jackson,Rodríguez,Taylor,Evans,Smith,Johnson,Matsson,
+				Williams,Jones,Brown,Miller,Wilson,Wright,Thompson,Lee,Woods,Avendaño,Bauer,Hoffman,
+				Koch,Becker,Schmith,Müller,Weber,Schneider,Fischer,Meyer,Wagner,Beck,Lenz,Wolf,
+				Duarte
+				""".split(",");
 
-		Random rand = new Random();
+		var rand = new Random();
 
 		IntStream.rangeClosed(1, DEMO_USERS_COUNT)
 				.mapToObj(i -> {
-					String name = firstNames[rand.nextInt(firstNames.length)] + " "
-							+ lastNames[rand.nextInt(lastNames.length)];
+					String name = firstNames[rand.nextInt(firstNames.length)].trim() + " "
+							+ lastNames[rand.nextInt(lastNames.length)].trim();
 					ArrayList<Group> groups = IntStream.rangeClosed(1, 1 + rand.nextInt(2))
 							.mapToObj(j -> allGroups.get(rand.nextInt(allGroups.size())))
 							.collect(Collectors.toCollection(ArrayList::new));

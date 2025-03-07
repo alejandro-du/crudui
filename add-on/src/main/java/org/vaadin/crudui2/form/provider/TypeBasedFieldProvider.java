@@ -37,7 +37,8 @@ public class TypeBasedFieldProvider<B, V> implements FieldProvider<B, AbstractFi
 	private Class<V> fieldValueType;
 	private String propertyName;
 
-	public TypeBasedFieldProvider(Class<? extends AbstractField> fieldType, Class<V> fieldValueType, String propertyName) {
+	public TypeBasedFieldProvider(Class<? extends AbstractField> fieldType, Class<V> fieldValueType,
+			String propertyName) {
 		this.fieldType = fieldType;
 		this.fieldValueType = fieldValueType;
 		this.propertyName = propertyName;
@@ -71,6 +72,7 @@ public class TypeBasedFieldProvider<B, V> implements FieldProvider<B, AbstractFi
 
 		if (Boolean.class.isAssignableFrom(fieldValueType) || boolean.class == fieldValueType) {
 			field = new Checkbox();
+
 		} else if (LocalDate.class.isAssignableFrom(fieldValueType) || Date.class.isAssignableFrom(fieldValueType)) {
 			field = new DatePicker();
 
