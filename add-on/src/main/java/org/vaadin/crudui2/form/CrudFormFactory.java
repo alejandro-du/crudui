@@ -49,8 +49,10 @@ public class CrudFormFactory<B> {
 		return this;
 	}
 
-	public CrudForm<B> build() {
+	public CrudForm<B> build(B bean) {
 		CrudForm<B> form = new CrudForm<>(domainType, useBeanValidation);
+		form.setValue(bean);
+
 		var vaadinFieldByBuilder = new HashMap<Builder<?, ?, ?>, AbstractField<?, ?>>();
 		var crudFieldByVaadinField = new HashMap<AbstractField<?, ?>, CrudField<B, ?, ?>>();
 		var vaadinFieldByCrudField = new HashMap<CrudField<B, ?, ?>, AbstractField<?, ?>>();
@@ -59,7 +61,7 @@ public class CrudFormFactory<B> {
 		fieldBuilders.forEach(builder -> {
 			try {
 				CrudField crudField = builder.build();
-				AbstractField vaadinField = buildField(crudField);
+				AbstractField vaadinField = buildField(crudField, bean);
 				configureVaadinField(vaadinField, crudField);
 
 				if (crudField.getGetter() != null) {
@@ -83,12 +85,12 @@ public class CrudFormFactory<B> {
 		notifiers.forEach((vaadinFieldNotifier, builderListeners) -> {
 			vaadinFieldNotifier.addValueChangeListener(event -> {
 				builderListeners.forEach(builderListener -> {
-					B bean = form.getValue();
+					B value = form.getValue();
 					AbstractField<?, ?> vaadinField = vaadinFieldByBuilder.get(builderListener);
 					CrudField crudField = crudFieldByVaadinField.get(vaadinField);
 					UpdateHandler<B> updateHandler = crudField.getUpdateHandler();
 					if (updateHandler != null) {
-						updateHandler.onUpdate((AbstractField) vaadinField, bean);
+						updateHandler.onUpdate((AbstractField) vaadinField, value);
 					}
 				});
 			});
@@ -98,8 +100,8 @@ public class CrudFormFactory<B> {
 			crudFieldByVaadinField.values().forEach(crudField -> {
 				if (crudField.getUpdateHandler() != null) {
 					AbstractField<?, ?> vaadinField = vaadinFieldByCrudField.get(crudField);
-					B bean = event.getValue();
-					crudField.getUpdateHandler().onUpdate((AbstractField) vaadinField, bean);
+					B value = event.getValue();
+					crudField.getUpdateHandler().onUpdate((AbstractField) vaadinField, value);
 				}
 			});
 		});
@@ -119,14 +121,14 @@ public class CrudFormFactory<B> {
 		});
 	}
 
-	private AbstractField<?, ?> buildField(CrudField<B, ?, ?> crudField) {
+	private AbstractField<?, ?> buildField(CrudField<B, ?, ?> crudField, B bean) {
 		FieldProvider fieldProvider = crudField.getFieldProvider();
 
 		if (fieldProvider == null) {
 			Class<?> fieldType = crudField.getFieldType();
 
 			if (fieldType != null) {
-				fieldProvider = () -> {
+				fieldProvider = theBean -> {
 					try {
 						return (AbstractField<?, ?>) fieldType.getDeclaredConstructor().newInstance();
 					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -147,7 +149,7 @@ public class CrudFormFactory<B> {
 			}
 		}
 
-		return fieldProvider.buildField();
+		return fieldProvider.buildField(bean);
 	}
 
 	private void configureVaadinField(AbstractField<?, ?> vaadinField, CrudField<B, ?, ?> crudField) {

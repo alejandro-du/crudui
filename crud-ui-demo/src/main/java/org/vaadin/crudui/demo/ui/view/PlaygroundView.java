@@ -2,7 +2,6 @@ package org.vaadin.crudui.demo.ui.view;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Set;
 
 import com.vaadin.flow.component.AbstractField;
@@ -30,6 +29,8 @@ import org.vaadin.crudui2.form.field.provider.MultiSelectComboBoxProvider;
 public class PlaygroundView extends VerticalLayout {
 
 	public PlaygroundView(UserService userService, GroupService groupService) {
+		User user = userService.findByNameContainingIgnoreCase("Edgar", 1, 2).get().findFirst().orElse(null);
+
 		var mainGroupField = CrudField.of(User::getMainGroup, User::setMainGroup, Group.class);
 		var mainGroupField2 = CrudField.of("mainGroup");
 
@@ -40,8 +41,8 @@ public class PlaygroundView extends VerticalLayout {
 						CrudField.of(User::getMaritalStatus, User::setMaritalStatus, MaritalStatus.class).label("Marital status"),
 						CrudField.of(User::getBirthDate, User::setBirthDate, LocalDate.class).label("Birth date"),
 						CrudField.of(User::getSalary, User::setSalary, BigDecimal.class).label("Salary"),
-						CrudField.of(User::getGroups, User::setGroups, Set.class).label("In groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField),
-						mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), Group::getName)).onUpdate(this::populateMainGroupBox),
+						CrudField.of(User::getGroups, User::setGroups, Set.class).label("In groups").fieldProvider(new MultiSelectComboBoxProvider<>(u -> groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField),
+						mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(User::getGroups, Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of(User::getActive, User::setActive, Boolean.class).label("Active"))
 				//*/
 				//*
@@ -49,8 +50,8 @@ public class PlaygroundView extends VerticalLayout {
 				.add(CrudField.of(User::getMaritalStatus, User::setMaritalStatus, MaritalStatus.class).label("Marital status"))
 				.add(CrudField.of(User::getBirthDate, User::setBirthDate, LocalDate.class).label("Birth date"))
 				.add(CrudField.of(User::getSalary, User::setSalary, BigDecimal.class).label("Salary"))
-				.add(CrudField.of(User::getGroups, User::setGroups, Set.class).label("In groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField))
-				.add(mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), Group::getName)).onUpdate(this::populateMainGroupBox))
+				.add(CrudField.of(User::getGroups, User::setGroups, Set.class).label("In groups").fieldProvider(new MultiSelectComboBoxProvider<>(u -> groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField))
+				.add(mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(User::getGroups, Group::getName)).onUpdate(this::populateMainGroupBox))
 				.add(CrudField.of(User::getActive, User::setActive, Boolean.class).label("Active"))
 				//*/
 				//**
@@ -62,14 +63,11 @@ public class PlaygroundView extends VerticalLayout {
 						CrudField.of("salary").label("The salary"),
 						CrudField.of("phoneNumber").label("The phone number"),
 						CrudField.of("maritalStatus").label("The marital status"),
-						CrudField.of("groups").label("The groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField2),
-						mainGroupField2.label("The main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), Group::getName)).onUpdate(this::populateMainGroupBox),
+						CrudField.of("groups").label("The groups").fieldProvider(new MultiSelectComboBoxProvider<>(u -> groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField2),
+						mainGroupField2.label("The main group").fieldProvider(new ComboBoxProvider<>(User::getGroups, Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of("active").label("Is it active?"))
 				//*/
-				.build();
-
-		User user = userService.findByNameContainingIgnoreCase("Edgar", 1, 2).get().findFirst().orElse(null);
-		form.setValue(user);
+				.build(user);
 
 		var save = new Button("Save", e -> {
 			if (form.isValid()) {

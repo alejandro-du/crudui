@@ -16,7 +16,7 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class DynamicFieldProvider<V> implements FieldProvider {
+public class DynamicFieldProvider<B, V> implements FieldProvider<B, AbstractField<?, V>, V> {
 
 	public static class UnsupportedFieldTypeException extends RuntimeException {
 		public UnsupportedFieldTypeException(String message) {
@@ -31,7 +31,7 @@ public class DynamicFieldProvider<V> implements FieldProvider {
 	}
 
 	@Override
-	public AbstractField buildField() {
+	public AbstractField buildField(B bean) {
 		if (Boolean.class.isAssignableFrom(javaType) || boolean.class == javaType) {
 			return new Checkbox();
 		}
