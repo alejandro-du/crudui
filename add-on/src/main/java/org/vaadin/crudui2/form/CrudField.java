@@ -9,7 +9,6 @@ import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.ValueProvider;
 
-import org.vaadin.crudui.form.FieldCreationListener;
 import org.vaadin.crudui2.form.provider.FieldProvider;
 
 public class CrudField<B, V, C extends AbstractField<C, V>> {
@@ -26,7 +25,6 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 		protected String propertyName;
 		private String label;
 		private boolean enabled = true;
-		private FieldCreationListener fieldCreationListener;
 		private FieldProvider<?, ?> fieldProvider;
 		private Class<? extends AbstractField<?, ?>> fieldType;
 		private Converter<?, V> converter;
@@ -50,11 +48,6 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 
 		public Builder<B, V, C> enabled(boolean enabled) {
 			this.enabled = enabled;
-			return this;
-		}
-
-		public Builder<B, V, C> fieldCreationListener(FieldCreationListener fieldCreationListener) {
-			this.fieldCreationListener = fieldCreationListener;
 			return this;
 		}
 
@@ -104,7 +97,6 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 	private final String propertyName;
 	private final String label;
 	private final boolean enabled;
-	private final FieldCreationListener fieldCreationListener;
 	private final FieldProvider<?, ?> fieldProvider;
 	private final Class<? extends AbstractField<?, ?>> fieldType;
 	private final Converter<?, V> converter;
@@ -118,7 +110,6 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 		this.propertyName = builder.propertyName;
 		this.label = builder.label;
 		this.enabled = builder.enabled;
-		this.fieldCreationListener = builder.fieldCreationListener;
 		this.fieldProvider = builder.fieldProvider;
 		this.fieldType = builder.fieldType;
 		this.converter = builder.converter;
@@ -148,10 +139,6 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 
 	public boolean isEnabled() {
 		return enabled;
-	}
-
-	public FieldCreationListener getFieldCreationListener() {
-		return fieldCreationListener;
 	}
 
 	public FieldProvider<?, ?> getFieldProvider() {
