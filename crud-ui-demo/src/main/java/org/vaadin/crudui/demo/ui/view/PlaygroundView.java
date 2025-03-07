@@ -41,7 +41,7 @@ public class PlaygroundView extends HorizontalLayout {
 		var mainGroupField = CrudField.of(User::getMainGroup, User::setMainGroup, Group.class);
 		var mainGroupField2 = CrudField.of("mainGroup");
 
-		CrudForm<User> userForm = new CrudFormFactory<>(User.class)
+		CrudForm<User> userForm = CrudFormFactory.of(User.class)
 				//*
 				.setFields(
 						CrudField.of(User::getName, User::setName, String.class).label("Name").enabled(false),
@@ -77,7 +77,7 @@ public class PlaygroundView extends HorizontalLayout {
 				.build(user);
 
 
-		var techForm = new CrudFormFactory<>(Technology.class)
+		var techForm = CrudFormFactory.of(Technology.class)
 				.replace("description", CrudField.of("description").label("Description").fieldType(TextArea.class))
 				.useBeanValidation()
 				.build(technologyService.findAll().get(3));

@@ -1,15 +1,12 @@
 package org.vaadin.crudui2.form;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.introspect.BasicBeanDescription;
-import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.shared.HasClearButton;
@@ -17,8 +14,8 @@ import com.vaadin.flow.shared.util.SharedUtil;
 
 import org.vaadin.crudui2.form.CrudField.Builder;
 import org.vaadin.crudui2.form.CrudField.UpdateHandler;
-import org.vaadin.crudui2.form.provider.DynamicFieldProvider;
 import org.vaadin.crudui2.form.provider.FieldProvider;
+import org.vaadin.crudui2.form.provider.TypeBasedFieldProvider;
 
 public class CrudFormFactory<B> {
 
@@ -26,7 +23,11 @@ public class CrudFormFactory<B> {
 	private List<CrudField.Builder<?, ?, ?>> fieldBuilders = new ArrayList<>();
 	private boolean useBeanValidation;
 
-	public CrudFormFactory(Class<B> domainType) {
+	public static <B> CrudFormFactory<B> of(Class<B> domainType) {
+		return new CrudFormFactory<>(domainType);
+	}
+
+	private CrudFormFactory(Class<B> domainType) {
 		this.domainType = domainType;
 		autoGenerateFieldBuilders();
 	}
@@ -58,7 +59,7 @@ public class CrudFormFactory<B> {
 		return this;
 	}
 
-	public CrudForm<B> build(B bean) {
+	public CrudForm<B> build(final B bean) {
 		CrudForm<B> form = new CrudForm<>(domainType, useBeanValidation);
 		form.setValue(bean);
 
@@ -70,11 +71,19 @@ public class CrudFormFactory<B> {
 		fieldBuilders.forEach(builder -> {
 			try {
 				CrudField crudField = builder.build();
-				AbstractField vaadinField = buildField(crudField, bean);
+				FieldProvider fieldProvider = crudField.getFieldProvider();
+
+				if (fieldProvider == null) {
+					fieldProvider = new TypeBasedFieldProvider<>(crudField.getFieldType(),
+							crudField.getFieldValueType(), crudField.getPropertyName());
+				}
+
+				AbstractField vaadinField = fieldProvider.buildField(bean);
 				configureVaadinField(vaadinField, crudField);
 
 				if (crudField.getGetter() != null) {
 					form.add(vaadinField, crudField.getGetter(), crudField.getSetter());
+
 				} else {
 					form.add(vaadinField, crudField.getPropertyName());
 				}
@@ -86,79 +95,15 @@ public class CrudFormFactory<B> {
 				vaadinFieldByBuilder.put(builder, vaadinField);
 				crudFieldByVaadinField.put(vaadinField, crudField);
 				vaadinFieldByCrudField.put(crudField, vaadinField);
-			} catch (DynamicFieldProvider.UnsupportedFieldTypeException ignored) {
+			} catch (TypeBasedFieldProvider.UnsupportedFieldTypeException ignored) {
 				// no field is created
 			}
 		});
 
-		notifiers.forEach((vaadinFieldNotifier, builderListeners) -> {
-			vaadinFieldNotifier.addValueChangeListener(event -> {
-				builderListeners.forEach(builderListener -> {
-					B value = form.getValue();
-					AbstractField<?, ?> vaadinField = vaadinFieldByBuilder.get(builderListener);
-					CrudField crudField = crudFieldByVaadinField.get(vaadinField);
-					UpdateHandler<B> updateHandler = crudField.getUpdateHandler();
-					if (updateHandler != null) {
-						updateHandler.onUpdate((AbstractField) vaadinField, value);
-					}
-				});
-			});
-		});
-
-		form.addValueChangeListener(event -> {
-			crudFieldByVaadinField.values().forEach(crudField -> {
-				if (crudField.getUpdateHandler() != null) {
-					AbstractField<?, ?> vaadinField = vaadinFieldByCrudField.get(crudField);
-					B value = event.getValue();
-					crudField.getUpdateHandler().onUpdate((AbstractField) vaadinField, value);
-				}
-			});
-		});
+		addNotifiers(form, vaadinFieldByBuilder, crudFieldByVaadinField, notifiers);
+		updateFields(form, crudFieldByVaadinField, vaadinFieldByCrudField);
 
 		return form;
-	}
-
-	private void autoGenerateFieldBuilders() {
-		ObjectMapper mapper = new ObjectMapper();
-		JavaType javaType = mapper.getTypeFactory().constructType(domainType);
-		var beanDescription = (BasicBeanDescription) mapper.getSerializationConfig().introspect(javaType);
-		beanDescription.findProperties().forEach(property -> {
-			String propertyName = property.getName();
-			var fieldBuilder = CrudField.of(propertyName);
-			fieldBuilder.label(SharedUtil.propertyIdToHumanFriendly(propertyName));
-			fieldBuilders.add(fieldBuilder);
-		});
-	}
-
-	private AbstractField<?, ?> buildField(CrudField<B, ?, ?> crudField, B bean) {
-		FieldProvider fieldProvider = crudField.getFieldProvider();
-
-		if (fieldProvider == null) {
-			Class<?> fieldType = crudField.getFieldType();
-
-			if (fieldType != null) {
-				fieldProvider = theBean -> {
-					try {
-						return (AbstractField<?, ?>) fieldType.getDeclaredConstructor().newInstance();
-					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-						throw new IllegalStateException("Unable to instantiate field type: " + fieldType, e);
-					}
-				};
-			} else if(crudField.getFieldValueType() != null) {
-				fieldProvider = (FieldProvider) new DynamicFieldProvider<>(crudField.getFieldValueType());
-			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				JavaType javaType = mapper.getTypeFactory().constructType(domainType);
-				var beanDescription = (BasicBeanDescription) mapper.getSerializationConfig().introspect(javaType);
-				String propertyName = crudField.getPropertyName();
-				BeanPropertyDefinition property = beanDescription.findProperty(new PropertyName(propertyName));
-				Class<?> propertyType = property.getRawPrimaryType();
-				fieldProvider = (FieldProvider) new DynamicFieldProvider<>(propertyType);
-			}
-		}
-
-		return fieldProvider.buildField(bean);
 	}
 
 	private void configureVaadinField(AbstractField<?, ?> vaadinField, CrudField<B, ?, ?> crudField) {
@@ -171,6 +116,49 @@ public class CrudFormFactory<B> {
 		}
 
 		vaadinField.setEnabled(crudField.isEnabled());
+	}
+
+	private void updateFields(CrudForm<B> form, HashMap<AbstractField<?, ?>, CrudField<B, ?, ?>> crudFieldByVaadinField,
+			HashMap<CrudField<B, ?, ?>, AbstractField<?, ?>> vaadinFieldByCrudField) {
+		form.addValueChangeListener(event -> {
+			crudFieldByVaadinField.values().forEach(crudField -> {
+				if (crudField.getUpdateHandler() != null) {
+					AbstractField<?, ?> vaadinField = vaadinFieldByCrudField.get(crudField);
+					B value = event.getValue();
+					crudField.getUpdateHandler().onUpdate(vaadinField, value);
+				}
+			});
+		});
+	}
+
+	private void addNotifiers(CrudForm<B> form, HashMap<Builder<?, ?, ?>, AbstractField<?, ?>> vaadinFieldByBuilder,
+			HashMap<AbstractField<?, ?>, CrudField<B, ?, ?>> crudFieldByVaadinField,
+			HashMap<AbstractField<?, ?>, List<Builder<B, ?, ?>>> notifiers) {
+		notifiers.forEach((vaadinFieldNotifier, builderListeners) -> {
+			vaadinFieldNotifier.addValueChangeListener(event -> {
+				builderListeners.forEach(builderListener -> {
+					B value = form.getValue();
+					AbstractField<?, ?> vaadinField = vaadinFieldByBuilder.get(builderListener);
+					CrudField crudField = crudFieldByVaadinField.get(vaadinField);
+					UpdateHandler<B> updateHandler = crudField.getUpdateHandler();
+					if (updateHandler != null) {
+						updateHandler.onUpdate(vaadinField, value);
+					}
+				});
+			});
+		});
+	}
+
+	private void autoGenerateFieldBuilders() {
+		ObjectMapper mapper = new ObjectMapper();
+		JavaType javaType = mapper.getTypeFactory().constructType(domainType);
+		var beanDescription = (BasicBeanDescription) mapper.getSerializationConfig().introspect(javaType);
+		beanDescription.findProperties().forEach(property -> {
+			String propertyName = property.getName();
+			var fieldBuilder = CrudField.of(propertyName);
+			fieldBuilder.label(SharedUtil.propertyIdToHumanFriendly(propertyName));
+			fieldBuilders.add(fieldBuilder);
+		});
 	}
 
 }
