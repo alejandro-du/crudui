@@ -7,7 +7,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.introspect.BasicBeanDescription;
+import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.shared.HasClearButton;
@@ -111,8 +113,7 @@ public class CrudFormFactory<B> {
 		var beanDescription = (BasicBeanDescription) mapper.getSerializationConfig().introspect(javaType);
 		beanDescription.findProperties().forEach(property -> {
 			String propertyName = property.getName();
-			Class propertyType = property.getRawPrimaryType();
-			var fieldBuilder = CrudField.of(propertyName, propertyType);
+			var fieldBuilder = CrudField.of(propertyName);
 			fieldBuilder.label(SharedUtil.propertyIdToHumanFriendly(propertyName));
 			fieldBuilders.add(fieldBuilder);
 		});
@@ -133,8 +134,16 @@ public class CrudFormFactory<B> {
 						throw new IllegalStateException("Unable to instantiate field type: " + fieldType, e);
 					}
 				};
-			} else {
+			} else if(crudField.getFieldValueType() != null) {
 				fieldProvider = (FieldProvider) new DynamicFieldProvider<>(crudField.getFieldValueType());
+			} else {
+				ObjectMapper mapper = new ObjectMapper();
+				JavaType javaType = mapper.getTypeFactory().constructType(domainType);
+				var beanDescription = (BasicBeanDescription) mapper.getSerializationConfig().introspect(javaType);
+				String propertyName = crudField.getPropertyName();
+				BeanPropertyDefinition property = beanDescription.findProperty(new PropertyName(propertyName));
+				Class<?> propertyType = property.getRawPrimaryType();
+				fieldProvider = (FieldProvider) new DynamicFieldProvider<>(propertyType);
 			}
 		}
 

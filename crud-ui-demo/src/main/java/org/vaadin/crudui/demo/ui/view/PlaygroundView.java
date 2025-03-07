@@ -32,10 +32,9 @@ public class PlaygroundView extends VerticalLayout {
 
 	public PlaygroundView(UserService userService, GroupService groupService) {
 		var mainGroupField = CrudField.of(User::getMainGroup, User::setMainGroup, Group.class);
-		var mainGroupField2 = CrudField.of("mainGroup", Group.class);
+		var mainGroupField2 = CrudField.of("mainGroup");
 
 		CrudForm<User> form = new CrudFormFactory<>(User.class)
-				.useBeanValidation()
 				//*
 				.setFields(
 						CrudField.of(User::getName, User::setName, String.class).label("Name").enabled(false),
@@ -46,7 +45,7 @@ public class PlaygroundView extends VerticalLayout {
 						mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), new TextRenderer<>(Group::getName), Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of(User::getActive, User::setActive, Boolean.class).label("Active"))
 				//*/
-				/*
+				//*
 				.add(CrudField.of(User::getName, User::setName, String.class).label("Name").enabled(false))
 				.add(CrudField.of(User::getMaritalStatus, User::setMaritalStatus, MaritalStatus.class).label("Marital status"))
 				.add(CrudField.of(User::getBirthDate, User::setBirthDate, LocalDate.class).label("Birth date"))
@@ -55,17 +54,18 @@ public class PlaygroundView extends VerticalLayout {
 				.add(mainGroupField.label("Main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), new TextRenderer<>(Group::getName), Group::getName)).onUpdate(this::populateMainGroupBox))
 				.add(CrudField.of(User::getActive, User::setActive, Boolean.class).label("Active"))
 				//*/
-				/**
+				//**
+				.useBeanValidation()
 				.setFields(
-						CrudField.of("name", String.class).label("The name"),
-						CrudField.of("birthDate", LocalDate.class).label("The date of birth"),
-						CrudField.of("email", String.class).label("The email"),
-						CrudField.of("salary", BigDecimal.class).label("The salary"),
-						CrudField.of("phoneNumber", Integer.class).label("The phone number"),
-						CrudField.of("maritalStatus", MaritalStatus.class).label("The marital status"),
-						CrudField.of("groups", Group.class).label("The groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField2),
+						CrudField.of("name").label("The name"),
+						CrudField.of("birthDate").label("The date of birth"),
+						CrudField.of("email").label("The email"),
+						CrudField.of("salary").label("The salary"),
+						CrudField.of("phoneNumber").label("The phone number"),
+						CrudField.of("maritalStatus").label("The marital status"),
+						CrudField.of("groups").label("The groups").fieldProvider(new MultiSelectComboBoxProvider<Group>(groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField2),
 						mainGroupField2.label("The main group").fieldProvider(new ComboBoxProvider<>(Arrays.asList(new Group()), new TextRenderer<>(Group::getName), Group::getName)).onUpdate(this::populateMainGroupBox),
-						CrudField.of("active", Boolean.class).label("Is it active?"))
+						CrudField.of("active").label("Is it active?"))
 				//*/
 				.build();
 

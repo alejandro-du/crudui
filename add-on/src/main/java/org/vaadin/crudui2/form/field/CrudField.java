@@ -1,7 +1,6 @@
 package org.vaadin.crudui2.form.field;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,10 +39,8 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 			this.fieldValueType = Objects.requireNonNull(fieldValueType, "Field value type cannot be null");
 		}
 
-		public Builder(String propertyName, Class<V> fieldValueType) {
+		public Builder(String propertyName) {
 			this.propertyName = Objects.requireNonNull(propertyName, "Property name cannot be null");
-			this.fieldValueType = Objects.requireNonNull(fieldValueType, "Field value type cannot be null");
-			// TODO: can we infer fieldValueType from propertyName?
 		}
 
 		public Builder<B, V, C> label(String label) {
@@ -76,7 +73,6 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 			return this;
 		}
 
-		// TODO: rename to addValueChangeListener
 		public Builder<B, V, C> onValueChangeUpdate(Builder<B, ?, ?> newValueChangeListener) {
 			valueChangeListeners.add(newValueChangeListener);
 			return this;
@@ -98,20 +94,8 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 	}
 
 	public static <B, V, C extends AbstractField<C, V>> Builder<B, V, C> of(
-			String propertyName, Class<V> fieldValueType) {
-		return new Builder<>(propertyName, fieldValueType);
-	}
-
-	public static <B, V, T extends Collection<V>, C extends AbstractField<C, T>> Builder<B, T, C> ofCollection(
-			ValueProvider<B, T> getter, Setter<B, T> setter, Class<V> fieldValueType) {
-		Class<T> collectionType = (Class<T>) (Class<?>) Collection.class;
-		return new Builder<>(getter, setter, collectionType);
-	}
-
-	public static <B, V, T extends Collection<V>, C extends AbstractField<C, T>> Builder<B, T, C> ofCollection(
-			String propertyName, Class<V> fieldValueType) {
-		Class<T> collectionType = (Class<T>) (Class<?>) Collection.class;
-		return new Builder<>(propertyName, collectionType);
+			String propertyName) {
+		return new Builder<>(propertyName);
 	}
 
 	private final ValueProvider<B, V> getter;
