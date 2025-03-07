@@ -8,36 +8,39 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.provider.HasListDataView;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.demo.entity.Group;
 import org.vaadin.crudui.demo.entity.MaritalStatus;
+import org.vaadin.crudui.demo.entity.Technology;
 import org.vaadin.crudui.demo.entity.User;
 import org.vaadin.crudui.demo.service.GroupService;
+import org.vaadin.crudui.demo.service.TechnologyService;
 import org.vaadin.crudui.demo.service.UserService;
+import org.vaadin.crudui2.form.CrudField;
 import org.vaadin.crudui2.form.CrudForm;
 import org.vaadin.crudui2.form.CrudFormFactory;
-import org.vaadin.crudui2.form.field.CrudField;
 import org.vaadin.crudui2.form.field.provider.ComboBoxProvider;
 import org.vaadin.crudui2.form.field.provider.MultiSelectComboBoxProvider;
 import org.vaadin.crudui2.form.field.provider.RadioButtonGroupProvider;
 
 @Route(value = "playground")
 @JsModule("theme-handler.js")
-public class PlaygroundView extends VerticalLayout {
+public class PlaygroundView extends HorizontalLayout {
 
-	public PlaygroundView(UserService userService, GroupService groupService) {
+	public PlaygroundView(UserService userService, GroupService groupService, TechnologyService technologyService) {
 		User user = userService.findByNameContainingIgnoreCase("Edgar", 1, 2).get().findFirst().orElse(null);
 
 		var mainGroupField = CrudField.of(User::getMainGroup, User::setMainGroup, Group.class);
 		var mainGroupField2 = CrudField.of("mainGroup");
 
-		CrudForm<User> form = new CrudFormFactory<>(User.class)
+		CrudForm<User> userForm = new CrudFormFactory<>(User.class)
 				//*
 				.setFields(
 						CrudField.of(User::getName, User::setName, String.class).label("Name").enabled(false),
@@ -73,7 +76,7 @@ public class PlaygroundView extends VerticalLayout {
 				.build(user);
 
 		var save = new Button("Save", e -> {
-			if (form.isValid()) {
+			if (userForm.isValid()) {
 				try {
 					userService.save(user);
 					Notification.show("Saved: " + user);
@@ -87,21 +90,17 @@ public class PlaygroundView extends VerticalLayout {
 			}
 		});
 
-		add(form, save);
+		var techForm = new CrudFormFactory<>(Technology.class)
+				.replace("description", CrudField.of("description").label("Description").fieldType(TextArea.class))
+				.useBeanValidation()
+				.build(technologyService.findAll().get(3));
+
+		add(new VerticalLayout(userForm, save), techForm);
 		setSizeFull();
 		UI.getCurrent().getPage().executeJs("window.applySystemTheme()");
 	}
 
-	private void populateMainGroupBox(AbstractField<?, ?> field, User user) {
-		ComboBox<Group> comboBox = (ComboBox<Group>) field;
-		Group previousMainGroup = user.getMainGroup();
-		comboBox.setItems(user.getGroups());
-		if(user.getGroups().contains(previousMainGroup)) {
-			comboBox.setValue(previousMainGroup);
-		}
-	}
-
-	private void populateMainGroupBox(AbstractField<?, ?> field, Object bean) {
+	private void populateMainGroupBox(AbstractField<?, Group> field, Object bean) {
 		var hasItems = (HasListDataView<Group, ?>) field;
 		var hasValue = (HasValue<?, Group>) field;
 		User user = (User) bean;

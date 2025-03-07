@@ -15,9 +15,8 @@ import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.shared.HasClearButton;
 import com.vaadin.flow.shared.util.SharedUtil;
 
-import org.vaadin.crudui2.form.field.CrudField;
-import org.vaadin.crudui2.form.field.CrudField.Builder;
-import org.vaadin.crudui2.form.field.CrudField.UpdateHandler;
+import org.vaadin.crudui2.form.CrudField.Builder;
+import org.vaadin.crudui2.form.CrudField.UpdateHandler;
 import org.vaadin.crudui2.form.field.provider.DynamicFieldProvider;
 import org.vaadin.crudui2.form.field.provider.FieldProvider;
 
@@ -41,6 +40,16 @@ public class CrudFormFactory<B> {
 	public CrudFormFactory<B> setFields(CrudField.Builder<?, ?, ?>... newFieldBuilders) {
 		fieldBuilders.clear();
 		fieldBuilders.addAll(List.of(newFieldBuilders));
+		return this;
+	}
+
+	public CrudFormFactory<B> replace(String propertyName, CrudField.Builder<?, ?, ?> newFieldBuilder) {
+		fieldBuilders.replaceAll(builder -> {
+			if (propertyName.equals(builder.propertyName)) {
+				return newFieldBuilder;
+			}
+			return builder;
+		});
 		return this;
 	}
 

@@ -16,7 +16,7 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class DynamicFieldProvider<B, V> implements FieldProvider<B, AbstractField<?, V>, V> {
+public class DynamicFieldProvider<B, V> implements FieldProvider<B, AbstractField<?, V>> {
 
 	public static class UnsupportedFieldTypeException extends RuntimeException {
 		public UnsupportedFieldTypeException(String message) {

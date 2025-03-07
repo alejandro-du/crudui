@@ -1,4 +1,4 @@
-package org.vaadin.crudui2.form.field;
+package org.vaadin.crudui2.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +23,12 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 		private ValueProvider<B, V> getter;
 		private Setter<B, V> setter;
 		private Class<V> fieldValueType;
-		private String propertyName;
+		protected String propertyName;
 		private String label;
 		private boolean enabled = true;
 		private FieldCreationListener fieldCreationListener;
-		private FieldProvider<?, ?, ?> fieldProvider;
-		private Class<AbstractField<C, V>> fieldType;
+		private FieldProvider<?, ?> fieldProvider;
+		private Class<? extends AbstractField<?, ?>> fieldType;
 		private Converter<?, V> converter;
 		private List<Builder<B, ?, ?>> valueChangeListeners = new ArrayList<>();
 		private UpdateHandler<B> updateHandler;
@@ -58,12 +58,12 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 			return this;
 		}
 
-		public Builder<B, V, C> fieldProvider(FieldProvider<?, ?, ?> fieldProvider) {
+		public Builder<B, V, C> fieldProvider(FieldProvider<?, ?> fieldProvider) {
 			this.fieldProvider = fieldProvider;
 			return this;
 		}
 
-		public Builder<B, V, C> fieldType(Class<AbstractField<C, V>> fieldType) {
+		public Builder<B, V, C> fieldType(Class<? extends AbstractField<?, ?>> fieldType) {
 			this.fieldType = fieldType;
 			return this;
 		}
@@ -105,8 +105,8 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 	private final String label;
 	private final boolean enabled;
 	private final FieldCreationListener fieldCreationListener;
-	private final FieldProvider<?, ?, ?> fieldProvider;
-	private final Class<AbstractField<C, V>> fieldType;
+	private final FieldProvider<?, ?> fieldProvider;
+	private final Class<? extends AbstractField<?, ?>> fieldType;
 	private final Converter<?, V> converter;
 	private final List<Builder<B, ?, ?>> valueChangeListeners;
 	private final UpdateHandler<B> updateHandler;
@@ -154,11 +154,11 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 		return fieldCreationListener;
 	}
 
-	public FieldProvider<?, ?, ?> getFieldProvider() {
+	public FieldProvider<?, ?> getFieldProvider() {
 		return fieldProvider;
 	}
 
-	public Class<AbstractField<C, V>> getFieldType() {
+	public Class<? extends AbstractField<?, ?>> getFieldType() {
 		return fieldType;
 	}
 

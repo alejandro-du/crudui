@@ -10,7 +10,7 @@ import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
 
-public class MultiSelectComboBoxProvider<B, V> implements FieldProvider<B, AbstractField<?, V>, V> {
+public class MultiSelectComboBoxProvider<B, V> implements FieldProvider<B, AbstractField<?, V>> {
 
 	private final SerializableFunction<B, Collection<V>> itemsSupplier;
 	private final ItemLabelGenerator<V> itemLabelGenerator;
