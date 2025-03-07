@@ -10,7 +10,7 @@ import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.ValueProvider;
 
 import org.vaadin.crudui.form.FieldCreationListener;
-import org.vaadin.crudui2.form.field.provider.FieldProvider;
+import org.vaadin.crudui2.form.provider.FieldProvider;
 
 public class CrudField<B, V, C extends AbstractField<C, V>> {
 

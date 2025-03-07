@@ -26,9 +26,9 @@ import org.vaadin.crudui.demo.service.UserService;
 import org.vaadin.crudui2.form.CrudField;
 import org.vaadin.crudui2.form.CrudForm;
 import org.vaadin.crudui2.form.CrudFormFactory;
-import org.vaadin.crudui2.form.field.provider.ComboBoxProvider;
-import org.vaadin.crudui2.form.field.provider.MultiSelectComboBoxProvider;
-import org.vaadin.crudui2.form.field.provider.RadioButtonGroupProvider;
+import org.vaadin.crudui2.form.provider.ComboBoxProvider;
+import org.vaadin.crudui2.form.provider.MultiSelectComboBoxProvider;
+import org.vaadin.crudui2.form.provider.RadioButtonGroupProvider;
 
 @Route(value = "playground")
 @JsModule("theme-handler.js")
@@ -61,7 +61,6 @@ public class PlaygroundView extends HorizontalLayout {
 				.add(CrudField.of(User::getActive, User::setActive, Boolean.class).label("Active"))
 				//*/
 				//**
-				.useBeanValidation()
 				.setFields(
 						CrudField.of("name").label("The name"),
 						CrudField.of("birthDate").label("The date of birth"),
@@ -73,6 +72,7 @@ public class PlaygroundView extends HorizontalLayout {
 						mainGroupField2.label("The main group").fieldProvider(new RadioButtonGroupProvider<>(User::getGroups, Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of("active").label("Is it active?"))
 				//*/
+				.useBeanValidation()
 				.build(user);
 
 		var save = new Button("Save", e -> {

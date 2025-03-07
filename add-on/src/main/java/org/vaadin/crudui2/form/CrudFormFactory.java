@@ -17,8 +17,8 @@ import com.vaadin.flow.shared.util.SharedUtil;
 
 import org.vaadin.crudui2.form.CrudField.Builder;
 import org.vaadin.crudui2.form.CrudField.UpdateHandler;
-import org.vaadin.crudui2.form.field.provider.DynamicFieldProvider;
-import org.vaadin.crudui2.form.field.provider.FieldProvider;
+import org.vaadin.crudui2.form.provider.DynamicFieldProvider;
+import org.vaadin.crudui2.form.provider.FieldProvider;
 
 public class CrudFormFactory<B> {
 

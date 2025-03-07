@@ -10,10 +10,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -65,6 +68,10 @@ public class User {
 	private Set<Group> groups = new HashSet<>();
 
 	private MaritalStatus maritalStatus;
+
+	@Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] profilePicture;
 
 	public User() {
 	}
@@ -194,4 +201,13 @@ public class User {
 	public void setMaritalStatus(MaritalStatus maritalStatus) {
 		this.maritalStatus = maritalStatus;
 	}
+
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+
 }

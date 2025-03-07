@@ -1,4 +1,4 @@
-package org.vaadin.crudui2.form.field.provider;
+package org.vaadin.crudui2.form.provider;
 
 import java.io.Serializable;
 
