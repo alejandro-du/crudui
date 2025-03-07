@@ -35,6 +35,10 @@ public class User {
 	@GeneratedValue
 	private Long id;
 
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private byte[] profilePicture;
+
 	@NotNull
 	@NotBlank
 	private String name;
@@ -43,35 +47,31 @@ public class User {
 	private LocalDate birthDate;
 
 	@NotNull
-	private int phoneNumber; // as an int for testing purposes
-
-	@NotNull
 	@Email
 	@Column(unique = true)
 	private String email;
 
 	@NotNull
-	private BigDecimal salary;
+	private int phoneNumber; // as an int for testing purposes
 
 	@NotNull
-	@Size(min = 6, max = 100)
-	private String password;
-
-	private Boolean active = true;
-
-	@ManyToOne
-	private Group mainGroup;
+	private BigDecimal salary;
 
 	@ManyToMany
 	@Fetch(FetchMode.JOIN)
 	@NotNull
 	private Set<Group> groups = new HashSet<>();
 
+	@ManyToOne
+	private Group mainGroup;
+
 	private MaritalStatus maritalStatus;
 
-	@Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] profilePicture;
+	@NotNull
+	@Size(min = 6, max = 100)
+	private String password;
+
+	private Boolean active = true;
 
 	public User() {
 	}
@@ -122,6 +122,14 @@ public class User {
 		this.id = id;
 	}
 
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -146,6 +154,14 @@ public class User {
 		this.email = email;
 	}
 
+	public int getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(int phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
 	public BigDecimal getSalary() {
 		return salary;
 	}
@@ -154,12 +170,28 @@ public class User {
 		this.salary = salary;
 	}
 
-	public int getPhoneNumber() {
-		return phoneNumber;
+	public Set<Group> getGroups() {
+		return groups;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
+
+	public Group getMainGroup() {
+		return mainGroup;
+	}
+
+	public void setMainGroup(Group mainGroup) {
+		this.mainGroup = mainGroup;
+	}
+
+	public MaritalStatus getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	public void setMaritalStatus(MaritalStatus maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	public String getPassword() {
@@ -176,38 +208,6 @@ public class User {
 
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	public Group getMainGroup() {
-		return mainGroup;
-	}
-
-	public void setMainGroup(Group mainGroup) {
-		this.mainGroup = mainGroup;
-	}
-
-	public Set<Group> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
-	}
-
-	public MaritalStatus getMaritalStatus() {
-		return maritalStatus;
-	}
-
-	public void setMaritalStatus(MaritalStatus maritalStatus) {
-		this.maritalStatus = maritalStatus;
-	}
-
-	public byte[] getProfilePicture() {
-		return profilePicture;
-	}
-
-	public void setProfilePicture(byte[] profilePicture) {
-		this.profilePicture = profilePicture;
 	}
 
 }

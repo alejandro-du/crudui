@@ -1,6 +1,7 @@
 package org.vaadin.crudui2.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -9,11 +10,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.introspect.BasicBeanDescription;
+import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.shared.HasClearButton;
+import com.vaadin.flow.data.provider.HasListDataView;
 import com.vaadin.flow.shared.util.SharedUtil;
 
 import org.vaadin.crudui2.form.CrudField.Builder;
@@ -84,6 +88,7 @@ public class CrudFormFactory<B> {
 
 				AbstractField vaadinField = fieldProvider.buildField(bean);
 				configureVaadinField(vaadinField, crudField);
+				updateVaadinField(vaadinField, crudField, bean);
 
 				if (crudField.getGetter() != null) {
 					form.add(vaadinField, crudField.getGetter(), crudField.getSetter());
@@ -106,7 +111,6 @@ public class CrudFormFactory<B> {
 		});
 
 		addNotifiers(form, vaadinFieldByBuilder, crudFieldByVaadinField, notifiers);
-		updateFields(form, crudFieldByVaadinField, vaadinFieldByCrudField);
 		focusOnFirstField(vaadinFieldByCrudField.values());
 
 		return form;
@@ -124,17 +128,26 @@ public class CrudFormFactory<B> {
 		vaadinField.setEnabled(crudField.isEnabled());
 	}
 
-	private void updateFields(CrudForm<B> form, Map<AbstractField<?, ?>, CrudField<B, ?, ?>> crudFieldByVaadinField,
-			Map<CrudField<B, ?, ?>, AbstractField<?, ?>> vaadinFieldByCrudField) {
-		form.addValueChangeListener(event -> {
-			crudFieldByVaadinField.values().forEach(crudField -> {
-				if (crudField.getUpdateHandler() != null) {
-					AbstractField<?, ?> vaadinField = vaadinFieldByCrudField.get(crudField);
-					B value = event.getValue();
-					crudField.getUpdateHandler().onUpdate(vaadinField, value);
+	private void updateVaadinField(AbstractField<?, ?> vaadinField, CrudField<B, ?, ?> crudField, B bean) {
+		if (crudField.getUpdateHandler() != null) {
+			crudField.getUpdateHandler().onUpdate(vaadinField, bean);
+		} else {
+			Class<?> fieldValueType = crudField.getFieldValueType();
+			if (fieldValueType != null) {
+				if (fieldValueType.isEnum() && HasListDataView.class.isAssignableFrom(vaadinField.getClass())) {
+					((HasListDataView) vaadinField).setItems(Arrays.asList(fieldValueType.getEnumConstants()));
 				}
-			});
-		});
+			} else if (crudField.getPropertyName() != null) {
+				ObjectMapper mapper = new ObjectMapper();
+				JavaType javaType = mapper.getTypeFactory().constructType(bean.getClass());
+				var beanDescription = (BasicBeanDescription) mapper.getSerializationConfig().introspect(javaType);
+				BeanPropertyDefinition property = beanDescription.findProperty(new PropertyName(crudField.getPropertyName()));
+				Class<?> propertyType = property.getRawPrimaryType();
+				if (propertyType.isEnum() && HasListDataView.class.isAssignableFrom(vaadinField.getClass())) {
+					((HasListDataView) vaadinField).setItems(Arrays.asList(propertyType.getEnumConstants()));
+				}
+			}
+		}
 	}
 
 	private void addNotifiers(CrudForm<B> form, Map<Builder<?, ?, ?>, AbstractField<?, ?>> vaadinFieldByBuilder,
