@@ -5,12 +5,14 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.HasListDataView;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.demo.entity.Group;
@@ -23,6 +25,7 @@ import org.vaadin.crudui2.form.CrudFormFactory;
 import org.vaadin.crudui2.form.field.CrudField;
 import org.vaadin.crudui2.form.field.provider.ComboBoxProvider;
 import org.vaadin.crudui2.form.field.provider.MultiSelectComboBoxProvider;
+import org.vaadin.crudui2.form.field.provider.RadioButtonGroupProvider;
 
 @Route(value = "playground")
 @JsModule("theme-handler.js")
@@ -64,7 +67,7 @@ public class PlaygroundView extends VerticalLayout {
 						CrudField.of("phoneNumber").label("The phone number"),
 						CrudField.of("maritalStatus").label("The marital status"),
 						CrudField.of("groups").label("The groups").fieldProvider(new MultiSelectComboBoxProvider<>(u -> groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField2),
-						mainGroupField2.label("The main group").fieldProvider(new ComboBoxProvider<>(User::getGroups, Group::getName)).onUpdate(this::populateMainGroupBox),
+						mainGroupField2.label("The main group").fieldProvider(new RadioButtonGroupProvider<>(User::getGroups, Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of("active").label("Is it active?"))
 				//*/
 				.build(user);
@@ -99,12 +102,13 @@ public class PlaygroundView extends VerticalLayout {
 	}
 
 	private void populateMainGroupBox(AbstractField<?, ?> field, Object bean) {
-		ComboBox<Group> comboBox = (ComboBox<Group>) field;
+		var hasItems = (HasListDataView<Group, ?>) field;
+		var hasValue = (HasValue<?, Group>) field;
 		User user = (User) bean;
 		Group previousMainGroup = user.getMainGroup();
-		comboBox.setItems(user.getGroups());
+		hasItems.setItems(user.getGroups());
 		if(user.getGroups().contains(previousMainGroup)) {
-			comboBox.setValue(previousMainGroup);
+			hasValue.setValue(previousMainGroup);
 		}
 	}
 }
