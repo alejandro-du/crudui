@@ -26,7 +26,7 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 		private String label;
 		private boolean enabled = true;
 		private FieldProvider<?, ?> fieldProvider;
-		private Class<? extends AbstractField<?, ?>> fieldType;
+		private Class<? extends AbstractField> fieldType;
 		private Converter<?, V> converter;
 		private List<Builder<B, ?, ?>> valueChangeListeners = new ArrayList<>();
 		private UpdateHandler<B> updateHandler;
@@ -56,7 +56,7 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 			return this;
 		}
 
-		public Builder<B, V, C> fieldType(Class<? extends AbstractField<?, ?>> fieldType) {
+		public Builder<B, V, C> fieldType(Class<? extends AbstractField> fieldType) {
 			this.fieldType = fieldType;
 			return this;
 		}
@@ -98,7 +98,7 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 	private final String label;
 	private final boolean enabled;
 	private final FieldProvider<?, ?> fieldProvider;
-	private final Class<? extends AbstractField<?, ?>> fieldType;
+	private final Class<? extends AbstractField> fieldType;
 	private final Converter<?, V> converter;
 	private final List<Builder<B, ?, ?>> valueChangeListeners;
 	private final UpdateHandler<B> updateHandler;
@@ -145,7 +145,7 @@ public class CrudField<B, V, C extends AbstractField<C, V>> {
 		return fieldProvider;
 	}
 
-	public Class<? extends AbstractField<?, ?>> getFieldType() {
+	public Class<? extends AbstractField> getFieldType() {
 		return fieldType;
 	}
 

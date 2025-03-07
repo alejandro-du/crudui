@@ -12,6 +12,7 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.provider.HasListDataView;
 import com.vaadin.flow.router.Route;
@@ -67,7 +68,7 @@ public class PlaygroundView extends HorizontalLayout {
 						CrudField.of("email").label("The email"),
 						CrudField.of("salary").label("The salary"),
 						CrudField.of("phoneNumber").label("The phone number"),
-						CrudField.of("maritalStatus").label("The marital status"),
+						CrudField.of("maritalStatus").label("The marital status").fieldType(RadioButtonGroup.class),
 						CrudField.of("groups").label("The groups").fieldProvider(new MultiSelectComboBoxProvider<>(u -> groupService.findAll(), Group::getName)).onValueChangeUpdate(mainGroupField2),
 						mainGroupField2.label("The main group").fieldProvider(new RadioButtonGroupProvider<>(User::getGroups, Group::getName)).onUpdate(this::populateMainGroupBox),
 						CrudField.of("active").label("Is it active?"))
@@ -75,25 +76,28 @@ public class PlaygroundView extends HorizontalLayout {
 				.useBeanValidation()
 				.build(user);
 
-		var save = new Button("Save", e -> {
-			if (userForm.isValid()) {
-				try {
-					userService.save(user);
-					Notification.show("Saved: " + user);
-
-				} catch (Exception ex) {
-					Notification.show("Error: " + ex.getMessage());
-					return;
-				}
-			} else {
-				Notification.show("Form is not valid");
-			}
-		});
 
 		var techForm = new CrudFormFactory<>(Technology.class)
 				.replace("description", CrudField.of("description").label("Description").fieldType(TextArea.class))
 				.useBeanValidation()
 				.build(technologyService.findAll().get(3));
+
+		var save = new Button("Save", e -> {
+			try {
+				if (userForm.isValid() && techForm.isValid()) {
+					userService.save(userForm.getValue());
+					technologyService.save(techForm.getValue());
+					Notification.show("Saved: " + userForm.getValue());
+					Notification.show("Saved: " + techForm.getValue());
+
+				} else {
+					Notification.show("Forms are not valid");
+				}
+			} catch (Exception ex) {
+				Notification.show("Error: " + ex.getMessage());
+				return;
+			}
+		});
 
 		add(new VerticalLayout(userForm, save), techForm);
 		setSizeFull();
