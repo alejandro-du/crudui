@@ -1,4 +1,4 @@
-package org.vaadin.crudui2.form.provider;
+package org.vaadin.crudui2.form.impl.provider;
 
 import java.util.Collection;
 
@@ -8,6 +8,8 @@ import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
+
+import org.vaadin.crudui2.form.impl.FieldProvider;
 
 public class ComboBoxProvider<B, V> implements FieldProvider<B, AbstractField<?, V>> {
 

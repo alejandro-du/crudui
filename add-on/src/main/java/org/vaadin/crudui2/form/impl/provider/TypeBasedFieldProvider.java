@@ -1,4 +1,4 @@
-package org.vaadin.crudui2.form.provider;
+package org.vaadin.crudui2.form.impl.provider;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -20,6 +20,8 @@ import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+
+import org.vaadin.crudui2.form.impl.FieldProvider;
 
 public class TypeBasedFieldProvider<B, V> implements FieldProvider<B, AbstractField<?, V>> {
 
@@ -53,7 +55,7 @@ public class TypeBasedFieldProvider<B, V> implements FieldProvider<B, AbstractFi
 			return buildByFieldValueType(fieldValueType);
 
 		} else {
-			return buildByBeanType(bean.getClass());
+			return buildByBeanTypeAndPropertyName(bean.getClass(), propertyName);
 		}
 	}
 
@@ -105,7 +107,7 @@ public class TypeBasedFieldProvider<B, V> implements FieldProvider<B, AbstractFi
 		return field;
 	}
 
-	private AbstractField buildByBeanType(Class<?> beanType) {
+	private static AbstractField buildByBeanTypeAndPropertyName(Class<?> beanType, String propertyName) {
 		ObjectMapper mapper = new ObjectMapper();
 		JavaType javaType = mapper.getTypeFactory().constructType(beanType);
 		var beanDescription = (BasicBeanDescription) mapper.getSerializationConfig().introspect(javaType);

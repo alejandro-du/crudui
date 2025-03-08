@@ -1,4 +1,4 @@
-package org.vaadin.crudui2.form.provider;
+package org.vaadin.crudui2.form.impl.provider;
 
 import java.util.Collection;
 
@@ -9,6 +9,8 @@ import com.vaadin.flow.component.combobox.ComboBoxBase;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
+
+import org.vaadin.crudui2.form.impl.FieldProvider;
 
 public class MultiSelectComboBoxProvider<B, V> implements FieldProvider<B, AbstractField<?, V>> {
 

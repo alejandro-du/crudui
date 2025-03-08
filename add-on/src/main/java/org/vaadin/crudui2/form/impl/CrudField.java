@@ -1,4 +1,4 @@
-package org.vaadin.crudui2.form;
+package org.vaadin.crudui2.form.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,6 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.ValueProvider;
-
-import org.vaadin.crudui2.form.provider.FieldProvider;
 
 public class CrudField<B, V, C extends AbstractField<C, V>> {
 
