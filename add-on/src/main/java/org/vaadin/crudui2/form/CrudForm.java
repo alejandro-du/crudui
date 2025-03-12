@@ -1,11 +1,14 @@
 package org.vaadin.crudui2.form;
 
-import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
-import com.vaadin.flow.component.HasValueAndElement;
+public interface CrudForm<B> {
 
-public interface CrudForm<B, C extends AbstractField<C, B>>
-		extends HasValueAndElement<ComponentValueChangeEvent<C, B>, B> {
+	B getValue();
+
+	void setValue(B value);
+
+	boolean isReadOnly();
+
+	void setReadOnly(boolean readOnly);
 
 	boolean isValid();
 
