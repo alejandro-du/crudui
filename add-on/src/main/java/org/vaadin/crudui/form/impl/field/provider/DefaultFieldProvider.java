@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 
+import java.sql.Timestamp;
+
 /**
  * @author Alejandro Duarte.
  */
@@ -38,7 +40,7 @@ public class DefaultFieldProvider implements FieldProvider {
 			return new DatePicker();
 		}
 
-		if (LocalDateTime.class.isAssignableFrom(type)) {
+		if (LocalDateTime.class.isAssignableFrom(type) || Timestamp.class.isAssignableFrom(type)) {
 			return new DateTimePicker();
 		}
 
