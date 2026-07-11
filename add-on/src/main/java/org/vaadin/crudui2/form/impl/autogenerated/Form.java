@@ -15,16 +15,16 @@ public class Form<B> extends Composite<FormLayout> implements CrudForm<B> {
 
 	private Binder<B> binder;
 
-	public Form(Class<B> beanType) {
-		this(beanType, false);
-	}
-
 	public Form(Class<B> domainType, boolean useBeanValidation) {
 		if (useBeanValidation) {
 			binder = new BeanValidationBinder<>(domainType);
 		} else {
 			binder = new Binder<>(domainType);
 		}
+	}
+
+	public Form(Class<B> beanType) {
+		this(beanType, false);
 	}
 
 	@Override

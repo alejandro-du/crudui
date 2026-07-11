@@ -14,6 +14,8 @@ public class GridList<B> extends Composite<VerticalLayout> implements CrudList<B
 	public GridList(Grid<B> grid) {
 		this.grid = grid;
 		getContent().add(grid);
+		getContent().setPadding(false);
+		getContent().setSizeFull();
 	}
 
 	@Override

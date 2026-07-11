@@ -23,6 +23,7 @@ import org.vaadin.crudui.form.CrudFormFactory;
 import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 import org.vaadin.crudui.form.impl.field.provider.MultiSelectComboBoxProvider;
 import org.vaadin.crudui.form.impl.form.factory.DefaultCrudFormFactory;
+import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 import org.vaadin.crudui.layout.impl.WindowBasedCrudLayout;
 
 @Route(value = "customized", layout = MainLayout.class)
@@ -35,8 +36,8 @@ public class CustomizedView extends VerticalLayout implements LazyCrudListener<U
 		this.userService = userService;
 
 		// CRUD layout configuration
-		WindowBasedCrudLayout crudLayout = new WindowBasedCrudLayout();
-		crudLayout.setFormWindowWidth("70%");
+		var crudLayout = new HorizontalSplitCrudLayout();
+		//crudLayout.setFormWindowWidth("70%");
 
 		// CRUD forms configuration
 		CrudFormFactory<User> formFactory = new DefaultCrudFormFactory<>(User.class);
