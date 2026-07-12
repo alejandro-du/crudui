@@ -39,6 +39,7 @@ import org.vaadin.crudui2.list.impl.GridList;
 
 @Route(value = "playground1")
 @JsModule("theme-handler.js")
+@SuppressWarnings("null")
 public class PlaygroundView1 extends VerticalLayout {
 
 	public PlaygroundView1(UserService userService, GroupService groupService) {
