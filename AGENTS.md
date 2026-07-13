@@ -7,7 +7,11 @@ This is a Java/Maven multi-module Vaadin project for the CRUD UI Add-on for Vaad
 - `add-on`: the main Vaadin add-on producing the `crudui` library jar that gets published in the Vaadin Directory.
 - `crud-ui-demo`: a Spring Boot + Vaadin demo application that uses the add-on.
 
-The library implements runtime CRUD UIs for Java beans using Vaadin components like `Grid`, `TreeGrid`, and forms. You'll be working on a new API located in the package `org.vaadin.crudui2` of the `add-on` Maven module and you will be modifying only that package and nothing else. This new API is an evolution of the previous API (in `org.vaadin.crudui`) and focuses on offering a type-safe fluent variant.
+The library implements runtime CRUD UIs for Java beans using Vaadin components like `Grid`, `TreeGrid`, and forms.
+
+## Your role
+
+You'll be working as a software engineer on a new API for this Vaadin add-on. The new API is located in the package `org.vaadin.crudui2` of the `add-on` Maven module and you will be modifying only that package and nothing else. This new API is an evolution of the previous API (in `org.vaadin.crudui`) and focuses on offering a type-safe fluent variant.
 
 ## Important conventions
 
@@ -34,3 +38,4 @@ Do not stop or run the demo application. It is already running and accessible at
 
 - Do not touch anything else than what is in `add-on/src/main/java/org/vaadin/crudui2`.
 - Do not use Git to modify any file in any way, including checking out files, reverting, committing changes (do not do anything that writes to disk with Git).
+- When available, prefer java classes and interfaces that already exist in the Vaadin library.
