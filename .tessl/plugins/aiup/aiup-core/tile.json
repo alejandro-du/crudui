@@ -1,0 +1,23 @@
+{
+  "name": "aiup/aiup-core",
+  "version": "2.3.11",
+  "summary": "AI Unified Process - stack-agnostic core methodology (requirements, entity model, use cases)",
+  "skills": {
+    "entity-model": {
+      "path": "skills/entity-model/SKILL.md"
+    },
+    "requirements": {
+      "path": "skills/requirements/SKILL.md"
+    },
+    "reverse-engineer": {
+      "path": "skills/reverse-engineer/SKILL.md"
+    },
+    "use-case-diagram": {
+      "path": "skills/use-case-diagram/SKILL.md"
+    },
+    "use-case-spec": {
+      "path": "skills/use-case-spec/SKILL.md"
+    }
+  },
+  "private": false
+}
