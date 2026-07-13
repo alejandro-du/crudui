@@ -40,3 +40,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.playwright-mcp/

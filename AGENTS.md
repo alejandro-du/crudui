@@ -7,7 +7,7 @@ This is a Java/Maven multi-module Vaadin project for the CRUD UI Add-on for Vaad
 - `add-on`: the main Vaadin add-on producing the `crudui` library jar that gets published in the Vaadin Directory.
 - `crud-ui-demo`: a Spring Boot + Vaadin demo application that uses the add-on.
 
-The library implements runtime CRUD UIs for Java beans using Vaadin components like `Grid`, `TreeGrid`, and forms.
+The library implements runtime CRUD UIs for Java beans using Vaadin components like `Grid`, `TreeGrid`, and forms. You'll be working on a new API located in the package `org.vaadin.crudui2` of the `add-on` Maven module and you will be modifying only that package and nothing else. This new API is an evolution of the previous API (in `org.vaadin.crudui`) and focuses on offering a type-safe fluent variant.
 
 ## Important conventions
 
@@ -21,29 +21,16 @@ The library implements runtime CRUD UIs for Java beans using Vaadin components l
 
 - Library source: `add-on/src/main/java/org/vaadin/crudui/...`
 - Demo source: `crud-ui-demo/src/main/java/...`
-- Main documentation: `README.md`
 
 ## Build and run commands
 
-- Build entire repository:
-  - `mvn clean install`
-- Build only the add-on:
-  - `mvn -pl add-on clean install`
-- Run the demo app from the repo root:
-  - `cd crud-ui-demo && mvn spring-boot:run`
-- When preparing production/demo packaging, use the `production` profile in `crud-ui-demo`:
-  - `cd crud-ui-demo && mvn -Pproduction clean package`
+Do not stop or run the demo application. It is already running and accessible at http://localhost:8080. Changes in `.java` files are automatically picked up, compiled, and deployed so you don't need to compile, deploy, stop/start anything. Changes take effect after 4 seconds approximately. All you need to do is modify the source code, wait ~4 seconds, and then use the Playwright MCP server to check that your code modifications are working correctly.
 
 ## What to focus on when editing
 
-- For library behavior or new features, change code under `add-on/src/main/java`.
-- For example/demo changes, update `crud-ui-demo/src/main/java`.
-- Keep the API stable where possible: this repo is an add-on library with public component classes.
-- Use the root `README.md` as the main reference for user-facing usage and API examples and update when new features are added or the API changes.
+- For library behavior or new features, change code under `add-on/src/main/java/org/vaadin/crudui2`.
 
 ## Notes for AI coding agents
 
-- There is no existing `.github/copilot-instructions.md` or `AGENTS.md` in this repo.
-- Prefer Maven lifecycle commands over npm or Gradle.
-- Avoid touching `target/` folders or generated frontend files under `crud-ui-demo/target/`.
-- If asked about styling or demo integration, the demo app is the best place to verify actual Vaadin usage.
+- Do not touch anything else than what is in `add-on/src/main/java/org/vaadin/crudui2`.
+- Do not use Git to modify any file in any way, including checking out files, reverting, committing changes (do not do anything that writes to disk with Git).
