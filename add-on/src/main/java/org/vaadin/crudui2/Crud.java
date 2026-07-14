@@ -117,6 +117,16 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     /**
+     * Fluent API alias for setCrudList(). Overrides the default list implementation.
+     *
+     * @param crudList The custom list
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> list(CrudList<B> crudList) {
+        return setCrudList(crudList);
+    }
+
+    /**
      * Overrides the default layout implementation.
      *
      * @param crudLayout The custom layout

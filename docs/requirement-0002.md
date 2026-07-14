@@ -1,18 +1,25 @@
-# requirement-0001
+# requirement-0002
 
 ## Summary
 
-What should the library do?
+Accept custom `Grid` components.
 
 ## Example
 
 ```java
-// Example usage
+var myGrid = new Grid<User>();
+myGrid.addColumn(User::getId);
+myGrid.addColumn(User::getName).setHeader("The name of the user");
+myGrid.addColumn(User::getBirthDate).setHeader("The birth date of the user");
+
+Crud crud = Crud.of(User.class)
+		.list(new GridList<>(myGrid))
+        .build();
 ```
 
 ## Behavior
 
-- The library creates...
+- If a list is specified, the library creates a CRUD component that uses the specified list instead of using the default.
 
 ## Acceptance Criteria
 
