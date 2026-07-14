@@ -28,7 +28,7 @@ You'll be working as a Senior Software Engineer on a new API for this Vaadin add
 
 ## Build and run commands
 
-Do not stop or run the demo application. It is already running and accessible at http://localhost:8080. Changes in `.java` files are automatically picked up, compiled, and deployed so you don't need to compile, deploy, stop/start anything. Changes take effect after 4 seconds approximately. All you need to do is modify the source code, wait ~4 seconds, and then use the Playwright MCP server to check that your code modifications are working correctly.
+Do not stop or run the demo application. It is already running and accessible at http://localhost:8080. Changes in `.java` files are automatically picked up, compiled, and deployed so you don't need to compile, deploy, stop/start anything. Changes take effect after 4 seconds approximately. All you need to do is modify the source code, wait ~4 seconds, and then use the Playwright MCP server to check that your code modifications are working correctly. You can build the project if necessary using Maven.
 
 ## What to focus on when editing
 
