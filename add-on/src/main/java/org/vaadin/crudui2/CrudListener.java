@@ -1,19 +1,21 @@
 package org.vaadin.crudui2;
 
+import java.util.List;
+
 /**
  * Listener interface for CRUD operations. Implement this to connect a CRUD component
- * to backend services for save, create, and delete operations.
+ * to backend services for create, read, update, and delete operations.
  *
  * @param <B> The bean type managed by the CRUD
  */
 public interface CrudListener<B> {
 
     /**
-     * Called when the user saves an existing bean (update).
+     * Called to retrieve all beans for display in the list.
      *
-     * @param bean The bean to save
+     * @return A list of all beans
      */
-    void onSave(B bean);
+    List<B> onRead();
 
     /**
      * Called when the user creates a new bean.
@@ -21,6 +23,13 @@ public interface CrudListener<B> {
      * @param bean The new bean to create
      */
     void onCreate(B bean);
+
+    /**
+     * Called when the user saves/updates an existing bean.
+     *
+     * @param bean The bean to update
+     */
+    void onUpdate(B bean);
 
     /**
      * Called when the user deletes a bean.
