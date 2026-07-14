@@ -1,13 +1,13 @@
-# AI Agent Instructions for `crudui`
+# AI Agent Instructions for Crud UI Add-On
 
 ## What this project is
 
 This is a Java/Maven multi-module Vaadin project for the CRUD UI Add-on for Vaadin (https://vaadin.com/directory/component/crud-ui-add-on):
 
-- `add-on`: the main Vaadin add-on producing the `crudui` library jar that gets published in the Vaadin Directory.
+- `add-on`: the main Vaadin add-on producing the **Crud UI Add-On** library jar that gets published in the Vaadin Directory.
 - `crud-ui-demo`: a Spring Boot + Vaadin demo application that uses the add-on.
 
-The library implements runtime CRUD UIs for Java beans using Vaadin components like `Grid`, `TreeGrid`, and forms.
+Now read the [vision.md](/docs/vision.md) file and learn a more detailed general description of the project.
 
 ## Important conventions
 
@@ -24,7 +24,7 @@ The library implements runtime CRUD UIs for Java beans using Vaadin components l
 
 ## Your role
 
-You'll be working as a software engineer on a new API for this Vaadin add-on. The new API is located in the package `org.vaadin.crudui2` of the `add-on` Maven module and you will be modifying only that package and nothing else. This new API is an evolution of the previous API (in `org.vaadin.crudui`) and focuses on offering a type-safe fluent variant.
+You'll be working as a Senior Software Engineer on a new API for this Vaadin add-on. The new API is located in the package `org.vaadin.crudui2` of the `add-on` Maven module and it's work in progress. You will be modifying only that package and nothing else in the `add-on` Maven module. This new API is an evolution of the previous API (residing in the `org.vaadin.crudui` package) and focuses on offering a type-safe fluent variant as described in the [vision.md](/docs/vision.md) file. You are allowed create and modify files in `crud-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/` which are used to test and show case that implemented features work (see the [test-view-template.md](/docs/test-view-template.md) file).
 
 ## Build and run commands
 
@@ -32,10 +32,10 @@ Do not stop or run the demo application. It is already running and accessible at
 
 ## What to focus on when editing
 
-- For library behavior or new features, change code under `add-on/src/main/java/org/vaadin/crudui2`.
+- For library behavior or new features, change code under `add-on/src/main/java/org/vaadin/crudui2/`.
 
 ## Additional notes
 
-- Do not touch anything else than what is in `add-on/src/main/java/org/vaadin/crudui2`.
+- Do not touch anything else than what is in `add-on/src/main/java/org/vaadin/crudui2/` and `-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/`.
 - Do not use Git to modify any file in any way, including checking out files, reverting, committing changes (do not do anything that writes to disk with Git).
 - When available, prefer java classes and interfaces that already exist in the Vaadin library.
