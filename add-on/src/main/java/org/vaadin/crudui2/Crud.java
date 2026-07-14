@@ -60,6 +60,8 @@ public class Crud<B> extends Composite<VerticalLayout> {
     private boolean built = false;
     private Button saveButton;
     private Button cancelButton;
+    private Button updateButton;
+    private boolean viewBeforeEdit = false;
 
 
     private Crud(Class<B> beanType) {
@@ -169,6 +171,19 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     /**
+     * Enables or disables the view-before-edit mode.
+     * When enabled, forms are shown in read-only mode with an "Update" button to enable editing.
+     * When disabled (default), forms are shown in editable mode immediately.
+     *
+     * @param viewBeforeEdit true to show read-only forms first, false for immediate edit mode
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> viewBeforeEdit(boolean viewBeforeEdit) {
+        this.viewBeforeEdit = viewBeforeEdit;
+        return this;
+    }
+
+    /**
      * Overrides the default list implementation.
      *
      * @param crudList The custom list
@@ -268,15 +283,28 @@ public class Crud<B> extends Composite<VerticalLayout> {
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         deleteButton.setEnabled(false);
 
+        // Create "Update" button for read-only form mode (only if viewBeforeEdit is enabled)
+        if (viewBeforeEdit) {
+            updateButton = new Button("Update", e -> onUpdateClicked());
+            updateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            updateButton.setEnabled(false);
+        }
+
         // Wire item selection listener
         crudList.addItemSelectedListener(bean -> {
             if (bean != null) {
                 selectedBean = bean;
                 isCreating = false;
                 deleteButton.setEnabled(true);
+                if (viewBeforeEdit && updateButton != null) {
+                    updateButton.setEnabled(true);
+                }
                 showForm(bean);
             } else {
                 deleteButton.setEnabled(false);
+                if (viewBeforeEdit && updateButton != null) {
+                    updateButton.setEnabled(false);
+                }
                 hideForm();
             }
         });
@@ -292,8 +320,14 @@ public class Crud<B> extends Composite<VerticalLayout> {
             }
         });
 
-        // Add Create and Delete buttons to layout
+        // Add Create, Update (if enabled), and Delete buttons to layout in order
         crudLayout.addCrudActionComponent(createButton);
+
+        // Add Update button to layout if viewBeforeEdit is enabled
+        if (viewBeforeEdit && updateButton != null) {
+            crudLayout.addCrudActionComponent(updateButton);
+        }
+
         crudLayout.addCrudActionComponent(deleteButton);
 
         return this;
@@ -326,10 +360,21 @@ public class Crud<B> extends Composite<VerticalLayout> {
             cancelButton = new Button("Cancel", e -> hideForm());
         }
 
+        // Determine if form should be read-only
+        boolean shouldBeReadOnly = viewBeforeEdit && !isCreating;
+        form.setReadOnly(shouldBeReadOnly);
+
         // Show form and add action buttons
         crudLayout.showCrudForm(form);
-        crudLayout.addFormActionComponent(saveButton);
-        crudLayout.addFormActionComponent(cancelButton);
+
+        if (shouldBeReadOnly) {
+            // Show only Cancel button in read-only mode (Update button is in layout)
+            crudLayout.addFormActionComponent(cancelButton);
+        } else {
+            // Show Save/Cancel buttons in edit mode
+            crudLayout.addFormActionComponent(saveButton);
+            crudLayout.addFormActionComponent(cancelButton);
+        }
     }
 
     private void onSaveClicked() {
@@ -389,6 +434,19 @@ public class Crud<B> extends Composite<VerticalLayout> {
 
         // Hide form and deselect
         hideForm();
+    }
+
+    private void onUpdateClicked() {
+        // Switch form from read-only to edit mode
+        if (form != null) {
+            form.setReadOnly(false);
+
+            // Update form actions to show Save/Cancel instead of just Cancel
+            crudLayout.hideForm();
+            crudLayout.showCrudForm(form);
+            crudLayout.addFormActionComponent(saveButton);
+            crudLayout.addFormActionComponent(cancelButton);
+        }
     }
 
     private void hideForm() {
