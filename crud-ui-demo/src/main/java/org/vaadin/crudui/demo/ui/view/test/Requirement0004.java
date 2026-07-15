@@ -26,24 +26,7 @@ public class Requirement0004 extends VerticalLayout {
         // Create tabs
         Tabs tabs = new Tabs();
 
-        // Tab 1: Standard mode (viewBeforeEdit = false)
-        VerticalLayout standardPanel = new VerticalLayout();
-        standardPanel.setPadding(true);
-        standardPanel.setSpacing(true);
-        standardPanel.setSizeFull();
-        Crud<User> standardCrud = Crud.of(User.class)
-            .onRead(userService::findAll)
-            .onCreate(userService::save)
-            .onUpdate(userService::save)
-            .onDelete(userService::delete)
-            .viewBeforeEdit(false) // Form is editable immediately
-            .build();
-        standardPanel.add(standardCrud);
-
-        Tab standardTab = new Tab("Standard Mode");
-        tabs.add(standardTab);
-
-        // Tab 2: View-before-edit mode (viewBeforeEdit = true)
+        // Tab 1: View-before-edit mode (viewBeforeEdit = true)
         VerticalLayout viewBeforeEditPanel = new VerticalLayout();
         viewBeforeEditPanel.setPadding(true);
         viewBeforeEditPanel.setSpacing(true);
@@ -60,12 +43,29 @@ public class Requirement0004 extends VerticalLayout {
         Tab viewBeforeEditTab = new Tab("View-Before-Edit Mode");
         tabs.add(viewBeforeEditTab);
 
+        // Tab 2: Standard mode (viewBeforeEdit = false)
+        VerticalLayout standardPanel = new VerticalLayout();
+        standardPanel.setPadding(true);
+        standardPanel.setSpacing(true);
+        standardPanel.setSizeFull();
+        Crud<User> standardCrud = Crud.of(User.class)
+            .onRead(userService::findAll)
+            .onCreate(userService::save)
+            .onUpdate(userService::save)
+            .onDelete(userService::delete)
+            .viewBeforeEdit(false) // Form is editable immediately
+            .build();
+        standardPanel.add(standardCrud);
+
+        Tab standardTab = new Tab("Standard Mode");
+        tabs.add(standardTab);
+
         // Create a container for the tab content
         VerticalLayout contentContainer = new VerticalLayout();
         contentContainer.setPadding(false);
         contentContainer.setSpacing(false);
         contentContainer.setSizeFull();
-        contentContainer.add(standardPanel);
+        contentContainer.add(viewBeforeEditPanel);
 
         // Handle tab selection
         tabs.addSelectedChangeListener(event -> {
