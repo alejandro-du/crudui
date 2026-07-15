@@ -7,7 +7,7 @@
 	<groupId>org.vaadin.crudui</groupId>
 	<artifactId>crudui</artifactId>
 	<packaging>jar</packaging>
-	<version>7.2.0</version>
+	<version>8.0.0</version>
 	<name>Crud UI Add-on</name>
 
 	<properties>
@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<vaadin.version>24.6.6</vaadin.version>
+		<vaadin.version>25.2.3</vaadin.version>
 
 		<drivers.dir>${project.basedir}/drivers</drivers.dir>
 		<maven.deploy.skip>true</maven.deploy.skip>
@@ -76,6 +76,10 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>

@@ -9,7 +9,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.JsModule;
+
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -38,7 +38,6 @@ import org.vaadin.crudui2.list.CrudList;
 import org.vaadin.crudui2.list.impl.GridList;
 
 @Route(value = "playground1")
-@JsModule("theme-handler.js")
 @SuppressWarnings("null")
 public class PlaygroundView1 extends VerticalLayout {
 

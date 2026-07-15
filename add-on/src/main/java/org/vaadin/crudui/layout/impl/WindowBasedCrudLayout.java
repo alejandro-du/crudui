@@ -121,7 +121,22 @@ public class WindowBasedCrudLayout extends Composite<VerticalLayout> implements 
 	@Override
 	public void hideForm() {
 		if (dialog != null) {
+			// In Vaadin 25+, wait for the closed event before removing the dialog to preserve
+			// the closing animation. If already closed, remove immediately.
+			if (dialog.isOpened()) {
+				dialog.addOpenedChangeListener(event -> {
+					if (!event.isOpened()) {
+						removeDialogFromParent();
+					}
+				});
+			}
 			dialog.close();
+		}
+	}
+
+	private void removeDialogFromParent() {
+		if (dialog != null && dialog.getParent().isPresent()) {
+			dialog.getParent().get().getElement().removeChild(dialog.getElement());
 		}
 	}
 

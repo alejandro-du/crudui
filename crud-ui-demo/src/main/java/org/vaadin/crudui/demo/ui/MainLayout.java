@@ -9,12 +9,7 @@ import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -30,32 +25,22 @@ import org.vaadin.crudui.demo.ui.view.DefaultView;
 import org.vaadin.crudui.demo.ui.view.HomeView;
 import org.vaadin.crudui.demo.ui.view.TreeView;
 
-@JsModule("theme-handler.js")
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver {
 
 	private VerticalLayout viewContainer = new VerticalLayout();
 	private HorizontalLayout footer = new HorizontalLayout();
 	private Tabs tabs = new Tabs();
-	private Image logo = new Image();
-	private Button themeSwitcher = new Button(VaadinIcon.MOON_O.create());
 	private Map<Tab, Class<? extends HasComponents>> tabToView = new HashMap<>();
 	private Map<Class<? extends HasComponents>, Tab> viewToTab = new HashMap<>();
 
 	public MainLayout() {
-		logo.addClassName("logo");
-		logo.setHeight("44px");
-
 		tabs.addSelectedChangeListener(this::tabsSelectionChanged);
 		addTab(HomeView.class);
 		addTab(CustomizedView.class);
 		addTab(DefaultView.class);
 		addTab(TreeView.class);
 
-		themeSwitcher.setId("theme-switch");
-		themeSwitcher.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-		themeSwitcher.addClickListener(e -> UI.getCurrent().getPage().executeJs("window.switchTheme()"));
-
-		var headerLayout = new HorizontalLayout(logo, tabs, themeSwitcher);
+		var headerLayout = new HorizontalLayout(tabs);
 		headerLayout.setMargin(true);
 		headerLayout.setWidthFull();
 		headerLayout.expand(tabs);
@@ -76,14 +61,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 		content.add(viewContainer, footer);
 
 		setContent(content);
-		UI.getCurrent().getPage().executeJs("window.applySystemTheme()");
 	}
 
 	@Override
 	public void showRouterLayoutContent(HasElement content) {
 		viewContainer.removeAll();
 		viewContainer.add(content.getElement().getComponent().get());
-		afterNavigation();
+		afterNavigationInternal();
 	}
 
 	private void tabsSelectionChanged(Tabs.SelectedChangeEvent event) {
@@ -111,6 +95,10 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 
 	@Override
 	public void afterNavigation(AfterNavigationEvent event) {
+		afterNavigationInternal();
+	}
+
+	private void afterNavigationInternal() {
 		updatePageTitle();
 		addSourceCodeAnchorToCurrentView();
 	}

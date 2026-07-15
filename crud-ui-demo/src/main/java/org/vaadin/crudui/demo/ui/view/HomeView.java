@@ -1,7 +1,9 @@
 package org.vaadin.crudui.demo.ui.view;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.flowingcode.vaadin.addons.markdown.MarkdownViewer;
 import com.vaadin.flow.component.Html;
@@ -9,14 +11,14 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-import org.apache.commons.io.FileUtils;
 import org.vaadin.crudui.demo.ui.MainLayout;
 
 @Route(value = "", layout = MainLayout.class)
 public class HomeView extends VerticalLayout {
 
 	public HomeView() throws IOException {
-		String readmeContent = FileUtils.readFileToString(new File(System.getProperty("user.dir"), "../README.md"), "UTF-8");
+		Path readmePath = Paths.get(System.getProperty("user.dir"), "../README.md");
+		String readmeContent = Files.readString(readmePath);
 
 		add(
 				new H1("Crud UI Add-on demo"),
