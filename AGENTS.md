@@ -12,9 +12,9 @@ Now read the [vision.md](/docs/vision.md) file and learn a more detailed general
 ## Important conventions
 
 - Java version: 21
-- Vaadin version: 24.6.6
+- Vaadin version: 25.2.3
 - Build system: Maven
-- The demo app uses Spring Boot 3.3.1
+- The demo app uses Spring Boot 4.0.0
 - Do not edit generated build output under `target/`
 
 ## Key source locations

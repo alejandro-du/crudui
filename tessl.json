@@ -1,9 +1,0 @@
-{
-  "name": "crudui",
-  "mode": "vendored",
-  "dependencies": {
-    "aiup/aiup-core": {
-      "version": "2.3.11"
-    }
-  }
-}
