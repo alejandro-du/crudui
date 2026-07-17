@@ -67,6 +67,9 @@ public class Crud<B> extends Composite<VerticalLayout> {
     private Button cancelButton;
     private Button updateButton;
     private boolean viewBeforeEdit = false;
+    private boolean createOperationVisible = true;
+    private boolean updateOperationVisible = true;
+    private boolean deleteOperationVisible = true;
     private boolean suppressSelectionEvents = false;
     private final EnumMap<CrudAction, ButtonConfig> buttonConfigs = new EnumMap<>(CrudAction.class);
     private String formCaptionForCreate = "Add";
@@ -195,6 +198,43 @@ public class Crud<B> extends Composite<VerticalLayout> {
      */
     public Crud<B> viewBeforeEdit(boolean viewBeforeEdit) {
         this.viewBeforeEdit = viewBeforeEdit;
+        applyOperationVisibility();
+        return this;
+    }
+
+    /**
+     * Controls whether the create operation is visible.
+     *
+     * @param visible true to show create operation, false to hide it
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> createOperationVisible(boolean visible) {
+        this.createOperationVisible = visible;
+        applyOperationVisibility();
+        return this;
+    }
+
+    /**
+     * Controls whether the update operation is visible.
+     *
+     * @param visible true to show update operation, false to hide it
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> updateOperationVisible(boolean visible) {
+        this.updateOperationVisible = visible;
+        applyOperationVisibility();
+        return this;
+    }
+
+    /**
+     * Controls whether the delete operation is visible.
+     *
+     * @param visible true to show delete operation, false to hide it
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> deleteOperationVisible(boolean visible) {
+        this.deleteOperationVisible = visible;
+        applyOperationVisibility();
         return this;
     }
 
@@ -269,6 +309,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
     public Crud<B> setCrudList(CrudList<B> crudList) {
         this.crudList = crudList;
         this.crudLayout.setCrudList(crudList);
+        applyOperationVisibility();
         return this;
     }
 
@@ -399,8 +440,10 @@ public class Crud<B> extends Composite<VerticalLayout> {
             if (bean != null) {
                 selectedBean = bean;
                 isCreating = false;
-                deleteButton.setEnabled(true);
-                if (viewBeforeEdit && updateButton != null) {
+                if (deleteOperationVisible) {
+                    deleteButton.setEnabled(true);
+                }
+                if (viewBeforeEdit && updateButton != null && updateOperationVisible) {
                     updateButton.setEnabled(true);
                 }
                 showForm(bean);
@@ -422,6 +465,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
         }
 
         crudLayout.addCrudActionComponent(deleteButton);
+        applyOperationVisibility();
 
         return this;
     }
@@ -455,7 +499,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
         }
 
         // Determine if form should be read-only
-        boolean shouldBeReadOnly = viewBeforeEdit && !isCreating;
+        boolean shouldBeReadOnly = !isCreating && (viewBeforeEdit || !updateOperationVisible);
         form.setReadOnly(shouldBeReadOnly);
 
         // Show form and add action buttons
@@ -549,6 +593,10 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     private void onUpdateClicked() {
+        if (!updateOperationVisible) {
+            return;
+        }
+
         // Switch form from read-only to edit mode
         if (form != null) {
             form.setReadOnly(false);
@@ -608,6 +656,26 @@ public class Crud<B> extends Composite<VerticalLayout> {
             case SAVE -> applyButtonConfig(saveButton, action);
             case CANCEL -> applyButtonConfig(cancelButton, action);
             default -> {
+            }
+        }
+    }
+
+    private void applyOperationVisibility() {
+        if (createButton != null) {
+            createButton.setVisible(createOperationVisible);
+        }
+
+        if (deleteButton != null) {
+            deleteButton.setVisible(deleteOperationVisible);
+            if (!deleteOperationVisible) {
+                deleteButton.setEnabled(false);
+            }
+        }
+
+        if (updateButton != null) {
+            updateButton.setVisible(viewBeforeEdit && updateOperationVisible);
+            if (!updateOperationVisible) {
+                updateButton.setEnabled(false);
             }
         }
     }

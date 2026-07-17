@@ -2,26 +2,21 @@
 
 ## Summary
 
-Expose explicit CRUD operation controls and backend wiring hooks so developers can enable, disable, and connect read/create/update/delete actions individually when needed.
+Expose explicit CRUD operations visibility.
 
 ## Example
 
 ```java
 Crud<User> userCrud = Crud.of(User.class)
-        .setCrudListener(userCrudListener)
-        .setAddOperationVisible(true)
-        .setUpdateOperationVisible(true)
-        .setDeleteOperationVisible(true)
-        .setFindAllOperationVisible(true)
+        .createOperationVisible(false)
+        .updateOperationVisible(false)
+        .deleteOperationVisible(false)
         .build();
 ```
 
 ## Behavior
 
-- The API lets developers configure each CRUD operation separately instead of forcing a single all-or-nothing setup.
-- Read, create, update, and delete actions can be wired independently.
-- The API keeps a convenience path for a single listener, but the lower-level operation hooks must remain available.
-- The API exposes a way to supply read data through a `DataProvider` when the caller wants lazy or prebuilt data access.
+- Read, create, update, and delete visibility can be set independently.
 
 ## Acceptance Criteria
 
