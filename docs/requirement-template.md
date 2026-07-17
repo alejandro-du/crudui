@@ -22,7 +22,7 @@ What should the library do?
 
 ## Remember
 
-Remember:
+Remember from the AGENTS.md file:
 
 - Use the Playwright MCP server to check that the changes are correct!!!
 - Use the Vaadin MCP server to check Vaadin APIs!!!
