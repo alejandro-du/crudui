@@ -19,6 +19,8 @@ public interface CrudLayout<B> {
 
 	void addFormActionComponent(Component component);
 
+	void setFormActionCaption(String caption);
+
 	void addFilterComponent(Component component);
 
 }

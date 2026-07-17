@@ -21,4 +21,6 @@ public interface CrudList<B> {
 
 	void refreshAllItems();
 
+	void clearSelection();
+
 }

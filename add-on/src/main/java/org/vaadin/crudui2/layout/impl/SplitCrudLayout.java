@@ -2,6 +2,8 @@ package org.vaadin.crudui2.layout.impl;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -23,9 +25,14 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 	private HorizontalLayout crudActionContainer = new HorizontalLayout();
 	private VerticalLayout crudListContainer = new VerticalLayout();
 	private VerticalLayout formLayout = new VerticalLayout();
+	private VerticalLayout formContentContainer = new VerticalLayout();
+	private VerticalLayout formContentHost = new VerticalLayout();
 	private HorizontalLayout formHeader = new HorizontalLayout();
+	private H3 crudActionCaption = new H3();
 	private Scroller crudFormContainer = new Scroller(ScrollDirection.VERTICAL);
 	private HorizontalLayout formActionContainer = new HorizontalLayout();
+	private HorizontalLayout formActionButtonsContainer = new HorizontalLayout();
+	private CrudList<B> currentCrudList;
 
 	public SplitCrudLayout(Orientation orientation) {
 		filterContainer.setWidthFull();
@@ -35,18 +42,41 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 
 		crudListContainer.setPadding(false);
 
-		formHeader.add(crudActionContainer);
+		crudActionCaption.setVisible(false);
+
+		crudActionContainer.setWidthFull();
+		crudActionContainer.setJustifyContentMode(JustifyContentMode.END);
+
+		formHeader.add(crudActionCaption, crudActionContainer);
+		formHeader.expand(crudActionContainer);
 		formHeader.setWidthFull();
 		formHeader.setPadding(true);
-		formHeader.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+		formHeader.setSpacing(true);
+		formHeader.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
-		crudFormContainer.getStyle().set("padding-left", "var(--lumo-space-m)");
+		formContentContainer.setPadding(true);
+		formContentContainer.setSpacing(false);
+		formContentContainer.setWidthFull();
+
+		formContentHost.setPadding(false);
+		formContentHost.setSpacing(false);
+		formContentHost.setWidthFull();
+		formContentContainer.add(formContentHost);
+
+		crudFormContainer.setContent(formContentContainer);
 
 		formActionContainer.setWidthFull();
 		formActionContainer.setPadding(true);
-		formActionContainer.setJustifyContentMode(JustifyContentMode.END);
-		formActionContainer.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+		formActionContainer.setSpacing(true);
 		formActionContainer.setVisible(false);
+
+		formActionButtonsContainer.setSpacing(true);
+		formActionButtonsContainer.setPadding(false);
+		formActionButtonsContainer.setJustifyContentMode(JustifyContentMode.END);
+ 		formActionButtonsContainer.setWidthFull();
+
+		formActionContainer.add(formActionButtonsContainer);
+		formActionContainer.expand(formActionButtonsContainer);
 
 		formLayout.add(formHeader, crudFormContainer, formActionContainer);
 		formLayout.setPadding(false);
@@ -68,26 +98,29 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 	}
 
 	@Override
-	public void setCrudList(CrudList crudList) {
+	public void setCrudList(CrudList<B> crudList) {
+		currentCrudList = crudList;
 		crudListContainer.removeAll();
 		crudListContainer.add((Component) crudList);
 	}
 
 	@Override
 	public CrudList<B> getCrudList() {
-		return (CrudList<B>) crudListContainer.getComponentAt(0);
+		return currentCrudList;
 	}
 
 	@Override
-	public void showCrudForm(CrudForm crudForm) {
-		crudFormContainer.setContent((Component) crudForm);
+	public void showCrudForm(CrudForm<B> crudForm) {
+		formContentHost.removeAll();
+		formContentHost.add((Component) crudForm);
 		formActionContainer.setVisible(true);
 	}
 
 	@Override
 	public void hideForm() {
-		crudFormContainer.setContent(null);
-		formActionContainer.removeAll();
+		formContentHost.removeAll();
+		formActionButtonsContainer.removeAll();
+		setFormActionCaption(null);
 		formActionContainer.setVisible(false);
 	}
 
@@ -98,7 +131,19 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 
 	@Override
 	public void addFormActionComponent(Component component) {
-		formActionContainer.add(component);
+		formActionButtonsContainer.add(component);
+	}
+
+	@Override
+	public void setFormActionCaption(String caption) {
+		if (caption == null || caption.isBlank()) {
+			crudActionCaption.setText("");
+			crudActionCaption.setVisible(false);
+			return;
+		}
+
+		crudActionCaption.setText(caption);
+		crudActionCaption.setVisible(true);
 	}
 
 	@Override

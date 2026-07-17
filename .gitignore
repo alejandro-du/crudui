@@ -42,3 +42,9 @@ build/
 .vscode/
 
 .playwright-mcp/
+
+.tessl/
+plugin.json
+.agents
+tessl.json
+plugins/

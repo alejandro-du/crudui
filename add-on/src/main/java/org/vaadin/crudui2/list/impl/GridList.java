@@ -38,4 +38,9 @@ public class GridList<B> extends Composite<VerticalLayout> implements CrudList<B
 		grid.getDataProvider().refreshAll();
 	}
 
+	@Override
+	public void clearSelection() {
+		grid.asSingleSelect().clear();
+	}
+
 }

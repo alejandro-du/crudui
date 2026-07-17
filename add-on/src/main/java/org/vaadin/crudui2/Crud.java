@@ -4,7 +4,9 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import org.vaadin.crudui2.data.provider.SimpleBackendDataProvider;
@@ -15,9 +17,10 @@ import org.vaadin.crudui2.layout.impl.SplitCrudLayout;
 import org.vaadin.crudui2.list.CrudList;
 import org.vaadin.crudui2.list.impl.GridList;
 
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -58,10 +61,20 @@ public class Crud<B> extends Composite<VerticalLayout> {
     private B selectedBean;
     private boolean isCreating;
     private boolean built = false;
+    private Button createButton;
+    private Button deleteButton;
     private Button saveButton;
     private Button cancelButton;
     private Button updateButton;
     private boolean viewBeforeEdit = false;
+    private boolean suppressSelectionEvents = false;
+    private final EnumMap<CrudAction, ButtonConfig> buttonConfigs = new EnumMap<>(CrudAction.class);
+    private String formCaptionForCreate = "Add";
+    private String formCaptionForUpdate = "Update";
+    private String deleteConfirmationHeader = "Delete item?";
+    private String deleteConfirmationText = "Are you sure you want to delete this item?";
+    private String deleteConfirmationConfirmText = "Delete";
+    private String deleteConfirmationCancelText = "Cancel";
 
 
     private Crud(Class<B> beanType) {
@@ -71,6 +84,8 @@ public class Crud<B> extends Composite<VerticalLayout> {
         // Initialize the root VerticalLayout
         getContent().setSizeFull();
         getContent().setPadding(false);
+
+        initializeDefaultButtonConfigs();
     }
 
     /**
@@ -184,6 +199,68 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     /**
+     * Customizes one of the CRUD action buttons.
+     *
+     * @param action The action button to customize
+     * @param text The button text
+     * @param iconSupplier Supplies the icon component to use, or null for no icon
+     * @param variants The exact variants to apply to the button
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> configureButton(CrudAction action, String text, Supplier<Component> iconSupplier,
+            ButtonVariant... variants) {
+        ButtonConfig config = buttonConfigs.get(action);
+        config.text = text;
+        config.iconSupplier = iconSupplier;
+        config.variants = variants == null ? List.of() : Arrays.asList(variants);
+        applyButtonConfigIfPresent(action);
+        return this;
+    }
+
+    /**
+     * Customizes one of the CRUD action buttons.
+     *
+     * @param action The action button to customize
+     * @param text The button text
+     * @param icon The icon component to use, or null for no icon
+     * @param variants The exact variants to apply to the button
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> configureButton(CrudAction action, String text, Component icon, ButtonVariant... variants) {
+        return configureButton(action, text, icon == null ? null : () -> icon, variants);
+    }
+
+    /**
+     * Sets form captions shown to the left of form action buttons.
+     *
+     * @param createCaption Caption used when creating
+     * @param updateCaption Caption used when updating
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> formCaptions(String createCaption, String updateCaption) {
+        this.formCaptionForCreate = createCaption;
+        this.formCaptionForUpdate = updateCaption;
+        return this;
+    }
+
+    /**
+     * Sets delete confirmation texts.
+     *
+     * @param header Dialog header
+     * @param text Dialog message
+     * @param confirmText Confirm button text
+     * @param cancelText Cancel button text
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> deleteConfirmationTexts(String header, String text, String confirmText, String cancelText) {
+        this.deleteConfirmationHeader = header;
+        this.deleteConfirmationText = text;
+        this.deleteConfirmationConfirmText = confirmText;
+        this.deleteConfirmationCancelText = cancelText;
+        return this;
+    }
+
+    /**
      * Overrides the default list implementation.
      *
      * @param crudList The custom list
@@ -278,20 +355,47 @@ public class Crud<B> extends Composite<VerticalLayout> {
         // Set up the data provider based on either listener or lambda methods
         setupDataProvider();
 
-        // Create "Delete" button (needs to be created before the selection listener)
-        Button deleteButton = new Button("Delete", e -> onDeleteClicked());
-        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        // Create action buttons before selection listeners so enable state can be updated consistently
+        createButton = new Button("Create", e -> {
+            try {
+                // Entering create mode must clear list selection and disable update/delete actions.
+                if (deleteButton != null) {
+                    deleteButton.setEnabled(false);
+                }
+                if (updateButton != null) {
+                    updateButton.setEnabled(false);
+                }
+
+                clearListSelectionWithoutEvents();
+
+                selectedBean = beanType.getDeclaredConstructor().newInstance();
+                isCreating = true;
+                showForm(selectedBean);
+            } catch (Exception ex) {
+                suppressSelectionEvents = false;
+                throw new RuntimeException("Failed to create new instance of " + beanType.getName(), ex);
+            }
+        });
+
+        deleteButton = new Button("Delete", e -> onDeleteClicked());
         deleteButton.setEnabled(false);
+
+        applyButtonConfig(createButton, CrudAction.CREATE);
+        applyButtonConfig(deleteButton, CrudAction.DELETE);
 
         // Create "Update" button for read-only form mode (only if viewBeforeEdit is enabled)
         if (viewBeforeEdit) {
             updateButton = new Button("Update", e -> onUpdateClicked());
-            updateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             updateButton.setEnabled(false);
+            applyButtonConfig(updateButton, CrudAction.UPDATE);
         }
 
         // Wire item selection listener
         crudList.addItemSelectedListener(bean -> {
+            if (suppressSelectionEvents) {
+                return;
+            }
+
             if (bean != null) {
                 selectedBean = bean;
                 isCreating = false;
@@ -306,17 +410,6 @@ public class Crud<B> extends Composite<VerticalLayout> {
                     updateButton.setEnabled(false);
                 }
                 hideForm();
-            }
-        });
-
-        // Create "Create" button
-        Button createButton = new Button("Create", e -> {
-            try {
-                selectedBean = beanType.getDeclaredConstructor().newInstance();
-                isCreating = true;
-                showForm(selectedBean);
-            } catch (Exception ex) {
-                throw new RuntimeException("Failed to create new instance of " + beanType.getName(), ex);
             }
         });
 
@@ -356,8 +449,9 @@ public class Crud<B> extends Composite<VerticalLayout> {
         // Lazy-create buttons on first use (they're reused across form displays)
         if (saveButton == null) {
             saveButton = new Button("Save", e -> onSaveClicked());
-            saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             cancelButton = new Button("Cancel", e -> hideForm());
+            applyButtonConfig(saveButton, CrudAction.SAVE);
+            applyButtonConfig(cancelButton, CrudAction.CANCEL);
         }
 
         // Determine if form should be read-only
@@ -366,6 +460,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
 
         // Show form and add action buttons
         crudLayout.showCrudForm(form);
+        crudLayout.setFormActionCaption(shouldBeReadOnly ? null : (isCreating ? formCaptionForCreate : formCaptionForUpdate));
 
         if (shouldBeReadOnly) {
             // Show only Cancel button in read-only mode (Update button is in layout)
@@ -420,10 +515,27 @@ public class Crud<B> extends Composite<VerticalLayout> {
             return;
         }
 
+        B beanToDelete = selectedBean;
+        ConfirmDialog confirmDialog = new ConfirmDialog();
+        confirmDialog.setHeader(deleteConfirmationHeader);
+        confirmDialog.setText(deleteConfirmationText);
+        confirmDialog.setCancelable(true);
+        confirmDialog.setCancelText(deleteConfirmationCancelText);
+        confirmDialog.setConfirmText(deleteConfirmationConfirmText);
+        confirmDialog.setConfirmButtonTheme("error primary");
+        confirmDialog.addConfirmListener(event -> performDelete(beanToDelete));
+        confirmDialog.open();
+    }
+
+    private void performDelete(B beanToDelete) {
+        if (beanToDelete == null) {
+            return;
+        }
+
         if (deleteOperation != null) {
-            deleteOperation.accept(selectedBean);
+            deleteOperation.accept(beanToDelete);
         } else if (crudListener != null) {
-            crudListener.onDelete(selectedBean);
+            crudListener.onDelete(beanToDelete);
         } else {
             throw new IllegalStateException(
                 "Neither delete operation nor CrudListener is set. Cannot delete bean.");
@@ -444,6 +556,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
             // Update form actions to show Save/Cancel instead of just Cancel
             crudLayout.hideForm();
             crudLayout.showCrudForm(form);
+            crudLayout.setFormActionCaption(formCaptionForUpdate);
             crudLayout.addFormActionComponent(saveButton);
             crudLayout.addFormActionComponent(cancelButton);
         }
@@ -452,7 +565,72 @@ public class Crud<B> extends Composite<VerticalLayout> {
     private void hideForm() {
         selectedBean = null;
         isCreating = false;
+        clearListSelectionWithoutEvents();
         crudLayout.hideForm();
+    }
+
+    private void clearListSelectionWithoutEvents() {
+        suppressSelectionEvents = true;
+        try {
+            crudList.clearSelection();
+        } finally {
+            suppressSelectionEvents = false;
+        }
+    }
+
+    private void initializeDefaultButtonConfigs() {
+        buttonConfigs.put(CrudAction.CREATE, ButtonConfig.of("", VaadinIcon.PLUS::create, List.of()));
+        buttonConfigs.put(CrudAction.UPDATE, ButtonConfig.of("", VaadinIcon.EDIT::create, List.of(ButtonVariant.LUMO_PRIMARY)));
+        buttonConfigs.put(CrudAction.DELETE, ButtonConfig.of("", VaadinIcon.TRASH::create, List.of(ButtonVariant.LUMO_ERROR)));
+        buttonConfigs.put(CrudAction.SAVE, ButtonConfig.of("Save", VaadinIcon.CHECK::create, List.of(ButtonVariant.LUMO_PRIMARY)));
+        buttonConfigs.put(CrudAction.CANCEL, ButtonConfig.of("Cancel", null, List.of()));
+    }
+
+    private void applyButtonConfig(Button button, CrudAction action) {
+        if (button == null) {
+            return;
+        }
+
+        ButtonConfig config = buttonConfigs.get(action);
+        button.setText(config.text);
+        button.setIcon(config.createIcon());
+        button.removeThemeVariants(ButtonVariant.values());
+        if (!config.variants.isEmpty()) {
+            button.addThemeVariants(config.variants.toArray(ButtonVariant[]::new));
+        }
+    }
+
+    private void applyButtonConfigIfPresent(CrudAction action) {
+        switch (action) {
+            case CREATE -> applyButtonConfig(createButton, action);
+            case UPDATE -> applyButtonConfig(updateButton, action);
+            case DELETE -> applyButtonConfig(deleteButton, action);
+            case SAVE -> applyButtonConfig(saveButton, action);
+            case CANCEL -> applyButtonConfig(cancelButton, action);
+            default -> {
+            }
+        }
+    }
+
+    private static class ButtonConfig {
+        private String text;
+        private Supplier<Component> iconSupplier;
+        private List<ButtonVariant> variants;
+
+        private static ButtonConfig of(String text, Supplier<Component> iconSupplier, List<ButtonVariant> variants) {
+            ButtonConfig config = new ButtonConfig();
+            config.text = text;
+            config.iconSupplier = iconSupplier;
+            config.variants = variants;
+            return config;
+        }
+
+        private Component createIcon() {
+            if (iconSupplier == null) {
+                return null;
+            }
+            return iconSupplier.get();
+        }
     }
 
 }
