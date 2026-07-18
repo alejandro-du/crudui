@@ -2,27 +2,31 @@
 
 ## Summary
 
-Provide layout variants beyond the default split view, including modal window editing and operation-aware form presentation.
+Add hierarchical list support to `crudui2`. The current implementation only ships `GridList`, so tree/hierarchical use cases are not yet supported.
 
 ## Example
 
 ```java
-Crud<User> userCrud = Crud.of(User.class)
-        .layout(new WindowCrudLayout<>())
+TreeGrid<Category> treeGrid = new TreeGrid<>(Category.class, false);
+CrudList<Category> treeList = new TreeGridList<>(treeGrid);
+
+Crud<Category> categoryCrud = Crud.of(Category.class)
+        .list(treeList)
         .build();
 ```
 
 ## Behavior
 
-- The API supports a modal or window-based CRUD layout for editing forms.
-- The API supports split-based layouts in both horizontal and vertical orientations.
-- The layout contract can host a main list component, toolbar components, and filter components.
-- The layout can show a form with a caption that depends on the CRUD operation being performed.
-- The window-based layout supports a configurable window width and standard dialog interactions.
+- The `CrudList` contract must support implementations for both flat and hierarchical data.
+- The API must provide a `crudui2`-native tree-list implementation (or equivalent adapter) for `TreeGrid`.
+- The implementation must support hierarchical data providers for scalable backends.
+- Parent-child resolution must be configurable on the list implementation in a way consistent with existing `CrudList` usage.
+- Selection, refresh, and form workflows must behave consistently across flat and hierarchical lists.
 
 ## Acceptance Criteria
 
 - [ ] API behaves as described.
+- [ ] A hierarchy-enabled CRUD works end-to-end in the demo using real services.
 - [ ] Only files in `add-on/src/main/java/org/vaadin/crudui2/` are touched in the `add-on` Maven module.
 - [ ] A new test view exists and showcases the implemented feature. See the instructions in the [test-view-template.md](/docs/test-view-template.md) file.
 

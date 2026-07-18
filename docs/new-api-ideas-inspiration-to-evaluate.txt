@@ -1,0 +1,199 @@
+var grid = new Grid<User>();
+grid.addColumn(User::getId);
+grid.addColumn(User::getName).setHeader("The name of the user");
+grid.addColumn(User::getBirthDate).setHeader("The birth date of the user");
+
+Field mainGroupField = GroupField.of(User::getGroups, User::setGroups);
+
+Crud crud = Crud.of(User.class)
+		.list(new GridList<>(grid))
+		.form(CrudFormFactory.of(User.class)
+				.defaultFields(
+						Field.of(User::getName, User::setName).caption("The name"),
+						Field.of(User::getBirthDate, User::setBirthDate).caption("The date of birth"),
+						Field.of(User::getEmail, User::setEmail).caption("The email"),
+						Field.of(User::getSalary, User::setSalary).caption("The salary"),
+						Field.of(User::getPhoneNumber, User::setPhoneNumber).caption("The phone number"),
+						Field.of(User::getMaritalStatus, User::setMaritalStatus).caption("The marital status"),
+						Field.of(User::getGroups, User::setGroups).caption("The groups")
+								.fieldProvider(new MultiSelectComboBoxProvider<>("Groups", groupService.findAll(), Group::getName))
+								.onValueChangeUpdate(mainGroupField),
+						Field.of(User::isActive, User::setActive).caption("Is it active?"),
+						mainGroupField.caption("The main group")
+								.onUpdate((user, field) -> field.setItems(user.getGroups())))
+				.fieldsFor(CrudOperation.DELETE,
+						Field.of(User::getName, User::setName).caption("The name"),
+						Field.of(User::getEmail, User::setEmail).caption("The email"))
+				.additionalFieldsFor(CrudOperation.ADD,
+						Field.of(User::getPassword, User::setPassword).caption("The password")))
+		.layout(new SplitCrudLayout<>(Orientation.HORIZONTAL))
+		.onCreate(userService::save)
+		.onRead(userService::findAll)
+		.onUpdate(userService::save)
+		.onDelete(userService::delete)
+		.build();
+
+
+
+Crud crud2 = Crud.of(User.class)
+		.list(new GridList<>(grid))
+		.form(CrudFormFactory.of(User.class)
+				.defaultFields(
+						Field.forProperty("name").caption("The name"),
+						Field.forProperty("birthDate").caption("The date of birth"),
+						Field.forProperty("email").caption("The email"),
+						Field.forProperty("salary").caption("The salary"),
+						Field.forProperty("phoneNumber").caption("The phone number"),
+						Field.forProperty("maritalStatus").caption("The marital status"),
+						Field.forProperty("groups").caption("The groups").fieldType(MultiSelectComboBox.class).valueProvider(fields -> groupService.findAll()),
+						Field.forProperty("active").caption("Is it active?"),
+						Field.forProperty("mainGroup").caption("The main group").valueProvider(fields -> fields.get("groups").getValue())))
+				.fieldsFor(CrudOperation.DELETE,
+						Field.forProperty("name").caption("The name"),
+						Field.forProperty("email").caption("The email"))
+				.additionalFieldsFor(CrudOperation.ADD,
+						Field.forProperty("password").caption("The password")))
+		.layout(DialogLayout.builder().dialogWidth("70%").build())
+		.onCreate(userService::save)
+		.onRead(userService::findAll)
+		.onUpdate(userService::save)
+		.onDelete(userService::delete)
+		.build();
+
+formFactory.setFieldsFor(CrudOperation.DELETE,
+		Field.forProperty("name").caption("The name").build(),
+		Field.forProperty("email").caption("The email")).build();
+
+formFactory.addField(CrudOperation.ADD, Field.forProperty("password").caption("The password").build());
+
+formFactory.removeField(CrudOperation.UPDATE, "email");
+
+
+
+formFactory.setDefaultFields(
+		Field.of("name", "The name"),
+		Field.of("birthDate", "The date of birth"),
+		Field.of("email", "The email"),
+		Field.of("salary", "The salary"),
+		Field.of("phoneNumber", "The phone number"),
+		Field.of("maritalStatus", "The marital status"),
+		Field.of("groups", "The groups"),
+		Field.of("active", "Is it active?"),
+		Field.of("mainGroup", "The main group"));
+
+formFactory.setFieldsFor(CrudOperation.DELETE,
+		Field.of("name", "The name"),
+		Field.of("email", "The email"));
+
+formFactory.addField(CrudOperation.ADD, Field.of("password", "The password"));
+
+formFactory.removeField(CrudOperation.UPDATE, "email");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package org.vaadin.crudui.demo.ui.view;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Set;
+
+import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
+import com.vaadin.flow.data.provider.HasListDataView;
+import com.vaadin.flow.router.Route;
+
+import org.vaadin.crudui.demo.entity.Group;
+import org.vaadin.crudui.demo.entity.MaritalStatus;
+import org.vaadin.crudui.demo.entity.User;
+import org.vaadin.crudui.demo.service.GroupService;
+import org.vaadin.crudui.demo.service.UserService;
+import org.vaadin.crudui2.Column;
+import org.vaadin.crudui2.Crud;
+import org.vaadin.crudui2.CrudFormFactory;
+import org.vaadin.crudui2.CrudOperation;
+import org.vaadin.crudui2.GridListListFactory;
+import org.vaadin.crudui2.form.impl.autogenerated.Field;
+import org.vaadin.crudui2.form.impl.autogenerated.field.provider.ComboBoxProvider;
+import org.vaadin.crudui2.form.impl.autogenerated.field.provider.MultiSelectComboBoxProvider;
+import org.vaadin.crudui2.layout.impl.SplitCrudLayout;
+
+@Route(value = "playground2")
+@JsModule("theme-handler.js")
+@SuppressWarnings("null")
+public class PlaygroundView2 extends VerticalLayout {
+
+    public PlaygroundView2(UserService userService, GroupService groupService) {
+        var mainGroupField = Field.of(User::getMainGroup, User::setMainGroup, Group.class);
+
+        Crud<User> crud = Crud.of(User.class)
+                .list(GridListListFactory.of(User.class)
+                        .columns(
+                                Column.of(User::getName).header("The name"),
+                                Column.of(User::getEmail).header("The email"),
+                                Column.of(User::getSalary).header("The salary"),
+                                Column.of(User::getPhoneNumber).header("The phone number"),
+                                Column.of(User::getMaritalStatus).header("The marital status"),
+                                Column.of(User::getBirthDate).header("The date of birth"),
+                                Column.of(User::getMainGroup).header("The main group"),
+                                Column.of(User::getGroups).header("The groups"),
+                                Column.of(User::getActive).header("Is it active?")))
+                .form(CrudFormFactory.of(User.class)
+                        .setFields(
+                                Field.of(User::getName, User::setName, String.class).label("Name")
+                                        .enabled(false),
+                                Field.of(User::getMaritalStatus, User::setMaritalStatus, MaritalStatus.class).label("Marital status"),
+                                Field.of(User::getBirthDate, User::setBirthDate, LocalDate.class).label("Birth date"),
+                                Field.of(User::getSalary, User::setSalary, BigDecimal.class).label("Salary"),
+                                Field.of(User::getGroups, User::setGroups, Set.class).label("In groups")
+                                        .fieldProvider(new MultiSelectComboBoxProvider<>(u -> groupService.findAll(), Group::getName))
+                                        .onValueChangeUpdate(mainGroupField),
+                                mainGroupField.label("Main group")
+                                        .fieldProvider(new ComboBoxProvider<>(User::getGroups, Group::getName))
+                                        .onUpdate(this::populateMainGroupBox),
+                                Field.of(User::getActive, User::setActive, Boolean.class).label("Active"))
+                        .fieldsFor(CrudOperation.DELETE,
+                                Field.of(User::getName, User::setName).caption("The name"),
+                                Field.of(User::getEmail, User::setEmail).caption("The email"))
+                        .additionalFieldsFor(CrudOperation.ADD,
+                                Field.of(User::getPassword, User::setPassword).caption("The password")))
+                .layout(new SplitCrudLayout<User>(Orientation.HORIZONTAL))
+                .onCreate(userService::save)
+                .onRead(userService::findAll)
+                .onUpdate(userService::save)
+                .onDelete(userService::delete)
+                .build();
+
+        add(crud);
+		expand(crud);
+		setSizeFull();
+		UI.getCurrent().getPage().executeJs("window.applySystemTheme()");
+    }
+
+    private void populateMainGroupBox(AbstractField<?, Group> field, Object bean) {
+		var hasItems = (HasListDataView<Group, ?>) field;
+		var hasValue = (HasValue<?, Group>) field;
+		User user = (User) bean;
+		Group previousMainGroup = user.getMainGroup();
+		hasItems.setItems(user.getGroups());
+		if (user.getGroups().contains(previousMainGroup)) {
+			hasValue.setValue(previousMainGroup);
+		}
+	}
+
+}
