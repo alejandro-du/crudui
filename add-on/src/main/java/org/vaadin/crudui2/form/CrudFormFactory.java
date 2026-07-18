@@ -1,8 +1,14 @@
 package org.vaadin.crudui2.form;
 
+import org.vaadin.crudui2.CrudOperation;
+
 public interface CrudFormFactory<B> {
 
 	CrudForm<B> build(B bean);
+
+	default CrudForm<B> build(B bean, CrudOperation operation) {
+		return build(bean);
+	}
 
 	/**
 	 * Gets the caption to use when creating a new bean.

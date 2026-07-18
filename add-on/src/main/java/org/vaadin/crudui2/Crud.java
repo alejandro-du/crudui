@@ -414,8 +414,18 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     private void showForm(B bean) {
+        CrudOperation operation = isCreating ? CrudOperation.CREATE
+                : (viewBeforeEdit || !updateOperationVisible ? CrudOperation.READ : CrudOperation.UPDATE);
+
+        showForm(bean, operation);
+    }
+
+    private void showForm(B bean, CrudOperation operation) {
         // Update the form
-        form = formFactory.build(bean);
+        form = formFactory.build(bean, operation);
+        isCreating = operation == CrudOperation.CREATE;
+
+        crudLayout.hideForm();
 
         // Lazy-create buttons on first use (they're reused across form displays)
         if (saveButton == null) {
@@ -426,7 +436,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
         }
 
         // Determine if form should be read-only
-        boolean shouldBeReadOnly = !isCreating && (viewBeforeEdit || !updateOperationVisible);
+        boolean shouldBeReadOnly = operation == CrudOperation.READ;
         form.setReadOnly(shouldBeReadOnly);
 
         // Show form and add action buttons
@@ -525,15 +535,8 @@ public class Crud<B> extends Composite<VerticalLayout> {
         }
 
         // Switch form from read-only to edit mode
-        if (form != null) {
-            form.setReadOnly(false);
-
-            // Update form actions to show Save/Cancel instead of just Cancel
-            crudLayout.hideForm();
-            crudLayout.showCrudForm(form);
-            crudLayout.setFormActionCaption(formFactory.getUpdateCaption());
-            crudLayout.addFormActionComponent(saveButton);
-            crudLayout.addFormActionComponent(cancelButton);
+        if (selectedBean != null) {
+            showForm(selectedBean, CrudOperation.UPDATE);
         }
     }
 
