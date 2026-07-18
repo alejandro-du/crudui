@@ -1,4 +1,4 @@
-# requirement-0003
+# requirement-0003 (obsolete - ignore this requirement)
 
 ## Summary
 

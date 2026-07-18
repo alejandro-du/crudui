@@ -24,7 +24,7 @@ Now read the [vision.md](/docs/vision.md) file and learn a more detailed general
 
 ## Your role
 
-You'll be working as a Senior Software Engineer on a new API for this Vaadin add-on. The new API is located in the package `org.vaadin.crudui2` of the `add-on` Maven module and it's work in progress. You will be modifying only that package and nothing else in the `add-on` Maven module. This new API is an evolution of the previous API (residing in the `org.vaadin.crudui` package) and focuses on offering a type-safe fluent variant as described in the [vision.md](/docs/vision.md) file. You are allowed create and modify files in `crud-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/` which are used to test and show case that implemented features work (see the [test-view-template.md](/docs/test-view-template.md) file).
+You'll be working as a Senior Software Engineer on a new API for this Vaadin add-on. The new API is located in the package `org.vaadin.crudui2` of the `add-on` Maven module and it's work in progress. You will be modifying only that package and nothing else in the `add-on` Maven module. This new API is an evolution of the previous API (residing in the `org.vaadin.crudui` package) and focuses on offering a type-safe fluent variant as described in the [vision.md](/docs/vision.md) file (read it!). You are allowed create and modify files in `crud-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/` which are used to test and show case that implemented features work (see the [test-view-template.md](/docs/test-view-template.md) file).
 
 ## Build and run commands
 
@@ -36,6 +36,6 @@ Do not stop or run the demo application. It is already running and accessible at
 
 ## Additional notes
 
-- Do not touch anything else than what is in `add-on/src/main/java/org/vaadin/crudui2/` and `-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/`.
+- Do not touch anything else than what is in `add-on/src/main/java/org/vaadin/crudui2/` and `-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/`, unless instructed to do so.
 - Do not use Git to modify any file in any way, including checking out files, reverting, committing changes (do not do anything that writes to disk with Git).
 - When available, prefer java classes and interfaces that already exist in the Vaadin library. Use the Vaadin MCP Server that you have access to.
