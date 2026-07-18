@@ -35,7 +35,11 @@ public class Requirement0002 extends VerticalLayout {
 
         // Create CRUD with custom grid
         Crud<User> userCrud = Crud.of(User.class)
-                .list(new GridList<>(myGrid))
+                .list(GridList.of(User.class).grid(myGrid))
+                .onRead(userService::findAll)
+                .onCreate(userService::save)
+                .onUpdate(userService::save)
+                .onDelete(userService::delete)
                 .build();
 
         // Add the CRUD component to layout

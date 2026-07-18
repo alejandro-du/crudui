@@ -6,9 +6,10 @@ grid.addColumn(User::getBirthDate).setHeader("The birth date of the user");
 Field mainGroupField = GroupField.of(User::getGroups, User::setGroups);
 
 Crud crud = Crud.of(User.class)
-		.list(new GridList<>(grid))
+		.list(GridList.of(User.class)
+            .grid(grid))
 		.form(CrudFormFactory.of(User.class)
-				.defaultFields(
+				.fields(
 						Field.of(User::getName, User::setName).caption("The name"),
 						Field.of(User::getBirthDate, User::setBirthDate).caption("The date of birth"),
 						Field.of(User::getEmail, User::setEmail).caption("The email"),
@@ -26,7 +27,8 @@ Crud crud = Crud.of(User.class)
 						Field.of(User::getEmail, User::setEmail).caption("The email"))
 				.additionalFieldsFor(CrudOperation.ADD,
 						Field.of(User::getPassword, User::setPassword).caption("The password")))
-		.layout(new SplitCrudLayout<>(Orientation.HORIZONTAL))
+		.layout(SplitCrudLayout.of(User.class)
+                .orientation(Orientation.HORIZONTAL))
 		.onCreate(userService::save)
 		.onRead(userService::findAll)
 		.onUpdate(userService::save)
@@ -38,7 +40,7 @@ Crud crud = Crud.of(User.class)
 Crud crud2 = Crud.of(User.class)
 		.list(new GridList<>(grid))
 		.form(CrudFormFactory.of(User.class)
-				.defaultFields(
+				.fields(
 						Field.forProperty("name").caption("The name"),
 						Field.forProperty("birthDate").caption("The date of birth"),
 						Field.forProperty("email").caption("The email"),

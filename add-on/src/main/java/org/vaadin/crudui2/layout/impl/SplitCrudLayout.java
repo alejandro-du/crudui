@@ -13,8 +13,12 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout.Orientation;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vaadin.crudui2.form.CrudForm;
 import org.vaadin.crudui2.layout.CrudLayout;
+import org.vaadin.crudui2.layout.CrudLayoutFactory;
 import org.vaadin.crudui2.list.CrudList;
 
 public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements CrudLayout<B> {
@@ -32,9 +36,19 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 	private Scroller crudFormContainer = new Scroller(ScrollDirection.VERTICAL);
 	private HorizontalLayout formActionContainer = new HorizontalLayout();
 	private HorizontalLayout formActionButtonsContainer = new HorizontalLayout();
-	private CrudList<B> currentCrudList;
 
-	public SplitCrudLayout(Orientation orientation) {
+	/**
+	 * Creates a new fluent builder for SplitCrudLayout.
+	 *
+	 * @param beanType The bean class (used for generic type inference)
+	 * @param <B>      The bean type
+	 * @return A builder for configuring the layout
+	 */
+	public static <B> Builder<B> of(Class<B> beanType) {
+		return new Builder<>();
+	}
+
+	private SplitCrudLayout(Orientation orientation) {
 		filterContainer.setWidthFull();
 
 		headerLayout.add(filterContainer);
@@ -73,7 +87,7 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 		formActionButtonsContainer.setSpacing(true);
 		formActionButtonsContainer.setPadding(false);
 		formActionButtonsContainer.setJustifyContentMode(JustifyContentMode.END);
- 		formActionButtonsContainer.setWidthFull();
+        formActionButtonsContainer.setWidthFull();
 
 		formActionContainer.add(formActionButtonsContainer);
 		formActionContainer.expand(formActionButtonsContainer);
@@ -93,20 +107,10 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 		getContent().setPadding(false);
 	}
 
-	public SplitCrudLayout() {
-		this(Orientation.HORIZONTAL);
-	}
-
 	@Override
 	public void setCrudList(CrudList<B> crudList) {
-		currentCrudList = crudList;
 		crudListContainer.removeAll();
 		crudListContainer.add((Component) crudList);
-	}
-
-	@Override
-	public CrudList<B> getCrudList() {
-		return currentCrudList;
 	}
 
 	@Override
@@ -150,5 +154,115 @@ public class SplitCrudLayout<B> extends Composite<VerticalLayout> implements Cru
 	public void addFilterComponent(Component component) {
 		filterContainer.add(component);
 		filterContainer.expand(component);
+	}
+
+	/**
+	 * Fluent builder for SplitCrudLayout.
+	 *
+	 * @param <B> The bean type
+	 */
+	public static class Builder<B> implements CrudLayoutFactory<B> {
+		private Orientation orientation = Orientation.HORIZONTAL;
+		private CrudList<B> crudList;
+		private final List<Component> crudActionComponents = new ArrayList<>();
+		private final List<Component> formActionComponents = new ArrayList<>();
+		private final List<Component> filterComponents = new ArrayList<>();
+		private String formActionCaption;
+
+		Builder() {
+		}
+
+		/**
+		 * Sets the orientation of the split layout.
+		 *
+		 * @param orientation The orientation (HORIZONTAL or VERTICAL)
+		 * @return This builder for chaining
+		 */
+		public Builder<B> orientation(Orientation orientation) {
+			this.orientation = orientation;
+			return this;
+		}
+
+		/**
+		 * Sets the CRUD list component.
+		 *
+		 * @param crudList The CRUD list
+		 * @return This builder for chaining
+		 */
+		public Builder<B> crudList(CrudList<B> crudList) {
+			this.crudList = crudList;
+			return this;
+		}
+
+		/**
+		 * Adds a CRUD action component (e.g., Create button).
+		 *
+		 * @param component The component to add
+		 * @return This builder for chaining
+		 */
+		public Builder<B> addCrudActionComponent(Component component) {
+			this.crudActionComponents.add(component);
+			return this;
+		}
+
+		/**
+		 * Adds a form action component (e.g., Save button).
+		 *
+		 * @param component The component to add
+		 * @return This builder for chaining
+		 */
+		public Builder<B> addFormActionComponent(Component component) {
+			this.formActionComponents.add(component);
+			return this;
+		}
+
+		/**
+		 * Adds a filter component.
+		 *
+		 * @param component The component to add
+		 * @return This builder for chaining
+		 */
+		public Builder<B> addFilterComponent(Component component) {
+			this.filterComponents.add(component);
+			return this;
+		}
+
+		/**
+		 * Sets the form action caption.
+		 *
+		 * @param caption The caption
+		 * @return This builder for chaining
+		 */
+		public Builder<B> formActionCaption(String caption) {
+			this.formActionCaption = caption;
+			return this;
+		}
+
+		/**
+		 * Builds and returns the SplitCrudLayout.
+		 *
+		 * @return The configured SplitCrudLayout
+		 */
+		public SplitCrudLayout<B> build() {
+			SplitCrudLayout<B> layout = new SplitCrudLayout<>(orientation);
+
+			if (crudList != null) {
+				layout.setCrudList(crudList);
+			}
+			for (Component component : crudActionComponents) {
+				layout.addCrudActionComponent(component);
+			}
+			for (Component component : formActionComponents) {
+				layout.addFormActionComponent(component);
+			}
+			for (Component component : filterComponents) {
+				layout.addFilterComponent(component);
+			}
+			if (formActionCaption != null) {
+				layout.setFormActionCaption(formActionCaption);
+			}
+
+			return layout;
+		}
 	}
 }

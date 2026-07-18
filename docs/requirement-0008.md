@@ -9,14 +9,14 @@ Provide an operation-aware fluent form factory API so developers can define defa
 ```java
 Crud<User> userCrud = Crud.of(User.class)
         .form(CrudFormFactory.of(User.class)
-                .defaultFields(
+                .fields(
                         Field.of(User::getName, User::setName).caption("The name"),
                         Field.of(User::getEmail, User::setEmail).caption("The email"),
                         Field.of(User::getGroups, User::setGroups).caption("The groups"))
-                .fieldsFor(CrudOperation.DELETE,
+                .fieldsFor(CrudOperation.DELETE, // sets the fields for this operation
                         Field.of(User::getName, User::setName).caption("The name"),
                         Field.of(User::getEmail, User::setEmail).caption("The email"))
-                .additionalFieldsFor(CrudOperation.ADD,
+                .additionalFieldsFor(CrudOperation.ADD, // add as oppose to set (add to what is already there)
                         Field.of(User::getPassword, User::setPassword).caption("The password")))
         .build();
 ```

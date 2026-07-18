@@ -9,8 +9,6 @@ public interface CrudLayout<B> {
 
 	void setCrudList(CrudList<B> crudList);
 
-	CrudList<B> getCrudList();
-
 	void showCrudForm(CrudForm<B> crudForm);
 
 	void hideForm();

@@ -49,7 +49,7 @@ public class Requirement0003 extends VerticalLayout {
         listenerPanel.setSpacing(true);
         listenerPanel.setSizeFull();
         Crud<User> crudWithListener = Crud.of(User.class)
-            .setCrudListener(new UserCrudListener(userService))
+            .crudListener(new UserCrudListener(userService))
             .build();
         listenerPanel.add(crudWithListener);
 
