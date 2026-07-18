@@ -1,3 +1,5 @@
+// identifiers (method, class, interface names) could vary from the current implementation. This is only for guidance and inspiration
+
 var grid = new Grid<User>();
 grid.addColumn(User::getId);
 grid.addColumn(User::getName).setHeader("The name of the user");

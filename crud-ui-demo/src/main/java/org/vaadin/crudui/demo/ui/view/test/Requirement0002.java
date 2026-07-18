@@ -2,6 +2,7 @@ package org.vaadin.crudui.demo.ui.view.test;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.demo.entity.User;
@@ -35,8 +36,8 @@ public class Requirement0002 extends VerticalLayout {
 
         // Create CRUD with custom grid
         Crud<User> userCrud = Crud.of(User.class)
-                .list(GridList.of(User.class).grid(myGrid))
-                .onRead(userService::findAll)
+                .list(GridList.of(User.class).grid(myGrid)
+                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
                 .onCreate(userService::save)
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)

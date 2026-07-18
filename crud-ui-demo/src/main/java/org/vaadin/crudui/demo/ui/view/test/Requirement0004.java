@@ -3,17 +3,21 @@ package org.vaadin.crudui.demo.ui.view.test;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
+
 import org.vaadin.crudui.demo.entity.User;
 import org.vaadin.crudui.demo.service.UserService;
 import org.vaadin.crudui2.Crud;
+import org.vaadin.crudui2.list.impl.GridList;
 
 /**
  * Test view for requirement-0004: Allow read-only forms and edit button.
  *
  * This view demonstrates the viewBeforeEdit feature using Vaadin Tabs:
  * 1. Standard mode: Form is editable immediately when item is selected
- * 2. View-before-edit mode: Form is read-only initially with an "Update" button to enable editing
+ * 2. View-before-edit mode: Form is read-only initially with an "Update" button
+ * to enable editing
  */
 @Route(value = "requirement-0004")
 public class Requirement0004 extends VerticalLayout {
@@ -32,12 +36,13 @@ public class Requirement0004 extends VerticalLayout {
         viewBeforeEditPanel.setSpacing(true);
         viewBeforeEditPanel.setSizeFull();
         Crud<User> viewBeforeEditCrud = Crud.of(User.class)
-            .onRead(userService::findAll)
-            .onCreate(userService::save)
-            .onUpdate(userService::save)
-            .onDelete(userService::delete)
-            .viewBeforeEdit(true) // Form is read-only initially with Update button
-            .build();
+                .list(GridList.of(User.class)
+                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .onCreate(userService::save)
+                .onUpdate(userService::save)
+                .onDelete(userService::delete)
+                .viewBeforeEdit(true) // Form is read-only initially with Update button
+                .build();
         viewBeforeEditPanel.add(viewBeforeEditCrud);
 
         Tab viewBeforeEditTab = new Tab("View-Before-Edit Mode");
@@ -49,12 +54,13 @@ public class Requirement0004 extends VerticalLayout {
         standardPanel.setSpacing(true);
         standardPanel.setSizeFull();
         Crud<User> standardCrud = Crud.of(User.class)
-            .onRead(userService::findAll)
-            .onCreate(userService::save)
-            .onUpdate(userService::save)
-            .onDelete(userService::delete)
-            .viewBeforeEdit(false) // Form is editable immediately
-            .build();
+                .list(GridList.of(User.class)
+                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .onCreate(userService::save)
+                .onUpdate(userService::save)
+                .onDelete(userService::delete)
+                .viewBeforeEdit(false) // Form is editable immediately
+                .build();
         standardPanel.add(standardCrud);
 
         Tab standardTab = new Tab("Standard Mode");
@@ -82,4 +88,5 @@ public class Requirement0004 extends VerticalLayout {
         add(contentContainer);
         setFlexGrow(1, contentContainer);
     }
+
 }

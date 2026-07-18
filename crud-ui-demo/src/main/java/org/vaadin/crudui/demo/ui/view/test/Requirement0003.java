@@ -1,5 +1,6 @@
 package org.vaadin.crudui.demo.ui.view.test;
 
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -7,14 +8,15 @@ import com.vaadin.flow.router.Route;
 import org.vaadin.crudui.demo.entity.User;
 import org.vaadin.crudui.demo.service.UserService;
 import org.vaadin.crudui2.Crud;
-import org.vaadin.crudui2.CrudListener;
+import org.vaadin.crudui2.list.impl.GridList;
 
 /**
- * Test view for requirement-0003: Support both CrudListener and lambda expressions.
+ * Test view for requirement-0003: demonstrate fluent CRUD setup with explicit
+ * DataProvider.
  *
  * This view demonstrates two approaches using Vaadin Tabs:
- * 1. Lambda expressions approach using onRead, onCreate, onUpdate, onDelete
- * 2. CrudListener interface approach using setCrudListener
+ * 1. Default list with fluent mutation hooks
+ * 2. Custom list configured via GridList builder
  */
 @Route(value = "requirement-0003")
 public class Requirement0003 extends VerticalLayout {
@@ -33,27 +35,32 @@ public class Requirement0003 extends VerticalLayout {
         lambdaPanel.setSpacing(true);
         lambdaPanel.setSizeFull();
         Crud<User> crudWithLambda = Crud.of(User.class)
-            .onRead(userService::findAll)
-            .onCreate(userService::save)
-            .onUpdate(userService::save)
-            .onDelete(userService::delete)
-            .build();
+                .list(GridList.of(User.class)
+                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .onCreate(userService::save)
+                .onUpdate(userService::save)
+                .onDelete(userService::delete)
+                .build();
         lambdaPanel.add(crudWithLambda);
 
-        Tab lambdaTab = new Tab("Lambda Expressions");
+        Tab lambdaTab = new Tab("Default List");
         tabs.add(lambdaTab);
 
-        // Tab 2: CrudListener interface approach
+        // Tab 2: Custom list builder approach
         VerticalLayout listenerPanel = new VerticalLayout();
         listenerPanel.setPadding(true);
         listenerPanel.setSpacing(true);
         listenerPanel.setSizeFull();
         Crud<User> crudWithListener = Crud.of(User.class)
-            .crudListener(new UserCrudListener(userService))
-            .build();
+                .list(GridList.of(User.class)
+                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .onCreate(userService::save)
+                .onUpdate(userService::save)
+                .onDelete(userService::delete)
+                .build();
         listenerPanel.add(crudWithListener);
 
-        Tab listenerTab = new Tab("CrudListener Interface");
+        Tab listenerTab = new Tab("Custom List Builder");
         tabs.add(listenerTab);
 
         // Create a container for the tab content
@@ -77,36 +84,5 @@ public class Requirement0003 extends VerticalLayout {
         add(tabs);
         add(contentContainer);
         setFlexGrow(1, contentContainer);
-    }
-
-    /**
-     * Example CrudListener implementation.
-     */
-    private static class UserCrudListener implements CrudListener<User> {
-        private final UserService userService;
-
-        public UserCrudListener(UserService userService) {
-            this.userService = userService;
-        }
-
-        @Override
-        public java.util.List<User> onRead() {
-            return userService.findAll();
-        }
-
-        @Override
-        public void onCreate(User user) {
-            userService.save(user);
-        }
-
-        @Override
-        public void onUpdate(User user) {
-            userService.save(user);
-        }
-
-        @Override
-        public void onDelete(User user) {
-            userService.delete(user);
-        }
     }
 }

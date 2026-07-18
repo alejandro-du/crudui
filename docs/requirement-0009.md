@@ -7,10 +7,10 @@ Add hierarchical list support to `crudui2`. The current implementation only ship
 ## Example
 
 ```java
-TreeGrid<Category> treeGrid = new TreeGrid<>(Category.class, false);
-CrudList<Category> treeList = new TreeGridList<>(treeGrid);
+TreeGrid<Technology> treeGrid = new TreeGrid<>(Technology.class, false);
+CrudList<Technology> treeList = new TreeGridList<>(treeGrid);
 
-Crud<Category> categoryCrud = Crud.of(Category.class)
+Crud<Technology> technologyCrud = Crud.of(Technology.class)
         .list(treeList)
         .build();
 ```

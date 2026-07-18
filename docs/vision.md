@@ -58,5 +58,3 @@ There are also some additional support Java interfaces that help gluing things t
 - **`CrudFormFactory`:** Defines the contract required for building CRUD forms. Needed because forms are created multiple times per CRUD instance as the user interacts with it.
 
 - **`VaadinFieldProvider`:** Defines the contract required for building new Vaadin input fields when auto-generating CRUD forms. Needed because forms with input fields are created multiple times per CRUD instance as the user interacts with it.
-
-- **`CrudListener`:** Connects the CRUD to backend operations. Application developers must implement this interface (or call the equivalent convenience methods defined in the `Crud` class).
