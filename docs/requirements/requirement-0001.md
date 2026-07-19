@@ -27,4 +27,4 @@ See the PlaygroundView1.java file for inspiration on how to implement all this. 
 
 - [ ] API behaves as described.
 - [ ] Only files in `add-on/src/main/java/org/vaadin/crudui2/` are touched in the `add-on` Maven module.
-- [ ] A new test view exists and showcases the implemented feature. See the instructions in the [test-view-template.md](/docs/test-view-template.md) file.
+- [ ] A new test view exists and showcases the implemented feature. See the instructions in the [test-view-template.md](/docs/requirements/test-view-template.md) file.

@@ -33,7 +33,7 @@ Improve layout and UX:
 - [ ] H3 title ("Add" or "Update") is displayed to the left of action components in non-read-only mode
 - [ ] Form titles/captions are customizable per CRUD operation
 - [ ] Only files in `add-on/src/main/java/org/vaadin/crudui2/` are touched in the `add-on` Maven module.
-- [ ] A new test view exists and showcases the implemented feature. See the instructions in the [test-view-template.md](/docs/test-view-template.md) file.
+- [ ] A new test view exists and showcases the implemented feature. See the instructions in the [test-view-template.md](/docs/requirements/test-view-template.md) file.
 - [ ] Update and delete buttons are disabled as specified in the summary.
 - [ ] No grid items are selected if the form is not currently showing such item (editable or read-only)
 

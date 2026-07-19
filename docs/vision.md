@@ -6,7 +6,7 @@ Vaadin business applications often require many CRUD views. Creating CRUDs for J
 
 ## Solution
 
-Provide a Vaadin add-on that generates CRUD Vaadin components that can be added to any Vaadin layout at runtime from Java beans via a fluent, type-safe API. The library offers customizable layouts and forms as well as validation and customization hooks so UIs can be generated and customized with minimal boilerplate.
+Provide a Vaadin add-on that generates CRUD Vaadin components that can be added to any Vaadin layout at runtime from Java beans via a high-quality fluent, type-safe API. The library offers customizable layouts and forms as well as validation and customization hooks so UIs can be generated and customized with minimal boilerplate.
 
 ## Target Users
 

@@ -29,7 +29,7 @@ Crud<Technology> technologyCrud = Crud.of(Technology.class)
 - [ ] No changes to the API are made.
 - [ ] CRUD operations work.
 - [ ] API behaves as described.
-- [ ] Only a new test view is created and other files are untouched. See the instructions in the [test-view-template.md](/docs/test-view-template.md) file.
+- [ ] Only a new test view is created and other files are untouched. See the instructions in the [test-view-template.md](/docs/requirements/test-view-template.md) file.
 - [ ] The new test view allows us to decide whether API changes are needed or not (do not implement this changes just yet).
 
 ## Remember
