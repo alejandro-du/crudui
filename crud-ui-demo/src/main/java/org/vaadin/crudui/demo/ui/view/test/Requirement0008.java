@@ -6,7 +6,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.demo.entity.Group;
@@ -53,10 +52,10 @@ public class Requirement0008 extends VerticalLayout {
                 .useBeanValidation();
 
         Crud<User> crud = Crud.of(User.class)
-                .list(GridList.of(User.class)
-                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .list(GridList.of(User.class))
                 .form(operationAwareFormFactory)
                 .onCreate(userService::save)
+                .onRead(userService::findAll)
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)
                 .viewBeforeEdit(true)

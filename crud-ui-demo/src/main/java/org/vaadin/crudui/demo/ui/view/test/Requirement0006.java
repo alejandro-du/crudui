@@ -2,7 +2,6 @@ package org.vaadin.crudui.demo.ui.view.test;
 
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.demo.entity.User;
@@ -20,9 +19,9 @@ public class Requirement0006 extends VerticalLayout {
         setSpacing(true);
 
         Crud<User> noCreateUpdateDeleteCrud = Crud.of(User.class)
-                .list(GridList.of(User.class)
-                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .list(GridList.of(User.class))
                 .onCreate(userService::save)
+                .onRead(userService::findAll)
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)
                 .createOperationVisible(false)
@@ -31,9 +30,9 @@ public class Requirement0006 extends VerticalLayout {
                 .build();
 
         Crud<User> createOnlyCrud = Crud.of(User.class)
-                .list(GridList.of(User.class)
-                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .list(GridList.of(User.class))
                 .onCreate(userService::save)
+                .onRead(userService::findAll)
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)
                 .createOperationVisible(true)

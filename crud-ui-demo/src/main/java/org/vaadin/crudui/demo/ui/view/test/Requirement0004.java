@@ -3,7 +3,6 @@ package org.vaadin.crudui.demo.ui.view.test;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.demo.entity.User;
@@ -36,9 +35,9 @@ public class Requirement0004 extends VerticalLayout {
         viewBeforeEditPanel.setSpacing(true);
         viewBeforeEditPanel.setSizeFull();
         Crud<User> viewBeforeEditCrud = Crud.of(User.class)
-                .list(GridList.of(User.class)
-                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .list(GridList.of(User.class))
                 .onCreate(userService::save)
+                .onRead(userService::findAll)
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)
                 .viewBeforeEdit(true) // Form is read-only initially with Update button
@@ -54,8 +53,8 @@ public class Requirement0004 extends VerticalLayout {
         standardPanel.setSpacing(true);
         standardPanel.setSizeFull();
         Crud<User> standardCrud = Crud.of(User.class)
-                .list(GridList.of(User.class)
-                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .list(GridList.of(User.class))
+                .onRead(userService::findAll)
                 .onCreate(userService::save)
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)

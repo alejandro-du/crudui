@@ -16,13 +16,16 @@ import org.vaadin.crudui2.layout.CrudLayoutFactory;
 import org.vaadin.crudui2.layout.impl.SplitCrudLayout;
 import org.vaadin.crudui2.list.CrudList;
 import org.vaadin.crudui2.list.CrudListFactory;
+import org.vaadin.crudui2.data.provider.SimpleBackendDataProvider;
 import org.vaadin.crudui2.list.impl.GridList;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import com.vaadin.flow.data.provider.DataProvider;
 
 /**
  * A fluent CRUD component factory. Creates a fully functional CRUD UI from a Java bean class
@@ -31,7 +34,8 @@ import java.util.function.Supplier;
  * Usage with lambda methods:
  * <pre>
  * Crud&lt;User&gt; crud = Crud.of(User.class)
- *     .list(GridList.of(User.class).dataProvider(DataProvider.fromCallbacks(...)))
+ *     .list(GridList.of(User.class))
+ *     .onRead(userService::findAll)
  *     .onCreate(userService::save)
  *     .onUpdate(userService::save)
  *     .onDelete(userService::delete)
@@ -47,6 +51,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
     private CrudLayout<B> crudLayout;
     private CrudFormFactory<B> formFactory;
     private CrudForm<B> form;
+    private DataProvider<B, ?> readDataProvider;
     private Consumer<B> createOperation;
     private Consumer<B> updateOperation;
     private Consumer<B> deleteOperation;
@@ -147,6 +152,28 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     /**
+     * Sets the read operation using a Vaadin {@link DataProvider}.
+     *
+     * @param dataProvider The data provider used by the configured list
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> onRead(DataProvider<B, ?> dataProvider) {
+        this.readDataProvider = dataProvider;
+        this.crudList.setDataProvider(dataProvider);
+        return this;
+    }
+
+    /**
+     * Sets the read operation using a supplier that returns all current items.
+     *
+     * @param itemsSupplier Supplier returning the current collection of beans
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> onRead(Supplier<? extends Collection<B>> itemsSupplier) {
+        return onRead(new SimpleBackendDataProvider<>(itemsSupplier::get));
+    }
+
+    /**
      * Enables or disables the view-before-edit mode.
      * When enabled, forms are shown in read-only mode with an "Update" button to enable editing.
      * When disabled (default), forms are shown in editable mode immediately.
@@ -234,6 +261,9 @@ public class Crud<B> extends Composite<VerticalLayout> {
      */
     public Crud<B> list(CrudListFactory<B> listFactory) {
         this.crudList = listFactory.build();
+        if (readDataProvider != null) {
+            this.crudList.setDataProvider(readDataProvider);
+        }
         this.crudLayout.setCrudList(this.crudList);
         applyOperationVisibility();
         return this;

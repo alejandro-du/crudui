@@ -15,8 +15,8 @@ import org.vaadin.crudui2.list.impl.GridList;
  * DataProvider.
  *
  * This view demonstrates two approaches using Vaadin Tabs:
- * 1. Default list with fluent mutation hooks
- * 2. Custom list configured via GridList builder
+ * 1. Read wiring via DataProvider
+ * 2. Read wiring via supplier method reference
  */
 @Route(value = "requirement-0003")
 public class Requirement0003 extends VerticalLayout {
@@ -35,15 +35,15 @@ public class Requirement0003 extends VerticalLayout {
         lambdaPanel.setSpacing(true);
         lambdaPanel.setSizeFull();
         Crud<User> crudWithLambda = Crud.of(User.class)
-                .list(GridList.of(User.class)
-                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .list(GridList.of(User.class))
                 .onCreate(userService::save)
+                .onRead(DataProvider.ofCollection(userService.findAll()))
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)
                 .build();
         lambdaPanel.add(crudWithLambda);
 
-        Tab lambdaTab = new Tab("Default List");
+        Tab lambdaTab = new Tab("onRead(DataProvider)");
         tabs.add(lambdaTab);
 
         // Tab 2: Custom list builder approach
@@ -52,15 +52,15 @@ public class Requirement0003 extends VerticalLayout {
         listenerPanel.setSpacing(true);
         listenerPanel.setSizeFull();
         Crud<User> crudWithListener = Crud.of(User.class)
-                .list(GridList.of(User.class)
-                        .dataProvider(DataProvider.ofCollection(userService.findAll())))
+                .list(GridList.of(User.class))
+                .onRead(userService::findAll)
                 .onCreate(userService::save)
                 .onUpdate(userService::save)
                 .onDelete(userService::delete)
                 .build();
         listenerPanel.add(crudWithListener);
 
-        Tab listenerTab = new Tab("Custom List Builder");
+        Tab listenerTab = new Tab("onRead(userService::findAll)");
         tabs.add(listenerTab);
 
         // Create a container for the tab content
