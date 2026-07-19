@@ -71,6 +71,7 @@ Crud myCrud = Crud.of(User.class)
                 .formRelatedMethod1()
                 .formRelatedMethod2()
                 .formRelatedMethod3())
+        // other methods not related to layout, list, or form
         .build();
 ```
 
@@ -87,5 +88,7 @@ There are also some additional support Java interfaces that help gluing things t
 - **`CrudFormFactory`:** Defines the contract required for building CRUD forms. Needed because forms are created multiple times per CRUD instance as the user interacts with it.
 
 - **`VaadinFieldProvider`:** Defines the contract required for building new Vaadin input fields when auto-generating CRUD forms. Needed because forms with input fields are created multiple times per CRUD instance as the user interacts with it.
+
+Components can be used separately. For example, an application developer should be able to use `GridList` and add them into layouts. The same applies to list and form implementations. These implementations should also offer fluent APIs.
 
 There is a `CrudOperation` enum with values that correspond to each CRUD operation. This enum can be used when convenient. Never add, remove or modify the values in this enum.
