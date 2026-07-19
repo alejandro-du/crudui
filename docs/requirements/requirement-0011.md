@@ -41,5 +41,6 @@ Crud<User> userCrud = Crud.of(User.class)
 Remember from the AGENTS.md file:
 
 - Use the Playwright MCP server to check that the changes are correct!!!
+- Wait ~4 seconds after making changes or compiling before checking with Playwright!!!
 - Use the Vaadin MCP server to check Vaadin APIs!!!
 - The demo app is already running and available at http://localhost:8080!!!
