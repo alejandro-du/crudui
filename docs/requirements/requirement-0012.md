@@ -8,8 +8,13 @@ Allow custom new-entity creation in `Crud` so create mode does not require a pub
 
 ```java
 Crud<User> userCrud = Crud.of(User.class)
-        .newInstanceSupplier(() -> User.withDefaults("Spain"))
-        .onCreate(userService::save)
+        .form()
+                .newInstanceSupplier(() -> {
+                    var user = new User(); // it's okay to have it here for simplicity but it shouldn't be needed
+                    user.setSalary(... some default salary value...);
+                    return user;
+                })
+        ... other configurations ...
         .build();
 ```
 

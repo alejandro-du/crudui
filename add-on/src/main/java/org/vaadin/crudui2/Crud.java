@@ -52,6 +52,7 @@ public class Crud<B> extends Composite<VerticalLayout> {
     private CrudList<B> crudList;
     private CrudLayout<B> crudLayout;
     private CrudFormFactory<B> formFactory;
+    private Supplier<B> newInstanceSupplier;
     private CrudForm<B> form;
     private DataProvider<B, ?> readDataProvider;
     private Consumer<B> createOperation;
@@ -241,6 +242,15 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     /**
+     * Returns a builder for configuring form-related behavior.
+     *
+     * @return A FormBuilder for chaining form-related configuration
+     */
+    public FormBuilder form() {
+        return new FormBuilder();
+    }
+
+    /**
      * Adds a filter component to the active layout.
      *
      * @param component The filter component to add
@@ -364,24 +374,19 @@ public class Crud<B> extends Composite<VerticalLayout> {
 
         // Create action buttons before selection listeners so enable state can be updated consistently
         createButton = new Button("Create", e -> {
-            try {
-                // Entering create mode must clear list selection and disable update/delete actions.
-                if (deleteButton != null) {
-                    deleteButton.setEnabled(false);
-                }
-                if (updateButton != null) {
-                    updateButton.setEnabled(false);
-                }
-
-                clearListSelectionWithoutEvents();
-
-                selectedBean = beanType.getDeclaredConstructor().newInstance();
-                isCreating = true;
-                showForm(selectedBean);
-            } catch (Exception ex) {
-                suppressSelectionEvents = false;
-                throw new RuntimeException("Failed to create new instance of " + beanType.getName(), ex);
+            // Entering create mode must clear list selection and disable update/delete actions.
+            if (deleteButton != null) {
+                deleteButton.setEnabled(false);
             }
+            if (updateButton != null) {
+                updateButton.setEnabled(false);
+            }
+
+            clearListSelectionWithoutEvents();
+
+            selectedBean = createBeanInstance();
+            isCreating = true;
+            showForm(selectedBean);
         });
 
         deleteButton = new Button("Delete", e -> onDeleteClicked());
@@ -583,6 +588,23 @@ public class Crud<B> extends Composite<VerticalLayout> {
         // Switch form from read-only to edit mode
         if (selectedBean != null) {
             showForm(selectedBean, CrudOperation.UPDATE);
+        }
+    }
+
+    private B createBeanInstance() {
+        if (newInstanceSupplier != null) {
+            B bean = newInstanceSupplier.get();
+            if (bean == null) {
+                throw new IllegalStateException(
+                        "Configured newInstanceSupplier returned null for " + beanType.getName());
+            }
+            return bean;
+        }
+
+        try {
+            return beanType.getDeclaredConstructor().newInstance();
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to create new instance of " + beanType.getName(), ex);
         }
     }
 
@@ -857,6 +879,23 @@ public class Crud<B> extends Composite<VerticalLayout> {
             Crud.this.updateButtonVariants(Crud.this.formButtonConfigs.get(operation), variants);
             Crud.this.applyCrudButtonConfigIfPresent(operation);
             Crud.this.applyFormButtonConfigIfPresent(operation);
+            return Crud.this;
+        }
+    }
+
+    /**
+     * Builder for configuring form-related behavior in a fluent API.
+     */
+    public class FormBuilder {
+
+        /**
+         * Sets a custom supplier used to create new bean instances in create mode.
+         *
+         * @param supplier Supplies a new bean instance when the Create action is triggered
+         * @return This Crud instance for continuing the fluent chain
+         */
+        public Crud<B> newInstanceSupplier(Supplier<B> supplier) {
+            Crud.this.newInstanceSupplier = supplier;
             return Crud.this;
         }
     }
