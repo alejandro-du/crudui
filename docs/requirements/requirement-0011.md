@@ -11,11 +11,11 @@ var nameFilter = new TextField();
 nameFilter.setPlaceholder("Search by name...");
 
 Crud<User> userCrud = Crud.of(User.class)
-        .addFilterComponent(nameFilter)
-        .onRead(userService::findAll)
         .onCreate(userService::save)
+        .onRead(userService::findAll)
         .onUpdate(userService::save)
         .onDelete(userService::delete)
+        .addFilterComponent(nameFilter)
         .onSaveSuccess(user -> Notification.show("Saved: " + user.getName()))
         .onDeleteSuccess(user -> Notification.show("Deleted: " + user.getName()))
         .onOperationError(error -> Notification.show(error.getMessage()))

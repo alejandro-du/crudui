@@ -21,6 +21,7 @@ import org.vaadin.crudui2.data.provider.SimpleBackendDataProvider;
 import org.vaadin.crudui2.list.impl.GridList;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
@@ -75,6 +76,10 @@ public class Crud<B> extends Composite<VerticalLayout> {
     private String deleteConfirmationText = "Are you sure you want to delete this item?";
     private String deleteConfirmationConfirmText = "Delete";
     private String deleteConfirmationCancelText = "Cancel";
+    private final List<Component> filterComponents = new ArrayList<>();
+    private Consumer<B> saveSuccessCallback;
+    private Consumer<B> deleteSuccessCallback;
+    private Consumer<Throwable> operationErrorCallback;
 
 
     private Crud(Class<B> beanType) {
@@ -236,6 +241,51 @@ public class Crud<B> extends Composite<VerticalLayout> {
     }
 
     /**
+     * Adds a filter component to the active layout.
+     *
+     * @param component The filter component to add
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> addFilterComponent(Component component) {
+        this.filterComponents.add(component);
+        this.crudLayout.addFilterComponent(component);
+        return this;
+    }
+
+    /**
+     * Sets an optional callback invoked after successful create or update operations.
+     *
+     * @param callback Callback receiving the saved bean
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> onSaveSuccess(Consumer<B> callback) {
+        this.saveSuccessCallback = callback;
+        return this;
+    }
+
+    /**
+     * Sets an optional callback invoked after a successful delete operation.
+     *
+     * @param callback Callback receiving the deleted bean
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> onDeleteSuccess(Consumer<B> callback) {
+        this.deleteSuccessCallback = callback;
+        return this;
+    }
+
+    /**
+     * Sets an optional callback invoked when create, update, or delete operations fail.
+     *
+     * @param callback Callback receiving the operation error
+     * @return This Crud instance for chaining
+     */
+    public Crud<B> onOperationError(Consumer<Throwable> callback) {
+        this.operationErrorCallback = callback;
+        return this;
+    }
+
+    /**
      * Returns a builder for configuring delete confirmation dialog settings.
      *
      * @return A DeleteConfirmationBuilder for chaining delete confirmation configuration
@@ -287,6 +337,10 @@ public class Crud<B> extends Composite<VerticalLayout> {
 
         // Set the current crudList on the new layout
         this.crudLayout.setCrudList(this.crudList);
+
+        for (Component filterComponent : filterComponents) {
+            this.crudLayout.addFilterComponent(filterComponent);
+        }
 
         // Add the new layout to the root
         getContent().add((Component) this.crudLayout);
@@ -433,28 +487,27 @@ public class Crud<B> extends Composite<VerticalLayout> {
 
         B savedBean = form.getValue();
 
+        boolean success;
         if (isCreating) {
-            // Handle create
-            if (createOperation != null) {
-                createOperation.accept(savedBean);
-            } else {
-                throw new IllegalStateException(
+            success = executeOperation(createOperation, savedBean,
                     "Create operation is not set. Cannot create bean.");
-            }
         } else {
-            // Handle update
-            if (updateOperation != null) {
-                updateOperation.accept(savedBean);
-            } else {
-                throw new IllegalStateException(
+            success = executeOperation(updateOperation, savedBean,
                     "Update operation is not set. Cannot update bean.");
-            }
+        }
+
+        if (!success) {
+            return;
         }
 
         isCreating = false;
 
         // Refresh the list to show updated data
         crudList.refreshAllItems();
+
+        if (saveSuccessCallback != null) {
+            saveSuccessCallback.accept(savedBean);
+        }
 
         // Hide form after save
         hideForm();
@@ -482,18 +535,44 @@ public class Crud<B> extends Composite<VerticalLayout> {
             return;
         }
 
-        if (deleteOperation != null) {
-            deleteOperation.accept(beanToDelete);
-        } else {
-            throw new IllegalStateException(
+        boolean success = executeOperation(deleteOperation, beanToDelete,
                 "Delete operation is not set. Cannot delete bean.");
+
+        if (!success) {
+            return;
         }
 
         // Refresh the list to show updated data
         crudList.refreshAllItems();
 
+        if (deleteSuccessCallback != null) {
+            deleteSuccessCallback.accept(beanToDelete);
+        }
+
         // Hide form and deselect
         hideForm();
+    }
+
+    private boolean executeOperation(Consumer<B> operation, B bean, String missingOperationMessage) {
+        if (operation == null) {
+            return handleOperationError(new IllegalStateException(missingOperationMessage));
+        }
+
+        try {
+            operation.accept(bean);
+            return true;
+        } catch (RuntimeException error) {
+            return handleOperationError(error);
+        }
+    }
+
+    private boolean handleOperationError(RuntimeException error) {
+        if (operationErrorCallback != null) {
+            operationErrorCallback.accept(error);
+            return false;
+        }
+
+        throw error;
     }
 
     private void onUpdateClicked() {
