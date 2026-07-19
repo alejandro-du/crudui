@@ -7,6 +7,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Setter;
+import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.ValueProvider;
 
 import org.vaadin.crudui2.form.CrudForm;
@@ -61,13 +62,33 @@ public class Form<B> extends Composite<FormLayout> implements CrudForm<B> {
 
 	public <C extends AbstractField<C, V>, V> void add(AbstractField<C, V> field,
 			ValueProvider<B, V> getter, Setter<B, V> setter) {
-		binder.forField(field).bind(getter, setter);
+		add(field, getter, setter, null);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void add(AbstractField<?, ?> field,
+			ValueProvider<B, ?> getter, Setter<B, ?> setter, Converter<?, ?> converter) {
+		if (converter != null) {
+			binder.forField(field).withConverter((Converter) converter).bind(getter, setter);
+		} else {
+			binder.forField(field).bind((ValueProvider) getter, (Setter) setter);
+		}
 		getContent().add(field);
 	}
 
 	public <C extends AbstractField<C, V>, V> void add(AbstractField<C, V> field,
 			String javaPropertyName) {
-		binder.forField(field).bind(javaPropertyName);
+		add(field, javaPropertyName, null);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void add(AbstractField<?, ?> field,
+			String javaPropertyName, Converter<?, ?> converter) {
+		if (converter != null) {
+			binder.forField(field).withConverter((Converter) converter).bind(javaPropertyName);
+		} else {
+			binder.forField(field).bind(javaPropertyName);
+		}
 		getContent().add(field);
 	}
 
