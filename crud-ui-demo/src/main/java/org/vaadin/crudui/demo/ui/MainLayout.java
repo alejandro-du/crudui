@@ -36,8 +36,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
 	public MainLayout() {
 		tabs.addSelectedChangeListener(this::tabsSelectionChanged);
 		addTab(HomeView.class);
-		addTab(CustomizedView.class);
 		addTab(DefaultView.class);
+		addTab(CustomizedView.class);
 		addTab(TreeView.class);
 
 		var headerLayout = new HorizontalLayout(tabs);

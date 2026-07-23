@@ -4,11 +4,11 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
+import org.vaadin.crudui.Crud;
 import org.vaadin.crudui.demo.entity.User;
 import org.vaadin.crudui.demo.service.GroupService;
 import org.vaadin.crudui.demo.service.UserService;
-import org.vaadin.crudui2.Crud;
-import org.vaadin.crudui2.list.impl.GridList;
+import org.vaadin.crudui.list.impl.GridList;
 
 /**
  * Test view showcasing custom Grid components with Crud.list() API.

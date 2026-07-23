@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,13 +39,13 @@ public class TechnologyService {
 
 	@Transactional
 	public void delete(Technology technology) {
-		List<Technology> children = findChildren(technology);
+		List<Technology> children = findChildren(technology).toList();
 		children.forEach(this::delete);
 		technologyRepository.delete(technology);
 	}
 
-	public List<Technology> findChildren(Technology technology) {
-		return technologyRepository.findAllByParent(technology);
+	public Stream<Technology> findChildren(Technology technology) {
+		return technologyRepository.findAllByParent(technology).stream();
 	}
 
 	public List<Technology> findRoots() {
