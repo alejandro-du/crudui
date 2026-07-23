@@ -1,28 +1,24 @@
 package org.vaadin.crudui.layout;
 
-import java.util.stream.Stream;
-
 import com.vaadin.flow.component.Component;
 
-import org.vaadin.crudui.crud.CrudOperation;
+import org.vaadin.crudui.form.CrudForm;
+import org.vaadin.crudui.list.CrudList;
 
-/**
- * @author Alejandro Duarte
- */
-public interface CrudLayout {
+public interface CrudLayout<B> {
 
-	void setMainComponent(Component component);
+	void setCrudList(CrudList<B> crudList);
 
-	void addFilterComponent(Component component);
-
-	default void addFilterComponents(Component... components) {
-		Stream.of(components).forEach(this::addFilterComponent);
-	}
-
-	void addToolbarComponent(Component component);
-
-	void showForm(CrudOperation operation, Component form, String caption);
+	void showCrudForm(CrudForm<B> crudForm);
 
 	void hideForm();
+
+	void addCrudActionComponent(Component component);
+
+	void addFormActionComponent(Component component);
+
+	void setFormActionCaption(String caption);
+
+	void addFilterComponent(Component component);
 
 }

@@ -1,5 +1,8 @@
 package org.vaadin.crudui.demo.entity;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,7 +18,7 @@ public class Group {
 
 	private String name;
 
-	private Boolean admin = false;
+	private boolean admin;
 
 	public Group() {
 	}
@@ -41,6 +44,11 @@ public class Group {
 		return id != null ? id.hashCode() : 0;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -57,11 +65,11 @@ public class Group {
 		this.name = name;
 	}
 
-	public Boolean getAdmin() {
+	public boolean isAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(Boolean admin) {
+	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
 

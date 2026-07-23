@@ -5,17 +5,23 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
@@ -29,14 +35,16 @@ public class User {
 	@GeneratedValue
 	private Long id;
 
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private byte[] profilePicture;
+
 	@NotNull
+	@NotBlank
 	private String name;
 
 	@Past
 	private LocalDate birthDate;
-
-	@NotNull
-	private int phoneNumber; // as an int for testing purposes
 
 	@NotNull
 	@Email
@@ -44,23 +52,26 @@ public class User {
 	private String email;
 
 	@NotNull
-	private BigDecimal salary;
+	private int phoneNumber; // as an int for testing purposes
 
 	@NotNull
-	@Size(min = 6, max = 100)
-	private String password;
-
-	private Boolean active = true;
-
-	@ManyToOne
-	private Group mainGroup;
+	private BigDecimal salary;
 
 	@ManyToMany
 	@Fetch(FetchMode.JOIN)
 	@NotNull
 	private Set<Group> groups = new HashSet<>();
 
+	@ManyToOne
+	private Group mainGroup;
+
 	private MaritalStatus maritalStatus;
+
+	@NotNull
+	@Size(min = 6, max = 100)
+	private String password;
+
+	private Boolean active = true;
 
 	public User() {
 	}
@@ -98,12 +109,25 @@ public class User {
 		return id != null ? id.hashCode() : 0;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 
 	public String getName() {
@@ -130,6 +154,14 @@ public class User {
 		this.email = email;
 	}
 
+	public int getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(int phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
 	public BigDecimal getSalary() {
 		return salary;
 	}
@@ -138,12 +170,28 @@ public class User {
 		this.salary = salary;
 	}
 
-	public int getPhoneNumber() {
-		return phoneNumber;
+	public Set<Group> getGroups() {
+		return groups;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
+
+	public Group getMainGroup() {
+		return mainGroup;
+	}
+
+	public void setMainGroup(Group mainGroup) {
+		this.mainGroup = mainGroup;
+	}
+
+	public MaritalStatus getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	public void setMaritalStatus(MaritalStatus maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	public String getPassword() {
@@ -162,27 +210,4 @@ public class User {
 		this.active = active;
 	}
 
-	public Group getMainGroup() {
-		return mainGroup;
-	}
-
-	public void setMainGroup(Group mainGroup) {
-		this.mainGroup = mainGroup;
-	}
-
-	public Set<Group> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
-	}
-
-	public MaritalStatus getMaritalStatus() {
-		return maritalStatus;
-	}
-
-	public void setMaritalStatus(MaritalStatus maritalStatus) {
-		this.maritalStatus = maritalStatus;
-	}
 }
