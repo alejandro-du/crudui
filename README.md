@@ -153,6 +153,13 @@ Other useful methods:
 - `additionalFieldsFor(CrudOperation, Field.Builder...)`
 - `replace(propertyName, Field.Builder)`
 
+Automatically generated date pickers for `java.util.Date` use the JVM default
+time zone. They display the date in that zone and write selected dates at the
+start of the day, so changing the date discards the original time of day.
+Dates skipped entirely by a time-zone transition are rejected. Explicit
+converters and custom field providers are not replaced. For `Date` subclasses
+or a different time-zone policy, configure an appropriate field and converter.
+
 ## Behavior and UX Options
 
 ### View-before-edit mode
