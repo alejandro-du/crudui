@@ -1,41 +1,34 @@
-# AI Agent Instructions for Crud UI Add-On
+# Crud UI agent instructions
 
-## What this project is
+Read `docs/vision.md` before changing the add-on API. Check the current Maven
+files and relevant requirements rather than assuming versions or behavior.
+This project contains the `add-on` library and the `crud-ui-demo` application.
 
-This is a Java/Maven multi-module Vaadin project for the CRUD UI Add-on for Vaadin (https://vaadin.com/directory/component/crud-ui-add-on):
+## Product changes
 
-- `add-on`: the main Vaadin add-on producing the **Crud UI Add-On** library jar that gets published in the Vaadin Directory.
-- `crud-ui-demo`: a Spring Boot + Vaadin demo application that uses the add-on.
+- Preserve the type-safe, fluent API and the contracts described in the vision.
+  Do not change the values of `CrudOperation`.
+- Unless explicitly instructed otherwise, modify product code only under
+  `add-on/src/main/java/org/vaadin/crudui/` and
+  `crud-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/`. Follow
+  `docs/requirements/test-view-template.md` for requirement test views.
+- Do not edit generated output under `target/`. Use existing Vaadin APIs when
+  suitable; consult available Vaadin documentation when needed.
+- Do not start or stop the demo application. If a running demo and browser
+  tooling are available, verify relevant UI changes there; otherwise report
+  the limitation. Run the smallest appropriate tests or build checks, and
+  report anything not verified.
 
-Now read the [vision.md](/docs/vision.md) file and learn a more detailed general description of the project.
+## Working safely
 
-## Important conventions
+- Inspect existing changes before editing and preserve unrelated work. Do not
+  use Git to modify files, create commits, switch branches, or integrate work;
+  the human controls Git changes.
+- Ask for approval before consequential actions. Instructions and agent roles
+  are guidance, not access controls; inspect tool permissions and commands.
+- Keep changes focused. Capture a lesson only when it is durable, verified and
+  useful, with evidence; propose a concise guidance change for human review
+  rather than appending automatic logs.
 
-- Java version: 21
-- Vaadin version: 25.2.3
-- Build system: Maven
-- The demo app uses Spring Boot 4.0.0
-- Do not edit generated build output under `target/`
-
-## Key source locations
-
-- Library source: `add-on/src/main/java/org/vaadin/crudui/...`
-- Demo source: `crud-ui-demo/src/main/java/...`
-
-## Your role
-
-You'll be working as a Senior Software Engineer on the API for this Vaadin add-on. The API is located in the package `org.vaadin.crudui` of the `add-on` Maven module and it's work in progress. You will be modifying only that package and nothing else in the `add-on` Maven module. The API is type-safe and fluent as described in the [vision.md](/docs/vision.md) file (read it!). You are allowed create and modify files in `crud-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/` which are used to test and show case that implemented features work (see the [test-view-template.md](/docs/requirements/test-view-template.md) file).
-
-## Build and run commands
-
-Do not stop or run the demo application. It is already running and accessible at http://localhost:8080. Changes in `.java` files are automatically picked up, compiled, and deployed so you don't need to compile, deploy, stop/start anything. Changes take effect after 4 seconds approximately. All you need to do is modify the source code, wait ~4 seconds, and then use the Playwright MCP server to check that your code modifications are working correctly. You can build the project if necessary using Maven.
-
-## What to focus on when editing
-
-- For library behavior or new features, change code under `add-on/src/main/java/org/vaadin/crudui/`.
-
-## Additional notes
-
-- Do not touch anything else than what is in `add-on/src/main/java/org/vaadin/crudui/` and `-ui-demo/src/main/java/org/vaadin/crudui/demo/ui/view/test/`, unless instructed to do so.
-- Do not use Git to modify any file in any way, including checking out files, reverting, committing changes (do not do anything that writes to disk with Git).
-- When available, prefer java classes and interfaces that already exist in the Vaadin library. Use the Vaadin MCP Server that you have access to.
+For session naming, reviews, handoffs and optional parallel worktrees, see
+`docs/copilot-workflow.md`.
