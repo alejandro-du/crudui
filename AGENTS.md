@@ -1,8 +1,8 @@
 # Crud UI agent instructions
 
+This project contains the `add-on` library and the `crud-ui-demo` application.
 Read `docs/vision.md` before changing the add-on API. Check the current Maven
 files and relevant requirements rather than assuming versions or behavior.
-This project contains the `add-on` library and the `crud-ui-demo` application.
 
 ## Product changes
 
@@ -16,8 +16,22 @@ This project contains the `add-on` library and the `crud-ui-demo` application.
   suitable; consult available Vaadin documentation when needed.
 - Do not start or stop the demo application. If a running demo and browser
   tooling are available, verify relevant UI changes there; otherwise report
-  the limitation. Run the smallest appropriate tests or build checks, and
-  report anything not verified.
+  the limitation.
+
+## Development and verification
+
+- Inspect relevant code and tests before changing behavior. Make focused
+  changes, preserve existing behavior unless requested otherwise, and update
+  directly affected documentation.
+- Add focused automated regression tests for new or changed behavior where
+  practical. A requirement test view does not replace automated tests.
+- Run the smallest appropriate checks and report what passed, what failed, and
+  what could not be verified. From the repository root, use explicit Maven
+  goals:
+  - `mvn -pl add-on test` runs the add-on tests.
+  - `mvn -pl crud-ui-demo -am test` tests the add-on and builds the demo in the
+    same reactor, so the demo uses the current add-on. The demo currently has
+    no automated tests.
 
 ## Working safely
 
@@ -29,6 +43,3 @@ This project contains the `add-on` library and the `crud-ui-demo` application.
 - Keep changes focused. Capture a lesson only when it is durable, verified and
   useful, with evidence; propose a concise guidance change for human review
   rather than appending automatic logs.
-
-For session naming, reviews, handoffs and optional parallel worktrees, see
-`docs/copilot-workflow.md`.
